@@ -142,8 +142,8 @@ sensor:
 
 switch:
   - platform: template
-    name: "Humidity Auto Mode"
-    id: humidity_auto_mode
+    name: "Local Mode"
+    id: local_mode
     optimistic: true
     restore_mode: RESTORE_DEFAULT_ON
     entity_category: config
@@ -159,10 +159,10 @@ interval:
             or:
               - not:
                   api.connected:
-              - switch.is_on: humidity_auto_mode
+              - switch.is_on: local_mode
           then:
-            - logger.log: "Running humidity control (disconnected or auto mode)"
+            - logger.log: "Running humidity control (disconnected or local mode)"
             - script.execute: humidity_control
           else:
-            - logger.log: "HA manual control (connected + auto mode off)"
+            - logger.log: "HA control (connected + local mode off)"
             - script.stop: humidity_control

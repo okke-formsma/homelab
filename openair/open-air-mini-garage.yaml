@@ -171,22 +171,29 @@ sensor:
       accuracy_decimals: 2
     update_interval: 30s
     measurement_mode: periodic
-script:
-  # Below includes for disconnected mode are mutually exclusive. Only use one at a time!
-  # !include disconnected-mode-without-humidity.yaml
-  !include disconnected-mode-with-humidity.yaml
+switch:
+  - platform: template
+    name: "Local Mode"
+    id: local_mode
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+
+script: !include humidity-control-mode.yaml
 
 interval:
   - interval: 30s
     then:
-      - logger.log: "API Connectivity Check for Disconnected Mode"
+      - logger.log: "Humidity Control Check"
       - if:
           condition:
-            not:
-              api.connected:
+            or:
+              - not:
+                  api.connected:
+              - switch.is_on: local_mode
           then:
-            - logger.log: "API disconnected"
-            - script.execute: disconnected_mode
+            - logger.log: "Running humidity control (disconnected or local mode)"
+            - script.execute: humidity_control
           else:
-            - logger.log: "API connected"
-            - script.stop: disconnected_mode
+            - logger.log: "HA control (connected + local mode off)"
+            - script.stop: humidity_control

@@ -1,8 +1,8 @@
 ---
 # Humidity Control Mode
 # - When HA disconnected: ESPHome controls based on humidity
-# - When HA connected + Auto Mode ON: ESPHome controls based on humidity
-# - When HA connected + Auto Mode OFF: HA has manual control
+# - When HA connected + Local Mode ON: ESPHome controls based on humidity
+# - When HA connected + Local Mode OFF: HA controls (manual or automation)
 
 - id: humidity_control
   mode: single
