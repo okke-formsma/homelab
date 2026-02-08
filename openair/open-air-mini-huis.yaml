@@ -31,6 +31,18 @@ wifi:
 captive_portal:
 
 globals:
+  # Hold “medium” speed for a while after humidity drops below the medium threshold.
+  - id: medium_hold_seconds
+    type: int
+    restore_value: no
+    initial_value: "1200"  # 20 minutes
+
+  # Internal: timestamp (millis) until which we keep medium speed.
+  - id: medium_hold_until_ms
+    type: uint32_t
+    restore_value: no
+    initial_value: "0"
+
   # Disconnected Mode Default Fan Speed, for humidities lower than Disconnected Hum Level Medium Speed
   # or if NOT using a humidity sensor. Without sensor this speed will be maintained untill a connection
   # to Home Assistant has been restored and your automations can take over.
