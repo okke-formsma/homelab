@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "WebFetch(domain:community.home-assistant.io)"
+      "WebFetch(domain:community.home-assistant.io)",
+      "WebFetch(domain:tteck.github.io)",
+      "WebFetch(domain:community-scripts.github.io)"
     ]
   }
 }

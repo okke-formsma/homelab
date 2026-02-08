@@ -324,6 +324,25 @@ ha supervisor update       # Update Supervisor
 ha backups new             # Create backup
 ```
 
+## Current State (2026-02-02)
+
+- Proxmox VE 9.1 running on `nuc` (Debian 13 trixie, kernel 6.17.2).
+- Storage: `local-lvm` expanded to ~800 GiB.
+- Proxmox repos: enterprise repos disabled; `pve-no-subscription` enabled.
+- ISO present: `/var/lib/vz/template/iso/ubuntu-24.04.3-live-server-amd64.iso`.
+- VM `openclaw` (VMID 102):
+  - 2 vCPU, 4 GB RAM, 32 GB disk on `local-lvm`, bridge `vmbr0`
+  - Boot order `ide2;scsi0` (ISO removed after install)
+  - Serial console enabled (`serial0: socket`, `vga: serial0`)
+- LXC `pihole` (CTID 101):
+  - Debian 13; Pi-hole reinstall in progress (user-driven)
+  - Current Pi-hole IP (per user): `192.168.1.149`
+- DNS clients: using Pi-hole as primary + `8.8.8.8` secondary (allows bypass).
+- Planned: Nginx reverse proxy for `*.formsma.nl` internal services.
+- TODO: Evaluate moving DNS hosting to Cloudflare (free plan) for automated DNS-01.
+- TODO: Set up HTTP-only reverse proxy for `*.formsma.nl` (no TLS for now).
+- TODO: Set up Proxmox backups (VZDump schedule + target storage).
+
 ## References
 
 - [Proxmox VE Documentation](https://pve.proxmox.com/wiki/Main_Page)
