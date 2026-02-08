@@ -11,12 +11,31 @@
     - fan.turn_on:
         id: fan_motor
         speed: !lambda |-
-          auto hum = id(air_humidity).state;
+          const float hum = id(air_humidity).state;
+          const uint32_t now = millis();
+
+          // Helper: check if a future deadline is still in the future, safe across millis() wrap.
+          auto deadline_active = [&](uint32_t until_ms) -> bool {
+            return (int32_t)(until_ms - now) > 0;
+          };
+
+          // Max speed when very humid.
           if (hum >= id(disconnected_hum_level_max_speed)) {
+            // Clear any pending medium-hold; we're in max now.
+            id(medium_hold_until_ms) = 0;
             return id(disconnected_max_fan_speed);
-          } else if (hum >= id(disconnected_hum_level_medium_speed)) {
-            return id(disconnected_medium_fan_speed);
-          } else {
-            return id(disconnected_default_fan_speed);
           }
+
+          // Medium speed when moderately humid.
+          if (hum >= id(disconnected_hum_level_medium_speed)) {
+            // Each time we are in medium-or-higher, extend the hold window.
+            id(medium_hold_until_ms) = now + (uint32_t) id(medium_hold_seconds) * 1000U;
+            return id(disconnected_medium_fan_speed);
+          }
+
+          // Below medium threshold: keep medium for a while to dry out.
+          if (deadline_active(id(medium_hold_until_ms))) {
+            return id(disconnected_medium_fan_speed);
+          }
+
           return id(disconnected_default_fan_speed);
