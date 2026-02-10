@@ -178,3 +178,19 @@ interval:
           else:
             - logger.log: "HA control (connected + local mode off)"
             - script.stop: humidity_control
+
+  # Kickstart: if fan has power but isn't spinning, briefly boost to overcome
+  # static friction. Prevents burndown from stalled motor with power applied.
+  - interval: 10s
+    then:
+      - if:
+          condition:
+            and:
+              - fan.is_on: fan_motor
+              - lambda: 'return id(open_air_mini_rpm).state < 10;'
+          then:
+            - logger.log: "Fan kickstart: fan is on but RPM near 0, boosting to 20%"
+            - fan.turn_on:
+                id: fan_motor
+                speed: 20
+            - delay: 5s
