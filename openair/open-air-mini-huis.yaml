@@ -123,6 +123,7 @@ sensor:
     unit_of_measurement: "RPM"
     name: "AIR Mini RPM"
     id: open_air_mini_rpm
+    update_interval: 15s
 
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
     name: "WiFi Signal dB"
@@ -150,7 +151,7 @@ sensor:
       name: "Open AIR Mini x Humidity"
       id: air_humidity
       accuracy_decimals: 2
-    update_interval: 30s
+    update_interval: 15s
 
 switch:
   - platform: template
