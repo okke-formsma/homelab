@@ -140,6 +140,14 @@ sensor:
     entity_category: "diagnostic"
     device_class: ""
 
+  - platform: uptime
+    name: "Uptime"
+    entity_category: diagnostic
+
+  - platform: internal_temperature
+    name: "MCU Temperature"
+    entity_category: diagnostic
+
   # humidity sensor
   - platform: sht4x
     i2c_id: i2c_sensor_1
@@ -152,6 +160,16 @@ sensor:
       id: air_humidity
       accuracy_decimals: 2
     update_interval: 15s
+
+text_sensor:
+  - platform: version
+    name: "Firmware Version"
+    entity_category: diagnostic
+
+  - platform: wifi_info
+    ip_address:
+      name: "WiFi IP"
+      entity_category: diagnostic
 
 switch:
   - platform: template

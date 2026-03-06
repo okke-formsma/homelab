@@ -98,33 +98,6 @@ i2c:
     scan: false
     frequency: 400kHz
 
-#For version <1.4.0 use: (remove the # and remove above sensor pins)
-#uart:
-#UART For Sensor 2
-#- rx_pin: GPIO13
-#tx_pin: GPIO12
-#baud_rate: 9600
-#id: uart_sensor_2
-#UART For Sensor 1
-#- rx_pin: GPIO25
-#tx_pin: GPIO26
-#baud_rate: 9600
-#id: uart_sensor_1
-
-#i2c:
-#I2C For Sensor 2
-#- id: i2c_sensor_2
-#sda: GPIO19
-#scl: GPIO18
-#scan: false
-#frequency: 400kHz
-#I2C For Sensor 1
-#- id: i2c_sensor_1
-#sda: GPIO16
-#scl: GPIO4
-#scan: false
-#frequency: 400kHz
-
 # Status led
 status_led:
   pin:
@@ -166,23 +139,24 @@ sensor:
     entity_category: "diagnostic"
     device_class: ""
 
-  # co2 sensor
-  - platform: scd4x
-    i2c_id: i2c_sensor_1 #Of sensor 2 (afhankelijk van waar deze op zit)
-    co2:
-      name: "Open AIR Mini Sensor 1 CO2"
-      id: air_Co2
-      accuracy_decimals: 0
-    temperature:
-      name: "Open AIR Mini Sensor 1 Temperature"
-      id: air_temperature
-      accuracy_decimals: 2
-    humidity:
-      name: "Open AIR Mini Sensor 1 Humidity"
-      id: air_humidity
-      accuracy_decimals: 2
-    update_interval: 30s
-    measurement_mode: periodic
+  - platform: uptime
+    name: "Uptime"
+    entity_category: diagnostic
+
+  - platform: internal_temperature
+    name: "MCU Temperature"
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: version
+    name: "Firmware Version"
+    entity_category: diagnostic
+
+  - platform: wifi_info
+    ip_address:
+      name: "WiFi IP"
+      entity_category: diagnostic
+
 switch:
   - platform: template
     name: "Local Mode"
@@ -190,22 +164,3 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_ON
     entity_category: config
-
-script: !include humidity-control-mode.yaml
-
-interval:
-  - interval: 30s
-    then:
-      - logger.log: "Humidity Control Check"
-      - if:
-          condition:
-            or:
-              - not:
-                  api.connected:
-              - switch.is_on: local_mode
-          then:
-            - logger.log: "Running humidity control (disconnected or local mode)"
-            - script.execute: humidity_control
-          else:
-            - logger.log: "HA control (connected + local mode off)"
-            - script.stop: humidity_control
