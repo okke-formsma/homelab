@@ -1,0 +1,6 @@
+## Written for Esphome version: 2025.9.1
+substitutions:
+  devicename: open-air-valve-4
+  upper_devicename: Open AIR Valve 4
+
+<<: !include Open_AIR_Valve_DIS_SCD40_SGP41.yaml
