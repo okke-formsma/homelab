@@ -32,73 +32,6 @@ wifi:
 
 captive_portal:
 
-globals:
-  # Hold “medium” speed for a while after humidity drops below the medium threshold.
-  - id: medium_hold_seconds
-    type: int
-    restore_value: no
-    initial_value: "1200" # 20 minutes
-
-  # Internal: timestamp (millis) until which we keep medium speed.
-  - id: medium_hold_until_ms
-    type: uint32_t
-    restore_value: no
-    initial_value: "0"
-
-  # Disconnected Mode Max Fan Speed, linked to Disconnected Hum Level Max Speed
-  - id: disconnected_max_fan_speed
-    type: int
-    restore_value: no
-    initial_value: "60"
-  # Disconnected Mode Medium Fan Speed, linked to Disconnected Hum Level Medium Speed
-  - id: disconnected_medium_fan_speed
-    type: int
-    restore_value: no
-    initial_value: "40"
-  # Disconnected Mode Default Fan Speed, for humidities lower than Disconnected Hum Level Medium Speed
-  # or if NOT using a humidity sensor. Without sensor this speed will be maintained untill a connection
-  # to Home Assistant has been restored and your automations can take over.
-  - id: disconnected_default_fan_speed
-    type: int
-    restore_value: no
-    initial_value: "20"
-  # Disconnected Mode Max Fan Speed Threshold
-  - id: disconnected_hum_level_max_speed
-    type: int
-    restore_value: no
-    initial_value: "80"
-  # Disconnected Mode Medium Fan Speed Threshold
-  - id: disconnected_hum_level_medium_speed
-    type: int
-    restore_value: no
-    initial_value: "63"
-
-# From V1.4.0 The Sensor pins on the Open AIR Mini are swapped. Correct example is below:
-uart:
-  #UART For Sensor 2
-  - rx_pin: GPIO13
-    tx_pin: GPIO12
-    baud_rate: 9600
-    id: uart_sensor_2
-  #UART For Sensor 1
-  - rx_pin: GPIO25
-    tx_pin: GPIO26
-    baud_rate: 9600
-    id: uart_sensor_1
-
-i2c:
-  #I2C For Sensor 2
-  - id: i2c_sensor_2
-    sda: GPIO19
-    scl: GPIO18
-    scan: false
-    frequency: 400kHz
-  #I2C For Sensor 1
-  - id: i2c_sensor_1
-    sda: GPIO16
-    scl: GPIO4
-    scan: false
-    frequency: 400kHz
 
 # Status led
 status_led:
@@ -159,10 +92,3 @@ text_sensor:
       name: "WiFi IP"
       entity_category: diagnostic
 
-switch:
-  - platform: template
-    name: "Local Mode"
-    id: local_mode
-    optimistic: true
-    restore_mode: RESTORE_DEFAULT_ON
-    entity_category: config
