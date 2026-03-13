@@ -12,24 +12,29 @@
 
   .layout { display: flex; flex-direction: column; gap: 16px; max-width: 1000px; margin: 0 auto; }
   .top-row { display: flex; gap: 16px; align-items: start; }
-  .top-row > .card { flex: 1; }
+  .top-row > *:nth-child(1) { flex: 0 0 calc(40% - 11px); }
+  .top-row > *:nth-child(2) { flex: 0 0 calc(20% - 11px); }
+  .top-row > *:nth-child(3) { flex: 0 0 calc(40% - 11px); }
   .rooms-row { display: flex; gap: 10px; justify-content: center; }
 
   .card { background: #16213e; border-radius: 10px; padding: 16px; border: 1px solid #0f3460; }
   .card h2 { font-size: 1em; margin-bottom: 10px; color: #a8b8d8; }
 
-  .room { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 120px; min-width: 90px; flex: 1; padding: 12px 10px; }
+  .room { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 108px; flex: 0 0 108px; padding: 12px 10px; }
   .room-name { font-weight: 600; font-size: 0.9em; color: #e0e0e0; }
   .room label { font-size: 0.75em; color: #8899aa; margin-top: 4px; }
   .room input[type=range] { writing-mode: vertical-lr; direction: rtl; height: 120px; width: 28px; accent-color: #4a9eff; }
   .room .val { font-size: 0.8em; font-variant-numeric: tabular-nums; text-align: center; color: #c0c8d8; }
-  .room.master { border-color: #4a9eff; background: #162850; flex-direction: column; max-width: 120px; min-width: 90px; gap: 0; align-items: center; padding: 12px 10px; }
-  .room.master .master-sliders { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .room.master .room-name { color: #4a9eff; }
-  .room.master input[type=range] { accent-color: #e8a735; }
 
   .presets-card { border-color: #7a5adf; background: #1a1630; }
   .presets-card h2 { color: #b8a0f0; }
+
+  .room.outside { border-color: #2a7a4a; background: #0e1c12; }
+  .room.outside .room-name { color: #5dc87a; }
+  .room.outside input[type=range] { accent-color: #5dc87a; }
+  .outside-sliders { display: flex; gap: 8px; margin-top: 4px; }
+  .outside-slider-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+
 
   .fan-display { text-align: center; }
   .fan-speed-value { font-size: 2.8em; font-weight: 700; color: #4a9eff; line-height: 1.1; }
@@ -38,13 +43,13 @@
   .fan-bar { height: 100%; border-radius: 6px; transition: width 0.3s, background 0.3s; }
 
   .valve-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .valve-label { width: 60px; font-size: 0.85em; color: #8899aa; }
+  .valve-label { width: 82px; font-size: 0.85em; color: #8899aa; white-space: nowrap; }
   .valve-bar-wrap { flex: 1; background: #0a0f1e; border-radius: 4px; height: 14px; overflow: hidden; }
   .valve-bar { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; }
   .valve-pct { width: 40px; font-size: 0.8em; text-align: right; font-variant-numeric: tabular-nums; }
 
   .demand-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-  .demand-label { width: 60px; font-size: 0.8em; color: #667; }
+  .demand-label { width: 82px; font-size: 0.8em; color: #667; white-space: nowrap; }
   .demand-bar-wrap { flex: 1; background: #0a0f1e; border-radius: 4px; height: 8px; overflow: hidden; }
   .demand-bar { height: 100%; border-radius: 4px; background: #e8a735; }
   .demand-val { width: 40px; font-size: 0.75em; text-align: right; color: #998; font-variant-numeric: tabular-nums; }
@@ -67,6 +72,13 @@
   #defaults-btn { margin-top: 10px; background: #0f3460; border: none; color: #a8b8d8; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75em; }
   #defaults-btn:hover { background: #1a4a80; color: #fff; }
 
+  .people-zone { display: grid; grid-template-columns: repeat(2, auto); gap: 2px; height: 52px; margin-top: 2px; padding: 2px; border-radius: 4px; border: 1px dashed transparent; align-content: center; justify-content: center; width: 100%; }
+  .people-zone.drag-over { border-color: #4a9eff; background: #0f1e3a; }
+  .avatar { font-size: 1.4em; cursor: grab; user-select: none; line-height: 1; background: none; }
+  .avatar:active { cursor: grabbing; }
+  .shower-btn { margin-top: 6px; width: 100%; background: #0f2a3a; border: 1px solid #1a5a7a; color: #70c8f0; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 0.72em; }
+  .shower-btn:hover { background: #1a3a50; }
+
   .presets { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
   .presets button { background: #0f3460; border: none; color: #a8b8d8; padding: 4px 6px; border-radius: 4px; cursor: pointer; font-size: 0.7em; white-space: nowrap; }
   .presets button:hover { background: #1a4a80; color: #fff; }
@@ -85,14 +97,14 @@
       <button id="defaults-btn">Defaults</button>
     </div>
     <div class="card fan-display">
-      <h2>Fan</h2>
-      <div class="fan-speed-value" id="fan-speed">15%</div>
-      <div class="fan-speed-label">speed</div>
-      <div class="fan-bar-wrap"><div class="fan-bar" id="fan-bar"></div></div>
-      <div style="margin-top:10px; font-size:0.8em; color:#667">
-        <span>Demand: <b id="fan-demand-val">0.00</b></span>
-        <span style="margin-left:10px">Smoothed: <b id="fan-smoothed-val">0.00</b></span>
-      </div>
+        <h2>Fan</h2>
+        <div class="fan-speed-value" id="fan-speed">15%</div>
+        <div class="fan-speed-label">speed</div>
+        <div class="fan-bar-wrap"><div class="fan-bar" id="fan-bar"></div></div>
+        <div style="margin-top:10px; font-size:0.8em; color:#667">
+          <span>Demand: <b id="fan-demand-val">0.00</b></span>
+          <span style="margin-left:10px">Smoothed: <b id="fan-smoothed-val">0.00</b></span>
+        </div>
     </div>
     <div class="card">
       <h2>Valve Positions</h2>
@@ -104,6 +116,22 @@
   </div>
   <div class="rooms-row" id="rooms"></div>
   <div class="card explain">
+    <h2>How to use</h2>
+    <div class="explain-grid">
+      <div class="explain-step">
+        <div class="explain-title">Rooms &amp; sliders</div>
+        <p>Each room has a CO₂ and humidity slider. Drag them to simulate different air quality conditions. The <em>All</em> slider moves all rooms at once. Use <em>Presets</em> to jump to realistic scenarios like sleeping or dinner. The <em>Outside</em> card sets incoming air quality.</p>
+      </div>
+      <div class="explain-step">
+        <div class="explain-title">People &amp; CO₂</div>
+        <p>Drag the family avatars (👩 👨 🧒 👧) between rooms. Each person in a room slowly raises CO₂ when the ventilator is running. People outside don't affect air quality. In the <em>Bathroom</em>, hit <em>🚿 Shower</em> to spike humidity to 85%.</p>
+      </div>
+      <div class="explain-step">
+        <div class="explain-title">Ventilator &amp; valves</div>
+        <p>Press <em>Start ventilator</em> to run the simulation in real time. Each room's demand (0–1) is <code>max(CO₂ demand, humidity demand)</code>, EMA-smoothed. Fan speed follows the worst room. Valves open proportionally to each room's demand — bad rooms get fresh air first, good rooms get the minimum.</p>
+      </div>
+    </div>
+    <hr class="divider" style="margin: 14px 0;">
     <h2>How it works</h2>
     <div class="explain-grid">
       <div class="explain-step">
@@ -123,14 +151,15 @@
 </div>
 
 <script>
-const ROOM_NAMES = ['Room 1', 'Room 2', 'Room 3', 'Room 4', 'Room 5'];
+const ROOM_NAMES = ['Living Room', 'Master', 'Bedroom 1', 'Bedroom 2', 'Bathroom'];
+const BATHROOM_IDX = 4;
 
 const DEFAULTS = {
   co2_target: 600, co2_max: 1500,
   humidity_target: 60, humidity_max: 75,
   fan_speed_min: 15, fan_speed_max: 70,
   valve_pos_min: 0.05, valve_pos_max: 1.0,
-  smoothing_alpha: 0.7
+  smoothing_alpha: 0.15
 };
 
 function loadSettings() {
@@ -145,7 +174,40 @@ function saveSettings() {
 
 const settings = loadSettings();
 
-const rooms = ROOM_NAMES.map(() => ({ co2: 450, humidity: 45 }));
+function loadRooms() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('openair-rooms'));
+    if (saved && saved.length === ROOM_NAMES.length) return saved;
+  } catch {}
+  return ROOM_NAMES.map(() => ({ co2: 450, humidity: 45 }));
+}
+function saveRooms() {
+  localStorage.setItem('openair-rooms', JSON.stringify(rooms));
+}
+
+const rooms = loadRooms();
+const outside = { co2: 400, humidity: 50 };
+
+const DEFAULT_PEOPLE = [
+  { name: 'Mum',   emoji: '👩', room: 0 },
+  { name: 'Dad',   emoji: '👨', room: 0 },
+  { name: 'Kid 1', emoji: '🧒', room: 2 },
+  { name: 'Kid 2', emoji: '👧', room: 3 },
+];
+function loadPeople() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('openair-people'));
+    if (saved && saved.length === DEFAULT_PEOPLE.length) return DEFAULT_PEOPLE.map((p, i) => ({ ...p, room: saved[i] }));
+  } catch {}
+  return DEFAULT_PEOPLE.map(p => ({ ...p }));
+}
+function savePeople() {
+  localStorage.setItem('openair-people', JSON.stringify(people.map(p => p.room)));
+}
+const people = loadPeople();
+let running = true;
+let lastPositions = new Array(5).fill(settings.valve_pos_min);
+let lastFanDemand = 0;
 let smoothedDemands = new Array(5).fill(0);
 let smoothedFanDemand = 0;
 
@@ -166,10 +228,13 @@ function barColor(pct) {
 
 function updateRoomSliders() {
   for (let i = 0; i < 5; i++) {
-    document.getElementById('co2-' + i).value = rooms[i].co2;
-    document.getElementById('co2val-' + i).textContent = rooms[i].co2 + ' ppm';
-    document.getElementById('hum-' + i).value = rooms[i].humidity;
-    document.getElementById('humval-' + i).textContent = rooms[i].humidity + '%';
+    if (i !== BATHROOM_IDX) {
+      document.getElementById('co2-' + i).value = rooms[i].co2;
+      document.getElementById('co2val-' + i).textContent = Math.round(rooms[i].co2) + ' ppm';
+    } else {
+      document.getElementById('hum-' + i).value = rooms[i].humidity;
+      document.getElementById('humval-' + i).textContent = Math.round(rooms[i].humidity) + '%';
+    }
   }
 }
 
@@ -214,6 +279,8 @@ function simulate() {
     dbar.style.width = (demands[i] * 100) + '%';
     document.getElementById('dval-' + i).textContent = demands[i].toFixed(2);
   }
+  lastPositions = positions;
+  lastFanDemand = smoothedFanDemand;
 }
 
 // Build presets card
@@ -223,65 +290,129 @@ presetsCard.className = 'card presets-card';
 presetsCard.innerHTML = `<h2>Presets</h2><div class="presets" id="presets"></div>`;
 roomsEl.appendChild(presetsCard);
 
-// Build master slider (All)
-const masterCard = document.createElement('div');
-masterCard.className = 'card room master';
-masterCard.innerHTML = `
-  <div class="master-sliders">
-    <div class="room-name">All</div>
-    <label>CO2</label>
-    <input type="range" min="350" max="2500" step="10" value="450" id="co2-master">
-    <span class="val" id="co2val-master">450 ppm</span>
-    <label>Hum</label>
-    <input type="range" min="20" max="95" step="1" value="45" id="hum-master">
-    <span class="val" id="humval-master">45%</span>
-  </div>
-`;
-roomsEl.appendChild(masterCard);
-
-masterCard.querySelector('#co2-master').addEventListener('input', e => {
-  const v = +e.target.value;
-  document.getElementById('co2val-master').textContent = v + ' ppm';
-  rooms.forEach(r => r.co2 = v);
-  smoothedDemands.fill(0); smoothedFanDemand = 0;
-  updateRoomSliders();
-  for (let j = 0; j < 10; j++) simulate();
-});
-masterCard.querySelector('#hum-master').addEventListener('input', e => {
-  const v = +e.target.value;
-  document.getElementById('humval-master').textContent = v + '%';
-  rooms.forEach(r => r.humidity = v);
-  smoothedDemands.fill(0); smoothedFanDemand = 0;
-  updateRoomSliders();
-  for (let j = 0; j < 10; j++) simulate();
-});
 
 // Build room controls
 for (let i = 0; i < 5; i++) {
   const card = document.createElement('div');
   card.className = 'card room';
+  card.dataset.room = i;
+  const isBathroom = i === BATHROOM_IDX;
   card.innerHTML = `
     <div class="room-name">${ROOM_NAMES[i]}</div>
+    <div class="people-zone" id="people-${i}"></div>
+    ${!isBathroom ? `
     <label>CO2</label>
     <input type="range" min="350" max="2500" step="10" value="${rooms[i].co2}" id="co2-${i}">
     <span class="val" id="co2val-${i}">${rooms[i].co2} ppm</span>
+    ` : `<span style="display:none" id="co2val-${i}"></span>`}
+    ${isBathroom ? `
     <label>Hum</label>
     <input type="range" min="20" max="95" step="1" value="${rooms[i].humidity}" id="hum-${i}">
     <span class="val" id="humval-${i}">${rooms[i].humidity}%</span>
+    <button class="shower-btn">🚿 Shower</button>
+    ` : `<span style="display:none" id="humval-${i}"></span>`}
   `;
   roomsEl.appendChild(card);
 
-  card.querySelector('#co2-' + i).addEventListener('input', e => {
-    rooms[i].co2 = +e.target.value;
-    document.getElementById('co2val-' + i).textContent = rooms[i].co2 + ' ppm';
-    simulate();
+  if (!isBathroom) {
+    card.querySelector('#co2-' + i).addEventListener('input', e => {
+      rooms[i].co2 = +e.target.value;
+      document.getElementById('co2val-' + i).textContent = rooms[i].co2 + ' ppm';
+      saveRooms();
+    });
+  }
+  if (isBathroom) {
+    card.querySelector('#hum-' + i).addEventListener('input', e => {
+      rooms[i].humidity = +e.target.value;
+      document.getElementById('humval-' + i).textContent = rooms[i].humidity + '%';
+      saveRooms();
+    });
+  }
+
+  if (isBathroom) {
+    card.querySelector('.shower-btn').addEventListener('click', () => {
+      rooms[BATHROOM_IDX].humidity = 85;
+      updateRoomSliders();
+    });
+  }
+
+  card.addEventListener('dragover', e => {
+    e.preventDefault();
+    document.getElementById('people-' + i).classList.add('drag-over');
   });
-  card.querySelector('#hum-' + i).addEventListener('input', e => {
-    rooms[i].humidity = +e.target.value;
-    document.getElementById('humval-' + i).textContent = rooms[i].humidity + '%';
-    simulate();
+  card.addEventListener('dragleave', e => {
+    if (!card.contains(e.relatedTarget))
+      document.getElementById('people-' + i).classList.remove('drag-over');
+  });
+  card.addEventListener('drop', e => {
+    e.preventDefault();
+    document.getElementById('people-' + i).classList.remove('drag-over');
+    const personIdx = +e.dataTransfer.getData('person');
+    people[personIdx].room = i;
+    renderPeople();
   });
 }
+
+function renderPeople() {
+  savePeople();
+  for (let i = 0; i < 5; i++)
+    document.getElementById('people-' + i).innerHTML = '';
+  document.getElementById('people-outside').innerHTML = '';
+  people.forEach((person, idx) => {
+    const el = document.createElement('span');
+    el.className = 'avatar';
+    el.textContent = person.emoji;
+    el.title = person.name;
+    el.draggable = true;
+    el.addEventListener('dragstart', e => e.dataTransfer.setData('person', idx));
+    const zoneId = person.room === -1 ? 'people-outside' : 'people-' + person.room;
+    document.getElementById(zoneId).appendChild(el);
+  });
+}
+// Build outside room card
+const outsideCard = document.createElement('div');
+outsideCard.className = 'card room outside';
+outsideCard.innerHTML = `
+  <div class="room-name">Outside</div>
+  <div class="people-zone" id="people-outside"></div>
+  <div class="outside-sliders">
+    <div class="outside-slider-col">
+      <label>CO2</label>
+      <input type="range" min="350" max="800" step="10" value="${outside.co2}" id="co2-outside">
+      <span class="val" id="co2val-outside">${outside.co2} ppm</span>
+    </div>
+    <div class="outside-slider-col">
+      <label>Hum</label>
+      <input type="range" min="20" max="95" step="1" value="${outside.humidity}" id="hum-outside">
+      <span class="val" id="humval-outside">${outside.humidity}%</span>
+    </div>
+  </div>
+`;
+roomsEl.appendChild(outsideCard);
+outsideCard.querySelector('#co2-outside').addEventListener('input', e => {
+  outside.co2 = +e.target.value;
+  document.getElementById('co2val-outside').textContent = outside.co2 + ' ppm';
+});
+outsideCard.querySelector('#hum-outside').addEventListener('input', e => {
+  outside.humidity = +e.target.value;
+  document.getElementById('humval-outside').textContent = outside.humidity + '%';
+});
+outsideCard.addEventListener('dragover', e => {
+  e.preventDefault();
+  document.getElementById('people-outside').classList.add('drag-over');
+});
+outsideCard.addEventListener('dragleave', e => {
+  if (!outsideCard.contains(e.relatedTarget))
+    document.getElementById('people-outside').classList.remove('drag-over');
+});
+outsideCard.addEventListener('drop', e => {
+  e.preventDefault();
+  document.getElementById('people-outside').classList.remove('drag-over');
+  const personIdx = +e.dataTransfer.getData('person');
+  people[personIdx].room = -1;
+  renderPeople();
+});
+renderPeople();
 
 // Build valve bars
 const vbarsEl = document.getElementById('valve-bars');
@@ -345,30 +476,65 @@ document.getElementById('defaults-btn').addEventListener('click', () => {
   simulate();
 });
 
-// Presets
+function placePeople(...positions) { positions.forEach((r, i) => people[i].room = r); }
+
+// Presets — [co2/hum fn, people rooms: Mum, Dad, Kid1, Kid2]
 const presets = {
-  'All normal': () => rooms.forEach(r => { r.co2 = 450; r.humidity = 45; }),
-  'One bad room': () => { presets['All normal'](); rooms[2].co2 = 1400; rooms[2].humidity = 72; },
-  'Two bad rooms': () => { presets['All normal'](); rooms[0].co2 = 1200; rooms[3].co2 = 1600; },
-  'High humidity': () => rooms.forEach(r => { r.co2 = 500; r.humidity = 80; }),
-  'Gradual': () => rooms.forEach((r, i) => { r.co2 = 400 + i * 250; r.humidity = 40 + i * 8; }),
+  'Sleeping': [() => {
+    rooms.forEach(r => { r.co2 = 450; r.humidity = 45; });
+    rooms[1].co2 = 750; rooms[1].humidity = 52; // master bedroom, two people
+    rooms[2].co2 = 650; rooms[2].humidity = 50;
+    rooms[3].co2 = 620; rooms[3].humidity = 49;
+  }, [1, 1, 2, 3]],
+
+  'Morning': [() => {
+    rooms.forEach(r => { r.co2 = 450; r.humidity = 45; });
+    rooms[1].co2 = 750; rooms[1].humidity = 52;
+    rooms[2].co2 = 650; rooms[2].humidity = 50;
+    rooms[3].co2 = 620; rooms[3].humidity = 49;
+    rooms[BATHROOM_IDX].humidity = 85; updateRoomSliders(); // shower just turned on
+  }, [4, 0, 2, 3]], // Mum is in the shower, Dad is in the living room
+
+  'Gone fishing': [() => {
+    rooms.forEach(r => { r.co2 = 450; r.humidity = 45; });
+  }, [-1, -1, -1, -1]],
+
+  'Dinner': [() => {
+    rooms.forEach(r => { r.co2 = 450; r.humidity = 45; });
+    rooms[0].co2 = 900; rooms[0].humidity = 55; // everyone in living room
+  }, [0, 0, 0, 0]],
 };
 const presetsEl = document.getElementById('presets');
-for (const [name, fn] of Object.entries(presets)) {
+for (const [name, [fn, positions]] of Object.entries(presets)) {
   const btn = document.createElement('button');
   btn.textContent = name;
   btn.addEventListener('click', () => {
-    fn();
-    smoothedDemands.fill(0);
-    smoothedFanDemand = 0;
-    updateRoomSliders();
-    for (let j = 0; j < 10; j++) simulate();
+    if (!running) {
+      fn();
+      smoothedDemands.fill(0);
+      smoothedFanDemand = 0;
+      updateRoomSliders(); saveRooms();
+    }
+    placePeople(...positions);
+    renderPeople();
   });
   presetsEl.appendChild(btn);
 }
 
-// Initial run (converge EMA)
-for (let j = 0; j < 10; j++) simulate();
+
+// Simulation loop at 10 Hz
+setInterval(() => {
+  if (running) {
+    for (let i = 0; i < 5; i++) {
+      const airflow = lastFanDemand * lastPositions[i];
+      const occupants = people.filter(p => p.room === i).length; // outside (room=-1) excluded
+      rooms[i].co2      = rooms[i].co2      - airflow * (rooms[i].co2      - outside.co2)      * 0.03 + occupants * 0.5;
+      rooms[i].humidity = rooms[i].humidity - airflow * (rooms[i].humidity - outside.humidity) * 0.03;
+    }
+    updateRoomSliders();
+  }
+  simulate();
+}, 100);
 </script>
 </body>
 </html>
