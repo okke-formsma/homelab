@@ -1,0 +1,4 @@
+substitutions:
+  # Hostname that the valves in this installation poll for fan speed.
+  # Must match the esphome.name of the fan controller below.
+  fan_host: "open-air-mini-garage.local"

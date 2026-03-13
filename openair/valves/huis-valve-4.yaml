@@ -1,6 +1,0 @@
-substitutions:
-  devicename: open-air-valve-huis-4
-  upper_devicename: Open AIR Valve Huis 4
-  fan_host: "open-air-mini-huis.local"
-
-<<: !include Open_AIR_Valve_DIS_SCD40_SGP41.yaml

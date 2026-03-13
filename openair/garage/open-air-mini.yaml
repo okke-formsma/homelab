@@ -1,16 +1,19 @@
 packages:
-  local_mode: !include local_mode_fan.yaml
+  local_mode: !include ../shared/local_mode_fan.yaml
 
 substitutions:
-  # Active valve hostnames for this installation (4 valves).
-  # Slots not listed here default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
-  valve_1_host: "open-air-valve-huis-1.local"
-  valve_2_host: "open-air-valve-huis-2.local"
-  valve_3_host: "open-air-valve-huis-3.local"
-  valve_4_host: "open-air-valve-huis-4.local"
+  # Active valve hostnames for this installation.
+  # Unused slots default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
+  valve_1_host: "open-air-valve-1.local"
+  valve_2_host: "open-air-valve-2.local"
+  valve_3_host: "open-air-valve-3.local"
+  valve_4_host: "open-air-valve-4.local"
+  valve_5_host: "open-air-valve-5.local"
 
 esphome:
-  name: open-air-mini-huis
+  name: open-air-mini-garage
+  includes:
+    - ../shared/local_mode_helpers.h
 
 esp32:
   board: esp32dev
@@ -33,17 +36,10 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   ap:
-    ssid: "Open-AIR-Mini Fallback"
+    ssid: "Open-AIR Garage Fallback"
     password: !secret wifi_ap_password
 
 captive_portal:
-
-i2c:
-  - id: i2c_sensor_1
-    sda: GPIO16
-    scl: GPIO4
-    scan: false
-    frequency: 400kHz
 
 status_led:
   pin:
@@ -68,7 +64,6 @@ sensor:
     unit_of_measurement: "RPM"
     name: "AIR Mini RPM"
     id: open_air_mini_rpm
-    update_interval: 15s
 
   - platform: wifi_signal
     name: "WiFi Signal dB"
@@ -93,18 +88,6 @@ sensor:
     name: "MCU Temperature"
     entity_category: diagnostic
 
-  - platform: sht4x
-    i2c_id: i2c_sensor_1
-    temperature:
-      name: "Temperature"
-      id: air_temperature
-      accuracy_decimals: 2
-    humidity:
-      name: "Humidity"
-      id: air_humidity
-      accuracy_decimals: 2
-    update_interval: 15s
-
 text_sensor:
   - platform: version
     name: "Firmware Version"
@@ -122,20 +105,3 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     entity_category: config
-
-interval:
-  # Kickstart: if fan has power but isn't spinning, briefly boost to overcome
-  # static friction. Prevents burndown from stalled motor with power applied.
-  - interval: 10s
-    then:
-      - if:
-          condition:
-            and:
-              - fan.is_on: fan_motor
-              - lambda: 'return id(open_air_mini_rpm).state < 10;'
-          then:
-            - logger.log: "Fan kickstart: fan is on but RPM near 0, boosting to 20%"
-            - fan.turn_on:
-                id: fan_motor
-                speed: 20
-            - delay: 5s

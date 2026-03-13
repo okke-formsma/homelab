@@ -1,0 +1,16 @@
+# One valve for this installation.
+# Copy this file to your installation directory, rename it (e.g. valve-1.yaml),
+# and fill in devicename / upper_devicename.
+# fan_host comes from config.yaml in the same directory.
+
+substitutions:
+  devicename: open-air-valve-<yourname>-1
+  upper_devicename: Open AIR Valve <Yourname> 1
+
+packages:
+  config: !include config.yaml
+  hardware: !include ../shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml
+
+esphome:
+  includes:
+    - ../shared/local_mode_helpers.h

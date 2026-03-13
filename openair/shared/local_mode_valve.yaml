@@ -1,9 +1,9 @@
-packages:
-  settings: !include ../local_mode_settings.yaml
+# NOTE: esphome.includes is NOT set here. Set it in your valve yaml:
+#   esphome:
+#     includes: [../shared/local_mode_helpers.h]
 
-esphome:
-  includes:
-    - ../local_mode_helpers.h
+packages:
+  settings: !include local_mode_settings.yaml
 
 http_request:
   timeout: 3s

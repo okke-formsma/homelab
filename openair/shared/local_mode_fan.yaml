@@ -5,11 +5,15 @@
 # host) return NAN and are excluded from demand calculation — the system runs
 # on whatever valves are reachable.
 #
-# To configure: set valve_1_host .. valve_7_host in your device yaml.
-# Unused slots default to "0.0.0.0" below — no need to list them.
+# Required substitutions (set in your device yaml):
+#   valve_1_host .. valve_7_host  — hostname or "0.0.0.0" to disable
 #
-# Tuning parameters (co2_target, fan_speed_min, etc.) come from
-# local_mode_settings.yaml, also included below.
+# Unused slots default to "0.0.0.0" in the substitutions block below.
+# Tuning parameters come from local_mode_settings.yaml (included below).
+#
+# NOTE: esphome.includes is NOT set here. Set it in your device yaml:
+#   esphome:
+#     includes: [../shared/local_mode_helpers.h]
 
 packages:
   settings: !include local_mode_settings.yaml
@@ -23,10 +27,6 @@ substitutions:
   valve_5_host: "0.0.0.0"
   valve_6_host: "0.0.0.0"
   valve_7_host: "0.0.0.0"
-
-esphome:
-  includes:
-    - local_mode_helpers.h
 
 http_request:
   timeout: 3s

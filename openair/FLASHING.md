@@ -1,37 +1,38 @@
 # Flashing
 
-## Setup
+## Setup (first time)
 
 ```bash
-# Install ESPHome (managed by uv)
+# Install ESPHome
 uv sync
 
-# First-time secrets (do this once per directory)
-cp secrets.yaml.example secrets.yaml          # fill in WiFi + keys
-cp valves/secrets.yaml.example valves/secrets.yaml
+# Create secrets file (covers all installations — ESPHome searches up from config dir)
+cp secrets.yaml.example secrets.yaml   # fill in WiFi credentials + keys
 ```
 
 ## Flash / update
 
-```bash
-# Fan controllers (from openair/)
-esphome run open-air-mini-garage.yaml
-esphome run open-air-mini-huis.yaml
+Run from the `openair/` directory:
 
-# Valves (from openair/)
-cd valves && esphome run valve1.yaml     # garage valves
-cd valves && esphome run huis-valve-1.yaml  # huis valves
+```bash
+# Fan controllers
+esphome run garage/open-air-mini.yaml
+esphome run huis/open-air-mini.yaml
+
+# Valves
+esphome run garage/valve-1.yaml
+esphome run huis/valve-1.yaml
 ```
 
-Pass `--device <IP>` if mDNS resolution is slow or fails on first flash:
+Pass `--device <IP>` on first flash (before mDNS is set up):
 
 ```bash
-esphome run open-air-mini-garage.yaml --device 192.168.1.x
+esphome run garage/open-air-mini.yaml --device 192.168.x.x
 ```
 
 ## Logs
 
 ```bash
-esphome logs open-air-mini-garage.yaml
-cd valves && esphome logs valve1.yaml
+esphome logs garage/open-air-mini.yaml
+esphome logs garage/valve-1.yaml
 ```

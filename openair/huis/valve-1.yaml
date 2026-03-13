@@ -1,0 +1,11 @@
+substitutions:
+  devicename: open-air-valve-huis-1
+  upper_devicename: Open AIR Valve Huis 1
+
+packages:
+  config: !include config.yaml
+  hardware: !include ../shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml
+
+esphome:
+  includes:
+    - ../shared/local_mode_helpers.h

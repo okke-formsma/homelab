@@ -21,9 +21,3 @@ substitutions:
 
   # Polling interval
   poll_interval: "60s"
-
-  # Fan controller hostname (for valves to poll).
-  # Default points to the garage controller. Override in your valve yaml
-  # to point at a different controller, e.g.:
-  #   fan_host: "open-air-mini-huis.local"
-  fan_host: "open-air-mini-garage.local"

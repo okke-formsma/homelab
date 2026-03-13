@@ -1,10 +1,12 @@
 ## humidity, temperature, CO2, VOC, NOx sensors
 #
-## Put in substitutions and then import this file.
+## Put in substitutions and then import this file:
 # substitutions:
 #   devicename: open-air-valve-1
 #   upper_devicename: Open AIR Valve 1
-# !include Open_AIR_Valve_DIS_SCD40_SGP41.yaml
+#   fan_host: "open-air-mini-<name>.local"
+# packages:
+#   hardware: !include ../shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml
 
 packages:
   local_mode: !include local_mode_valve.yaml
@@ -299,12 +301,6 @@ valve:
     id: air_valve
     name: "Valve"
     has_position: true
-
-    # HA semantics:
-    # - position==0   => Closed
-    # - position==1   => Open (fully open)
-    # - (0,1)         => Partially open
-    # - current_operation only indicates motion (opening/closing/idle)
 
     open_action:
       - lambda: |-

@@ -1,17 +1,20 @@
+# Fan controller for one installation.
+# Copy this file to your installation directory (e.g. myhouse/) and fill in the valve hostnames.
+# Also create config.yaml with fan_host set to this controller's hostname.
+
 packages:
-  local_mode: !include local_mode_fan.yaml
+  local_mode: !include ../shared/local_mode_fan.yaml
 
 substitutions:
-  # Active valve hostnames for this installation.
-  # Slots not listed here default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
+  # Set one line per active valve. Unused slots default to "0.0.0.0" (disabled).
   valve_1_host: "open-air-valve-1.local"
   valve_2_host: "open-air-valve-2.local"
-  valve_3_host: "open-air-valve-3.local"
-  valve_4_host: "open-air-valve-4.local"
-  valve_5_host: "open-air-valve-5.local"
+  # valve_3_host: "0.0.0.0"   # uncomment and fill in to add more valves (up to 7)
 
 esphome:
-  name: open-air-mini-garage
+  name: open-air-mini-<yourname>     # must match fan_host in config.yaml (without .local)
+  includes:
+    - ../shared/local_mode_helpers.h
 
 esp32:
   board: esp32dev
@@ -34,7 +37,7 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   ap:
-    ssid: "Open-AIR-Mini Fallback"
+    ssid: "Open-AIR Fallback"
     password: !secret wifi_ap_password
 
 captive_portal:
