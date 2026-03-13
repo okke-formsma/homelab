@@ -40,7 +40,20 @@ interval:
                   then:
                     - lambda: |-
                         ESP_LOGD("poll", "Response: %s", body.c_str());
-                        id(current_fan_speed) = parse_sensor_value(body, response->status_code);
+                        if (response->status_code != 200) {
+                          ESP_LOGW("poll", "HTTP error %d", response->status_code);
+                          id(current_fan_speed) = NAN;
+                          return;
+                        }
+                        auto p = body.find("\"speed_level\":");
+                        if (p == std::string::npos) {
+                          ESP_LOGW("poll", "No 'speed_level' field in response");
+                          id(current_fan_speed) = NAN;
+                          return;
+                        }
+                        float v = atof(body.c_str() + p + 14);
+                        ESP_LOGD("poll", "Fan speed_level: %.0f", v);
+                        id(current_fan_speed) = v;
             # Compute demand and set valve position
             - lambda: |-
                 const float CO2_TARGET = ${co2_target};

@@ -1,0 +1,10 @@
+substitutions:
+  # Default valve hostnames: "0.0.0.0" means disabled/skipped.
+  # Override these in your installation's config.yaml.
+  valve_1_host: "0.0.0.0"
+  valve_2_host: "0.0.0.0"
+  valve_3_host: "0.0.0.0"
+  valve_4_host: "0.0.0.0"
+  valve_5_host: "0.0.0.0"
+  valve_6_host: "0.0.0.0"
+  valve_7_host: "0.0.0.0"

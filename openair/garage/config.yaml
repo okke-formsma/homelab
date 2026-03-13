@@ -1,3 +1,6 @@
+packages:
+  defaults: !include ../shared/local_mode_defaults.yaml
+
 substitutions:
   # Name of this fan controller. Used as ESPHome device name and mDNS hostname.
   # Must match fan_host below (without .local).
@@ -8,10 +11,6 @@ substitutions:
   fan_host: "${device_name}.local"
 
   # Active valve hostnames for this installation.
-  # Unused slots default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
-  # 
-  # valve_1_host: "garage-valve-1.local"
-  # valve_2_host: "garage-valve-2.local"
+  # Overrides defaults from local_mode_defaults.yaml.
   valve_3_host: "garage-valve-3.local"
   valve_4_host: "garage-valve-4.local"
-  # valve_5_host: "garage-valve-5.local"
