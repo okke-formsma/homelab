@@ -72,6 +72,11 @@ The system controls RPM/PWM percentage, not actual airflow (m³/h). Fan speed do
 ### 4. Threshold-only, no hysteresis on CO2
 Humidity control in `open-air-mini-huis.yaml` has a 20-minute hold timer to prevent cycling. The openair local mode has no such hysteresis — it can oscillate between levels every 60 seconds if readings hover around a threshold.
 
+### 6. Valve hunting near setpoint
+When CO2 hovers near the target (e.g. 600 ppm), demand flickers between 0 and a tiny positive value. The valve position formula computes `ratio = room_demand / fan_demand` — when both are near zero, this division is numerically unstable and valves oscillate between fully open and minimum every cycle. This was discovered via the simulator.
+
+**Fix:** apply a dead band. When `fan_demand < 5%`, skip the ratio calculation and open all valves fully. This distributes air evenly when there is no meaningful demand signal, and eliminates hunting. Implemented in `local_mode_valve.yaml` and configurable via `dead_band` in `local_mode_settings.yaml`.
+
 ### 5. No error resilience for unreachable valves
 If a valve is unreachable (HTTP timeout/error), `update_worst_value` silently ignores it. This means a permanently unreachable valve is treated as "everything is fine" (CO2=0) rather than triggering a safe fallback.
 
@@ -113,6 +118,9 @@ substitutions:
   # Valve position range
   valve_pos_min: "0.05"    # keep slightly open for sensor freshness
   valve_pos_max: "1.0"     # fully open
+
+  # Dead band: below this fan demand, all valves open fully (prevents hunting near setpoint)
+  dead_band: "0.05"
 
   # Smoothing (EMA alpha: 0=ignore new, 1=no smoothing)
   smoothing_alpha: "0.7"
@@ -175,14 +183,18 @@ float demand = max(co2_demand, hum_demand);
 // Normalize fan speed to a demand value (0-1)
 float fan_demand = clamp((fan_speed - FAN_SPEED_MIN) / (FAN_SPEED_MAX - FAN_SPEED_MIN), 0.0f, 1.0f);
 
-// Ratio: how much of the fan's effort is for this room?
-// If this room is driving the fan → ratio ≈ 1.0 → stay open
-// If another room is driving the fan → ratio < 1.0 → close down
-float ratio = (fan_demand > 0.0f) ? (demand / fan_demand) : 1.0f;
-ratio = clamp(ratio, 0.0f, 1.0f);
-
-// Prefer staying open (bias towards open to limit noise from frequent repositioning)
-float position = VALVE_POS_MIN + ratio * (VALVE_POS_MAX - VALVE_POS_MIN);
+if (fan_demand < DEAD_BAND) {
+  // Dead band: no meaningful demand signal — open all valves fully.
+  // Prevents hunting when CO2/humidity hover near the target (both demand
+  // and fan_demand near zero → ratio = 0/0 → unstable).
+  position = VALVE_POS_MAX;
+} else {
+  // Ratio: how much of the fan's effort is for this room?
+  // If this room is driving the fan → ratio ≈ 1.0 → stay open
+  // If another room is driving the fan → ratio < 1.0 → close down
+  float ratio = clamp(demand / fan_demand, 0.0f, 1.0f);
+  position = VALVE_POS_MIN + ratio * (VALVE_POS_MAX - VALVE_POS_MIN);
+}
 ```
 
 This naturally balances airflow: rooms with high demand stay wide open while rooms that don't need the air close down, redirecting flow where it's needed. Assuming linearity throughout.

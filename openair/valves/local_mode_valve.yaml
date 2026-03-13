@@ -48,6 +48,7 @@ interval:
                 const float POS_MIN = ${valve_pos_min};
                 const float POS_MAX = ${valve_pos_max};
                 const float ALPHA = ${smoothing_alpha};
+                const float DEAD_BAND = ${dead_band};
 
                 float co2 = id(air_Co2).state;
                 float hum = id(air_humidity).state;
@@ -65,17 +66,22 @@ interval:
                 float fan_speed = id(current_fan_speed);
                 float position;
                 if (std::isnan(fan_speed) || fan_speed <= 0.0f) {
-                  // Can't reach fan controller — use demand directly
-                  position = POS_MIN + smoothed * (POS_MAX - POS_MIN);
-                  ESP_LOGW("local_mode", "Fan unreachable, using demand directly");
+                  // Can't reach fan controller — open fully as safe default
+                  position = POS_MAX;
+                  ESP_LOGW("local_mode", "Fan unreachable, defaulting to fully open");
                 } else {
-                  // Normalize fan speed to demand scale
+                  // Normalize fan speed to demand scale (0-1)
                   float fan_demand = std::max(0.0f, std::min(1.0f,
                     (fan_speed - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)));
-                  // Ratio: close down if fan is running harder than this room needs
-                  float ratio = (fan_demand > 0.0f) ? (smoothed / fan_demand) : 1.0f;
-                  ratio = std::max(0.0f, std::min(1.0f, ratio));
-                  position = POS_MIN + ratio * (POS_MAX - POS_MIN);
+                  if (fan_demand < DEAD_BAND) {
+                    // Dead band: no meaningful demand signal, open all valves fully
+                    // to distribute air evenly and prevent hunting near the setpoint
+                    position = POS_MAX;
+                  } else {
+                    // Ratio: close down if fan is running harder than this room needs
+                    float ratio = std::max(0.0f, std::min(1.0f, smoothed / fan_demand));
+                    position = POS_MIN + ratio * (POS_MAX - POS_MIN);
+                  }
                 }
 
                 ESP_LOGI("local_mode", "CO2=%.0f hum=%.1f%% demand=%.2f smoothed=%.2f fan=%.0f%% -> pos=%.2f",

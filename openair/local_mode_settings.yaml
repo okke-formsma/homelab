@@ -13,6 +13,9 @@ substitutions:
   valve_pos_min: "0.05"    # keep slightly open for sensor freshness
   valve_pos_max: "1.0"     # fully open
 
+  # Dead band: below this fan demand, all valves open fully (prevents hunting near setpoint)
+  dead_band: "0.05"
+
   # Smoothing (EMA alpha: higher = more weight on new value)
   smoothing_alpha: "0.7"
 

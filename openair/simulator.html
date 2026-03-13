@@ -87,7 +87,7 @@
 <body>
 
 <h1>OpenAIR Local Mode Simulator</h1>
-<p class="subtitle">Drag CO2 and humidity sliders to see how the fan and valves respond</p>
+<p class="subtitle">Move people between rooms and watch how the fan and valves respond</p>
 
 <div class="layout">
   <div class="top-row">
@@ -120,15 +120,15 @@
     <div class="explain-grid">
       <div class="explain-step">
         <div class="explain-title">Rooms &amp; sliders</div>
-        <p>Each room has a CO₂ and humidity slider. Drag them to simulate different air quality conditions. The <em>All</em> slider moves all rooms at once. Use <em>Presets</em> to jump to realistic scenarios like sleeping or dinner. The <em>Outside</em> card sets incoming air quality.</p>
+        <p>Each room has a CO₂ slider (or humidity in the Bathroom). Drag them to manually set air quality. Use <em>Presets</em> to jump to realistic scenarios like sleeping or dinner. The <em>Outside</em> card sets the incoming air quality used by the ventilator.</p>
       </div>
       <div class="explain-step">
         <div class="explain-title">People &amp; CO₂</div>
-        <p>Drag the family avatars (👩 👨 🧒 👧) between rooms. Each person in a room slowly raises CO₂ when the ventilator is running. People outside don't affect air quality. In the <em>Bathroom</em>, hit <em>🚿 Shower</em> to spike humidity to 85%.</p>
+        <p>Drag the family avatars (👩 👨 🧒 👧) between rooms. Each person slowly raises the CO₂ in their room. People outside don't affect air quality. In the <em>Bathroom</em>, hit <em>🚿 Shower</em> to spike humidity to 85%.</p>
       </div>
       <div class="explain-step">
         <div class="explain-title">Ventilator &amp; valves</div>
-        <p>Press <em>Start ventilator</em> to run the simulation in real time. Each room's demand (0–1) is <code>max(CO₂ demand, humidity demand)</code>, EMA-smoothed. Fan speed follows the worst room. Valves open proportionally to each room's demand — bad rooms get fresh air first, good rooms get the minimum.</p>
+        <p>The simulation runs continuously. Each room's demand (0–1) is <code>max(CO₂ demand, humidity demand)</code>, EMA-smoothed. Fan speed follows the worst room. Valves open proportionally to each room's demand — bad rooms get fresh air first, good rooms get the minimum.</p>
       </div>
     </div>
     <hr class="divider" style="margin: 14px 0;">
@@ -144,7 +144,7 @@
       </div>
       <div class="explain-step">
         <div class="explain-title">3. Valve positions</div>
-        <p>Each valve opens proportionally to its room's demand relative to the fan's normalised demand: <code>valve = valve_min + (room_demand / fan_demand) × (valve_max − valve_min)</code>. Rooms that caused the fan to spin up get fully open valves; rooms with low demand get the minimum opening.</p>
+        <p>Each valve opens proportionally to its room's demand relative to the fan's normalised demand: <code>valve = valve_min + (room_demand / fan_demand) × (valve_max − valve_min)</code>. Rooms that caused the fan to spin up get fully open valves; rooms with low demand get the minimum opening. A <em>dead band</em> (fan demand &lt; 5%) opens all valves fully to distribute air evenly and prevent hunting near the setpoint.</p>
       </div>
     </div>
   </div>
@@ -256,7 +256,8 @@ function simulate() {
 
   const fanDemandNorm = clamp((fanSpeed - S.fan_speed_min) / (S.fan_speed_max - S.fan_speed_min), 0, 1);
   const positions = demands.map(d => {
-    const ratio = fanDemandNorm > 0 ? clamp(d / fanDemandNorm, 0, 1) : 1;
+    if (fanDemandNorm < 0.05) return S.valve_pos_max; // dead band: all valves open when no demand
+    const ratio = clamp(d / fanDemandNorm, 0, 1);
     return S.valve_pos_min + ratio * (S.valve_pos_max - S.valve_pos_min);
   });
 
@@ -493,7 +494,7 @@ const presets = {
     rooms[2].co2 = 650; rooms[2].humidity = 50;
     rooms[3].co2 = 620; rooms[3].humidity = 49;
     rooms[BATHROOM_IDX].humidity = 85; updateRoomSliders(); // shower just turned on
-  }, [4, 0, 2, 3]], // Mum is in the shower, Dad is in the living room
+  }, [4, 0, 2, 3], () => { rooms[BATHROOM_IDX].humidity = 85; updateRoomSliders(); }], // Mum is in the shower, Dad is in the living room
 
   'Gone fishing': [() => {
     rooms.forEach(r => { r.co2 = 450; r.humidity = 45; });
@@ -505,7 +506,7 @@ const presets = {
   }, [0, 0, 0, 0]],
 };
 const presetsEl = document.getElementById('presets');
-for (const [name, [fn, positions]] of Object.entries(presets)) {
+for (const [name, [fn, positions, always]] of Object.entries(presets)) {
   const btn = document.createElement('button');
   btn.textContent = name;
   btn.addEventListener('click', () => {
@@ -515,6 +516,7 @@ for (const [name, [fn, positions]] of Object.entries(presets)) {
       smoothedFanDemand = 0;
       updateRoomSliders(); saveRooms();
     }
+    if (always) always();
     placePeople(...positions);
     renderPeople();
   });
