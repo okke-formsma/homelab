@@ -31,19 +31,19 @@ Each installation directory contains:
 
 ## Setting up a new installation
 
-### 0. Secrets
-
-Create `secrets.yaml` at the `openair/` root if it doesn't exist yet (ESPHome searches parent directories, so one file covers every installation):
-
-```bash
-cp secrets.yaml.example secrets.yaml
-# edit secrets.yaml with your WiFi credentials and OTA password
-```
-
-### 1. Create a directory
+### 0. Create a directory
 
 ```bash
 mkdir myhouse
+```
+
+### 1. Secrets
+
+Copy `secrets.yaml` into your installation directory (ESPHome only looks for it next to the config being compiled):
+
+```bash
+cp secrets.yaml.example myhouse/secrets.yaml
+# edit with your WiFi credentials and OTA password
 ```
 
 ### 2. Create `myhouse/config.yaml`

@@ -9,8 +9,8 @@ substitutions:
 
   # Active valve hostnames for this installation.
   # Unused slots default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
-  valve_1_host: "open-air-valve-1.local"
-  valve_2_host: "open-air-valve-2.local"
-  valve_3_host: "open-air-valve-3.local"
-  valve_4_host: "open-air-valve-4.local"
-  valve_5_host: "open-air-valve-5.local"
+  valve_1_host: "garage-valve-1.local"
+  valve_2_host: "garage-valve-2.local"
+  valve_3_host: "garage-valve-3.local"
+  valve_4_host: "garage-valve-4.local"
+  valve_5_host: "garage-valve-5.local"

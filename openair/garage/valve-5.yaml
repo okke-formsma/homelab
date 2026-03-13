@@ -1,6 +1,6 @@
 substitutions:
-  devicename: open-air-valve-5
-  upper_devicename: Open AIR Valve 5
+  devicename: garage-valve-5
+  upper_devicename: Garage Valve 5
 
 packages:
   config: !include config.yaml

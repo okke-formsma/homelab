@@ -1,3 +1,7 @@
 .esphome/
 .venv/
 secrets.yaml
+# ESPHome auto-generates .gitignore files next to compiled configs
+garage/.gitignore
+huis/.gitignore
+example/.gitignore

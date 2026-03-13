@@ -10,7 +10,6 @@ packages:
 
 esphome:
   name: ${devicename}
-  name_add_mac_suffix: true
   on_boot:
     - priority: 700
       then:
