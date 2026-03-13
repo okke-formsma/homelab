@@ -7,6 +7,8 @@ substitutions:
 
 esphome:
   name: open-air-mini-garage
+  includes:
+    - offline_helpers.h
 
 esp32:
   board: esp32dev
@@ -141,110 +143,60 @@ interval:
                 url: "http://${valve_1_host}/sensor/air_co2"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_co2)) id(offline_worst_co2) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_co2), body, status_code);'
             - http_request.get:
                 url: "http://${valve_1_host}/sensor/air_humidity"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_humidity)) id(offline_worst_humidity) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_humidity), body, status_code);'
 
             # Valve 2
             - http_request.get:
                 url: "http://${valve_2_host}/sensor/air_co2"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_co2)) id(offline_worst_co2) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_co2), body, status_code);'
             - http_request.get:
                 url: "http://${valve_2_host}/sensor/air_humidity"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_humidity)) id(offline_worst_humidity) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_humidity), body, status_code);'
 
             # Valve 3
             - http_request.get:
                 url: "http://${valve_3_host}/sensor/air_co2"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_co2)) id(offline_worst_co2) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_co2), body, status_code);'
             - http_request.get:
                 url: "http://${valve_3_host}/sensor/air_humidity"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_humidity)) id(offline_worst_humidity) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_humidity), body, status_code);'
 
             # Valve 4
             - http_request.get:
                 url: "http://${valve_4_host}/sensor/air_co2"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_co2)) id(offline_worst_co2) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_co2), body, status_code);'
             - http_request.get:
                 url: "http://${valve_4_host}/sensor/air_humidity"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_humidity)) id(offline_worst_humidity) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_humidity), body, status_code);'
 
             # Valve 5
             - http_request.get:
                 url: "http://${valve_5_host}/sensor/air_co2"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_co2)) id(offline_worst_co2) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_co2), body, status_code);'
             - http_request.get:
                 url: "http://${valve_5_host}/sensor/air_humidity"
                 on_response:
                   then:
-                    - lambda: |-
-                        if (status_code != 200) return;
-                        auto p = body.find("\"value\":");
-                        if (p == std::string::npos) return;
-                        float v = atof(body.c_str() + p + 8);
-                        if (v > 0 && v > id(offline_worst_humidity)) id(offline_worst_humidity) = v;
+                    - lambda: 'update_worst_value(id(offline_worst_humidity), body, status_code);'
 
             # Set fan speed based on worst values
             - lambda: |-
