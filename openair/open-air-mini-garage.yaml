@@ -1,3 +1,6 @@
+packages:
+  settings: !include local_mode_settings.yaml
+
 substitutions:
   valve_1_host: VALVE_1_HOSTNAME
   valve_2_host: VALVE_2_HOSTNAME
@@ -15,15 +18,12 @@ esp32:
   framework:
     type: esp-idf
 
-# Enable logging
 logger:
   level: DEBUG
 
-# This is optional and can be commented out to disable the Web Server
 web_server:
   port: 80
 
-# Enable Home Assistant API
 api:
 
 ota:
@@ -33,8 +33,6 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Open-AIR-Mini Fallback"
     password: "ChangeMe@123!"
@@ -45,22 +43,25 @@ http_request:
   timeout: 3s
 
 globals:
-  # Local mode valve polling: worst sensor values seen across all valves
-  - id: local_worst_co2
-    type: float
+  # Per-valve sensor readings (CO2 and humidity)
+  - id: valve_co2
+    type: float[5]
     restore_value: no
-    initial_value: "0.0"
-  - id: local_worst_humidity
+    initial_value: "{NAN, NAN, NAN, NAN, NAN}"
+  - id: valve_humidity
+    type: float[5]
+    restore_value: no
+    initial_value: "{NAN, NAN, NAN, NAN, NAN}"
+  # Smoothed fan demand
+  - id: smoothed_fan_demand
     type: float
     restore_value: no
     initial_value: "0.0"
 
-# Status led
 status_led:
   pin:
     number: GPIO33
 
-#PWM output for controlling the motor.
 output:
   - platform: ledc
     pin: GPIO15
@@ -81,13 +82,13 @@ sensor:
     name: "AIR Mini RPM"
     id: open_air_mini_rpm
 
-  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+  - platform: wifi_signal
     name: "WiFi Signal dB"
     id: wifi_signal_db
     update_interval: 60s
     entity_category: "diagnostic"
 
-  - platform: copy # Reports the WiFi signal strength in %
+  - platform: copy
     source_id: wifi_signal_db
     name: "WiFi Signal Percent"
     filters:
@@ -123,9 +124,8 @@ switch:
     entity_category: config
 
 interval:
-  # Local mode: poll all valve sensors and control fan based on worst reading.
-  # Update valve_x_host substitutions at the top of the file.
-  - interval: 60s
+  # Local mode: poll all valve sensors and control fan based on continuous demand.
+  - interval: ${poll_interval}
     then:
       - if:
           condition:
@@ -134,88 +134,112 @@ interval:
                   api.connected:
               - switch.is_on: local_mode
           then:
-            - lambda: |-
-                id(local_worst_co2) = 0.0f;
-                id(local_worst_humidity) = 0.0f;
-
-            # Valve 1
+            # Poll valve 1
             - http_request.get:
                 url: "http://${valve_1_host}/sensor/CO2"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
+                    - lambda: 'id(valve_co2)[0] = parse_sensor_value(body, status_code);'
             - http_request.get:
                 url: "http://${valve_1_host}/sensor/Humidity"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
+                    - lambda: 'id(valve_humidity)[0] = parse_sensor_value(body, status_code);'
 
-            # Valve 2
+            # Poll valve 2
             - http_request.get:
                 url: "http://${valve_2_host}/sensor/CO2"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
+                    - lambda: 'id(valve_co2)[1] = parse_sensor_value(body, status_code);'
             - http_request.get:
                 url: "http://${valve_2_host}/sensor/Humidity"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
+                    - lambda: 'id(valve_humidity)[1] = parse_sensor_value(body, status_code);'
 
-            # Valve 3
+            # Poll valve 3
             - http_request.get:
                 url: "http://${valve_3_host}/sensor/CO2"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
+                    - lambda: 'id(valve_co2)[2] = parse_sensor_value(body, status_code);'
             - http_request.get:
                 url: "http://${valve_3_host}/sensor/Humidity"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
+                    - lambda: 'id(valve_humidity)[2] = parse_sensor_value(body, status_code);'
 
-            # Valve 4
+            # Poll valve 4
             - http_request.get:
                 url: "http://${valve_4_host}/sensor/CO2"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
+                    - lambda: 'id(valve_co2)[3] = parse_sensor_value(body, status_code);'
             - http_request.get:
                 url: "http://${valve_4_host}/sensor/Humidity"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
+                    - lambda: 'id(valve_humidity)[3] = parse_sensor_value(body, status_code);'
 
-            # Valve 5
+            # Poll valve 5
             - http_request.get:
                 url: "http://${valve_5_host}/sensor/CO2"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
+                    - lambda: 'id(valve_co2)[4] = parse_sensor_value(body, status_code);'
             - http_request.get:
                 url: "http://${valve_5_host}/sensor/Humidity"
                 on_response:
                   then:
-                    - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
+                    - lambda: 'id(valve_humidity)[4] = parse_sensor_value(body, status_code);'
 
-            # Set fan speed based on worst values
+            # Compute per-valve demand, aggregate, and set fan speed
             - lambda: |-
-                float co2 = id(local_worst_co2);
-                float hum = id(local_worst_humidity);
-                ESP_LOGI("local_mode", "Worst values — CO2: %.0f ppm, humidity: %.1f%%", co2, hum);
-                int speed;
-                if (co2 > 1500.0f || hum > 75.0f) {
-                  speed = 70;
-                  ESP_LOGI("local_mode", "Level: high (CO2>1500 or hum>75) → fan %d%%", speed);
-                } else if (co2 > 900.0f || hum > 65.0f) {
-                  speed = 40;
-                  ESP_LOGI("local_mode", "Level: medium (CO2>900 or hum>65) → fan %d%%", speed);
-                } else {
-                  speed = 15;
-                  ESP_LOGI("local_mode", "Level: low → fan %d%%", speed);
+                const float CO2_TARGET = ${co2_target};
+                const float CO2_MAX = ${co2_max};
+                const float HUM_TARGET = ${humidity_target};
+                const float HUM_MAX = ${humidity_max};
+                const float SPEED_MIN = ${fan_speed_min};
+                const float SPEED_MAX = ${fan_speed_max};
+                const float ALPHA = ${smoothing_alpha};
+
+                float max_demand = 0.0f;
+                float total_demand = 0.0f;
+                int active_valves = 0;
+
+                for (int i = 0; i < 5; i++) {
+                  float co2_d = compute_demand(id(valve_co2)[i], CO2_TARGET, CO2_MAX);
+                  float hum_d = compute_demand(id(valve_humidity)[i], HUM_TARGET, HUM_MAX);
+                  float d = std::max(co2_d, hum_d);
+
+                  ESP_LOGD("local_mode", "Valve %d: CO2=%.0f hum=%.1f%% demand=%.2f",
+                           i + 1,
+                           std::isnan(id(valve_co2)[i]) ? -1.0f : id(valve_co2)[i],
+                           std::isnan(id(valve_humidity)[i]) ? -1.0f : id(valve_humidity)[i],
+                           d);
+
+                  if (!std::isnan(id(valve_co2)[i]) || !std::isnan(id(valve_humidity)[i])) {
+                    active_valves++;
+                    total_demand += d;
+                    if (d > max_demand) max_demand = d;
+                  }
                 }
+
+                // Fan factor: at least serve the neediest room, scale up for multiple
+                float fan_demand = (active_valves > 0)
+                  ? std::max(max_demand, total_demand / (float)active_valves)
+                  : 0.0f;
+
+                // Apply EMA smoothing
+                id(smoothed_fan_demand) = ema(id(smoothed_fan_demand), fan_demand, ALPHA);
+                float smoothed = id(smoothed_fan_demand);
+
+                int speed = (int)(SPEED_MIN + smoothed * (SPEED_MAX - SPEED_MIN));
+                ESP_LOGI("local_mode", "Demand: max=%.2f total=%.2f active=%d fan_demand=%.2f smoothed=%.2f -> fan %d%%",
+                         max_demand, total_demand, active_valves, fan_demand, smoothed, speed);
+
                 auto call = id(fan_motor).make_call();
                 call.set_speed(speed);
                 call.set_state(true);
                 call.perform();
-

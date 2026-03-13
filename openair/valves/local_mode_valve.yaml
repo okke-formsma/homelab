@@ -1,0 +1,86 @@
+packages:
+  settings: !include ../local_mode_settings.yaml
+
+esphome:
+  includes:
+    - ../local_mode_helpers.h
+
+http_request:
+  timeout: 3s
+
+globals:
+  - id: smoothed_demand
+    type: float
+    restore_value: no
+    initial_value: "0.0"
+  - id: current_fan_speed
+    type: float
+    restore_value: no
+    initial_value: "NAN"
+
+interval:
+  # ---------- LOCAL MODE VALVE CONTROL ----------
+  - interval: ${poll_interval}
+    then:
+      - if:
+          condition:
+            and:
+              - or:
+                  - not:
+                      api.connected:
+                  - switch.is_on: local_mode
+              - lambda: 'return !id(homing_in_progress);'
+          then:
+            # Read fan speed from openair controller
+            - http_request.get:
+                url: "http://${fan_host}/fan/Open AIR Mini"
+                on_response:
+                  then:
+                    - lambda: 'id(current_fan_speed) = parse_sensor_value(body, status_code);'
+            # Compute demand and set valve position
+            - lambda: |-
+                const float CO2_TARGET = ${co2_target};
+                const float CO2_MAX = ${co2_max};
+                const float HUM_TARGET = ${humidity_target};
+                const float HUM_MAX = ${humidity_max};
+                const float SPEED_MIN = ${fan_speed_min};
+                const float SPEED_MAX = ${fan_speed_max};
+                const float POS_MIN = ${valve_pos_min};
+                const float POS_MAX = ${valve_pos_max};
+                const float ALPHA = ${smoothing_alpha};
+
+                float co2 = id(air_Co2).state;
+                float hum = id(air_humidity).state;
+
+                // Compute this valve's demand
+                float co2_d = compute_demand(co2, CO2_TARGET, CO2_MAX);
+                float hum_d = compute_demand(hum, HUM_TARGET, HUM_MAX);
+                float demand = std::max(co2_d, hum_d);
+
+                // Apply EMA smoothing
+                id(smoothed_demand) = ema(id(smoothed_demand), demand, ALPHA);
+                float smoothed = id(smoothed_demand);
+
+                // Compute position using fan speed ratio
+                float fan_speed = id(current_fan_speed);
+                float position;
+                if (std::isnan(fan_speed) || fan_speed <= 0.0f) {
+                  // Can't reach fan controller — use demand directly
+                  position = POS_MIN + smoothed * (POS_MAX - POS_MIN);
+                  ESP_LOGW("local_mode", "Fan unreachable, using demand directly");
+                } else {
+                  // Normalize fan speed to demand scale
+                  float fan_demand = std::max(0.0f, std::min(1.0f,
+                    (fan_speed - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)));
+                  // Ratio: close down if fan is running harder than this room needs
+                  float ratio = (fan_demand > 0.0f) ? (smoothed / fan_demand) : 1.0f;
+                  ratio = std::max(0.0f, std::min(1.0f, ratio));
+                  position = POS_MIN + ratio * (POS_MAX - POS_MIN);
+                }
+
+                ESP_LOGI("local_mode", "CO2=%.0f hum=%.1f%% demand=%.2f smoothed=%.2f fan=%.0f%% -> pos=%.2f",
+                         co2, hum, demand, smoothed, fan_speed, position);
+
+                auto call = id(air_valve).make_call();
+                call.set_position(position);
+                call.perform();

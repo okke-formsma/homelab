@@ -1,0 +1,23 @@
+substitutions:
+  # Sensor targets (below these = no demand)
+  co2_target: "600"        # ppm - outdoor baseline
+  co2_max: "1500"          # ppm - full demand
+  humidity_target: "60"    # % - comfortable baseline
+  humidity_max: "75"       # % - full demand
+
+  # Fan speed range
+  fan_speed_min: "15"      # % - always-on minimum
+  fan_speed_max: "70"      # % - maximum speed
+
+  # Valve position range
+  valve_pos_min: "0.05"    # keep slightly open for sensor freshness
+  valve_pos_max: "1.0"     # fully open
+
+  # Smoothing (EMA alpha: higher = more weight on new value)
+  smoothing_alpha: "0.7"
+
+  # Polling interval
+  poll_interval: "60s"
+
+  # Fan controller hostname (for valves to poll)
+  fan_host: "open-air-mini-garage.local"
