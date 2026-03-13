@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAIR Local Mode Simulator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
+  h1 { text-align: center; margin-bottom: 6px; font-size: 1.4em; color: #fff; }
+  .subtitle { text-align: center; color: #888; font-size: 0.85em; margin-bottom: 20px; }
+
+  .layout { display: flex; flex-direction: column; gap: 16px; max-width: 1000px; margin: 0 auto; }
+  .top-row { display: flex; gap: 16px; align-items: start; }
+  .top-row > .card { flex: 1; }
+  .rooms-row { display: flex; gap: 10px; justify-content: center; }
+
+  .card { background: #16213e; border-radius: 10px; padding: 16px; border: 1px solid #0f3460; }
+  .card h2 { font-size: 1em; margin-bottom: 10px; color: #a8b8d8; }
+
+  .room { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 120px; min-width: 90px; flex: 1; padding: 12px 10px; }
+  .room-name { font-weight: 600; font-size: 0.9em; color: #e0e0e0; }
+  .room label { font-size: 0.75em; color: #8899aa; margin-top: 4px; }
+  .room input[type=range] { writing-mode: vertical-lr; direction: rtl; height: 120px; width: 28px; accent-color: #4a9eff; }
+  .room .val { font-size: 0.8em; font-variant-numeric: tabular-nums; text-align: center; color: #c0c8d8; }
+  .room.master { border-color: #4a9eff; background: #162850; flex-direction: column; max-width: 120px; min-width: 90px; gap: 0; align-items: center; padding: 12px 10px; }
+  .room.master .master-sliders { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .room.master .room-name { color: #4a9eff; }
+  .room.master input[type=range] { accent-color: #e8a735; }
+
+  .presets-card { border-color: #7a5adf; background: #1a1630; }
+  .presets-card h2 { color: #b8a0f0; }
+
+  .fan-display { text-align: center; }
+  .fan-speed-value { font-size: 2.8em; font-weight: 700; color: #4a9eff; line-height: 1.1; }
+  .fan-speed-label { font-size: 0.8em; color: #8899aa; margin-top: 2px; }
+  .fan-bar-wrap { margin-top: 10px; background: #0a0f1e; border-radius: 6px; height: 18px; overflow: hidden; }
+  .fan-bar { height: 100%; border-radius: 6px; transition: width 0.3s, background 0.3s; }
+
+  .valve-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .valve-label { width: 60px; font-size: 0.85em; color: #8899aa; }
+  .valve-bar-wrap { flex: 1; background: #0a0f1e; border-radius: 4px; height: 14px; overflow: hidden; }
+  .valve-bar { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; }
+  .valve-pct { width: 40px; font-size: 0.8em; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .demand-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .demand-label { width: 60px; font-size: 0.8em; color: #667; }
+  .demand-bar-wrap { flex: 1; background: #0a0f1e; border-radius: 4px; height: 8px; overflow: hidden; }
+  .demand-bar { height: 100%; border-radius: 4px; background: #e8a735; }
+  .demand-val { width: 40px; font-size: 0.75em; text-align: right; color: #998; font-variant-numeric: tabular-nums; }
+
+  .settings-grid { display: grid; grid-template-columns: auto 1fr 44px; gap: 4px 8px; align-items: center; }
+  .settings-grid label { font-size: 0.8em; color: #8899aa; white-space: nowrap; }
+  .settings-grid input[type=range] { width: 100%; accent-color: #4a9eff; }
+  .settings-grid .s-val { font-size: 0.8em; text-align: right; color: #c0c8d8; font-variant-numeric: tabular-nums; }
+
+  .divider { border: none; border-top: 1px solid #0f3460; margin: 8px 0; }
+
+  .explain { border-color: #1e3a1e; background: #101810; }
+  .explain h2 { color: #7ab87a; }
+  .explain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 4px; }
+  .explain-step { font-size: 0.82em; color: #a0b0a0; line-height: 1.5; }
+  .explain-title { font-weight: 600; color: #9ad09a; margin-bottom: 4px; }
+  .explain-step code { background: #0a140a; border-radius: 3px; padding: 1px 4px; font-size: 0.95em; color: #c8e8c8; }
+  .explain-step em { color: #c0d8c0; font-style: normal; font-weight: 500; }
+
+  #defaults-btn { margin-top: 10px; background: #0f3460; border: none; color: #a8b8d8; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75em; }
+  #defaults-btn:hover { background: #1a4a80; color: #fff; }
+
+  .presets { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+  .presets button { background: #0f3460; border: none; color: #a8b8d8; padding: 4px 6px; border-radius: 4px; cursor: pointer; font-size: 0.7em; white-space: nowrap; }
+  .presets button:hover { background: #1a4a80; color: #fff; }
+</style>
+</head>
+<body>
+
+<h1>OpenAIR Local Mode Simulator</h1>
+<p class="subtitle">Drag CO2 and humidity sliders to see how the fan and valves respond</p>
+
+<div class="layout">
+  <div class="top-row">
+    <div class="card">
+      <h2>Settings</h2>
+      <div class="settings-grid" id="settings"></div>
+      <button id="defaults-btn">Defaults</button>
+    </div>
+    <div class="card fan-display">
+      <h2>Fan</h2>
+      <div class="fan-speed-value" id="fan-speed">15%</div>
+      <div class="fan-speed-label">speed</div>
+      <div class="fan-bar-wrap"><div class="fan-bar" id="fan-bar"></div></div>
+      <div style="margin-top:10px; font-size:0.8em; color:#667">
+        <span>Demand: <b id="fan-demand-val">0.00</b></span>
+        <span style="margin-left:10px">Smoothed: <b id="fan-smoothed-val">0.00</b></span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Valve Positions</h2>
+      <div id="valve-bars"></div>
+      <hr class="divider">
+      <h2 style="margin-top:6px">Demand per Room</h2>
+      <div id="demand-bars"></div>
+    </div>
+  </div>
+  <div class="rooms-row" id="rooms"></div>
+  <div class="card explain">
+    <h2>How it works</h2>
+    <div class="explain-grid">
+      <div class="explain-step">
+        <div class="explain-title">1. Demand per room</div>
+        <p>Each room computes a demand (0–1) for CO₂ and humidity independently: <code>(value − target) / (max − target)</code>, clamped to [0, 1]. The room's demand is the higher of the two. Demand is smoothed over time with an exponential moving average (EMA), controlled by <em>EMA alpha</em> — higher alpha means faster response.</p>
+      </div>
+      <div class="explain-step">
+        <div class="explain-title">2. Fan speed</div>
+        <p>Fan demand equals the highest room demand, then EMA-smoothed. A single bad room is enough to spin the fan up. Fan speed is mapped linearly from <em>Fan min</em> to <em>Fan max</em> based on this demand.</p>
+      </div>
+      <div class="explain-step">
+        <div class="explain-title">3. Valve positions</div>
+        <p>Each valve opens proportionally to its room's demand relative to the fan's normalised demand: <code>valve = valve_min + (room_demand / fan_demand) × (valve_max − valve_min)</code>. Rooms that caused the fan to spin up get fully open valves; rooms with low demand get the minimum opening.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROOM_NAMES = ['Room 1', 'Room 2', 'Room 3', 'Room 4', 'Room 5'];
+
+const DEFAULTS = {
+  co2_target: 600, co2_max: 1500,
+  humidity_target: 60, humidity_max: 75,
+  fan_speed_min: 15, fan_speed_max: 70,
+  valve_pos_min: 0.05, valve_pos_max: 1.0,
+  smoothing_alpha: 0.7
+};
+
+function loadSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('openair-settings'));
+    return saved ? { ...DEFAULTS, ...saved } : { ...DEFAULTS };
+  } catch { return { ...DEFAULTS }; }
+}
+function saveSettings() {
+  localStorage.setItem('openair-settings', JSON.stringify(settings));
+}
+
+const settings = loadSettings();
+
+const rooms = ROOM_NAMES.map(() => ({ co2: 450, humidity: 45 }));
+let smoothedDemands = new Array(5).fill(0);
+let smoothedFanDemand = 0;
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+function computeDemand(value, target, max) {
+  return clamp((value - target) / (max - target), 0, 1);
+}
+
+function ema(old, cur, alpha) { return alpha * cur + (1 - alpha) * old; }
+
+function barColor(pct) {
+  if (pct < 0.3) return '#2ecc71';
+  if (pct < 0.6) return '#e8a735';
+  if (pct < 0.85) return '#e67e22';
+  return '#e74c3c';
+}
+
+function updateRoomSliders() {
+  for (let i = 0; i < 5; i++) {
+    document.getElementById('co2-' + i).value = rooms[i].co2;
+    document.getElementById('co2val-' + i).textContent = rooms[i].co2 + ' ppm';
+    document.getElementById('hum-' + i).value = rooms[i].humidity;
+    document.getElementById('humval-' + i).textContent = rooms[i].humidity + '%';
+  }
+}
+
+function simulate() {
+  const S = settings;
+  const demands = [];
+
+  for (let i = 0; i < 5; i++) {
+    const co2_d = computeDemand(rooms[i].co2, S.co2_target, S.co2_max);
+    const hum_d = computeDemand(rooms[i].humidity, S.humidity_target, S.humidity_max);
+    const d = Math.max(co2_d, hum_d);
+    smoothedDemands[i] = ema(smoothedDemands[i], d, S.smoothing_alpha);
+    demands.push(smoothedDemands[i]);
+  }
+
+  const fanDemandRaw = Math.max(...demands);
+  smoothedFanDemand = ema(smoothedFanDemand, fanDemandRaw, S.smoothing_alpha);
+  const fanSpeed = S.fan_speed_min + smoothedFanDemand * (S.fan_speed_max - S.fan_speed_min);
+
+  const fanDemandNorm = clamp((fanSpeed - S.fan_speed_min) / (S.fan_speed_max - S.fan_speed_min), 0, 1);
+  const positions = demands.map(d => {
+    const ratio = fanDemandNorm > 0 ? clamp(d / fanDemandNorm, 0, 1) : 1;
+    return S.valve_pos_min + ratio * (S.valve_pos_max - S.valve_pos_min);
+  });
+
+  const fanPct = Math.round(fanSpeed);
+  document.getElementById('fan-speed').textContent = fanPct + '%';
+  const fanBar = document.getElementById('fan-bar');
+  fanBar.style.width = fanPct + '%';
+  fanBar.style.background = barColor(smoothedFanDemand);
+  document.getElementById('fan-demand-val').textContent = fanDemandRaw.toFixed(2);
+  document.getElementById('fan-smoothed-val').textContent = smoothedFanDemand.toFixed(2);
+
+  for (let i = 0; i < 5; i++) {
+    const pct = Math.round(positions[i] * 100);
+    const bar = document.getElementById('vbar-' + i);
+    bar.style.width = pct + '%';
+    bar.style.background = barColor(demands[i]);
+    document.getElementById('vpct-' + i).textContent = pct + '%';
+
+    const dbar = document.getElementById('dbar-' + i);
+    dbar.style.width = (demands[i] * 100) + '%';
+    document.getElementById('dval-' + i).textContent = demands[i].toFixed(2);
+  }
+}
+
+// Build presets card
+const roomsEl = document.getElementById('rooms');
+const presetsCard = document.createElement('div');
+presetsCard.className = 'card presets-card';
+presetsCard.innerHTML = `<h2>Presets</h2><div class="presets" id="presets"></div>`;
+roomsEl.appendChild(presetsCard);
+
+// Build master slider (All)
+const masterCard = document.createElement('div');
+masterCard.className = 'card room master';
+masterCard.innerHTML = `
+  <div class="master-sliders">
+    <div class="room-name">All</div>
+    <label>CO2</label>
+    <input type="range" min="350" max="2500" step="10" value="450" id="co2-master">
+    <span class="val" id="co2val-master">450 ppm</span>
+    <label>Hum</label>
+    <input type="range" min="20" max="95" step="1" value="45" id="hum-master">
+    <span class="val" id="humval-master">45%</span>
+  </div>
+`;
+roomsEl.appendChild(masterCard);
+
+masterCard.querySelector('#co2-master').addEventListener('input', e => {
+  const v = +e.target.value;
+  document.getElementById('co2val-master').textContent = v + ' ppm';
+  rooms.forEach(r => r.co2 = v);
+  smoothedDemands.fill(0); smoothedFanDemand = 0;
+  updateRoomSliders();
+  for (let j = 0; j < 10; j++) simulate();
+});
+masterCard.querySelector('#hum-master').addEventListener('input', e => {
+  const v = +e.target.value;
+  document.getElementById('humval-master').textContent = v + '%';
+  rooms.forEach(r => r.humidity = v);
+  smoothedDemands.fill(0); smoothedFanDemand = 0;
+  updateRoomSliders();
+  for (let j = 0; j < 10; j++) simulate();
+});
+
+// Build room controls
+for (let i = 0; i < 5; i++) {
+  const card = document.createElement('div');
+  card.className = 'card room';
+  card.innerHTML = `
+    <div class="room-name">${ROOM_NAMES[i]}</div>
+    <label>CO2</label>
+    <input type="range" min="350" max="2500" step="10" value="${rooms[i].co2}" id="co2-${i}">
+    <span class="val" id="co2val-${i}">${rooms[i].co2} ppm</span>
+    <label>Hum</label>
+    <input type="range" min="20" max="95" step="1" value="${rooms[i].humidity}" id="hum-${i}">
+    <span class="val" id="humval-${i}">${rooms[i].humidity}%</span>
+  `;
+  roomsEl.appendChild(card);
+
+  card.querySelector('#co2-' + i).addEventListener('input', e => {
+    rooms[i].co2 = +e.target.value;
+    document.getElementById('co2val-' + i).textContent = rooms[i].co2 + ' ppm';
+    simulate();
+  });
+  card.querySelector('#hum-' + i).addEventListener('input', e => {
+    rooms[i].humidity = +e.target.value;
+    document.getElementById('humval-' + i).textContent = rooms[i].humidity + '%';
+    simulate();
+  });
+}
+
+// Build valve bars
+const vbarsEl = document.getElementById('valve-bars');
+const dbarsEl = document.getElementById('demand-bars');
+for (let i = 0; i < 5; i++) {
+  vbarsEl.innerHTML += `<div class="valve-row">
+    <span class="valve-label">${ROOM_NAMES[i]}</span>
+    <div class="valve-bar-wrap"><div class="valve-bar" id="vbar-${i}"></div></div>
+    <span class="valve-pct" id="vpct-${i}">5%</span>
+  </div>`;
+  dbarsEl.innerHTML += `<div class="demand-row">
+    <span class="demand-label">${ROOM_NAMES[i]}</span>
+    <div class="demand-bar-wrap"><div class="demand-bar" id="dbar-${i}"></div></div>
+    <span class="demand-val" id="dval-${i}">0.00</span>
+  </div>`;
+}
+
+// Build settings
+const settingsEl = document.getElementById('settings');
+const settingDefs = [
+  { key: 'co2_target',      label: 'CO2 target',  min: 0, max: 2500, step: 10,   fmt: v => v + ' ppm' },
+  { key: 'co2_max',         label: 'CO2 max',     min: 0, max: 2500, step: 10,   fmt: v => v + ' ppm' },
+  { key: 'humidity_target', label: 'Hum target',  min: 0, max: 100,  step: 1,    fmt: v => v + '%' },
+  { key: 'humidity_max',    label: 'Hum max',     min: 0, max: 100,  step: 1,    fmt: v => v + '%' },
+  { key: 'fan_speed_min',   label: 'Fan min',     min: 0, max: 100,  step: 1,    fmt: v => v + '%' },
+  { key: 'fan_speed_max',   label: 'Fan max',     min: 0, max: 100,  step: 1,    fmt: v => v + '%' },
+  { key: 'valve_pos_min',   label: 'Valve min',   min: 0, max: 100,  step: 1,    fmt: v => v + '%',      scale: 0.01 },
+  { key: 'valve_pos_max',   label: 'Valve max',   min: 0, max: 100,  step: 1,    fmt: v => v + '%',      scale: 0.01 },
+  { key: 'smoothing_alpha', label: 'EMA alpha',   min: 0, max: 1,    step: 0.01, fmt: v => v.toFixed(2) },
+];
+for (const def of settingDefs) {
+  const initSlider = def.scale ? Math.round(settings[def.key] / def.scale) : settings[def.key];
+  settingsEl.innerHTML += `<label>${def.label}</label>
+    <input type="range" min="${def.min}" max="${def.max}" step="${def.step}" value="${initSlider}" id="s-${def.key}">
+    <span class="s-val" id="sv-${def.key}">${def.fmt(initSlider)}</span>`;
+}
+function applySettingsToSliders() {
+  for (const def of settingDefs) {
+    const sliderVal = def.scale ? Math.round(settings[def.key] / def.scale) : settings[def.key];
+    document.getElementById('s-' + def.key).value = sliderVal;
+    document.getElementById('sv-' + def.key).textContent = def.fmt(sliderVal);
+  }
+}
+
+settingsEl.querySelectorAll('input').forEach(input => {
+  input.addEventListener('input', e => {
+    const key = e.target.id.replace('s-', '');
+    const def = settingDefs.find(d => d.key === key);
+    const sliderVal = +e.target.value;
+    settings[key] = def.scale ? sliderVal * def.scale : sliderVal;
+    document.getElementById('sv-' + key).textContent = def.fmt(sliderVal);
+    saveSettings();
+    simulate();
+  });
+});
+
+document.getElementById('defaults-btn').addEventListener('click', () => {
+  Object.assign(settings, DEFAULTS);
+  saveSettings();
+  applySettingsToSliders();
+  simulate();
+});
+
+// Presets
+const presets = {
+  'All normal': () => rooms.forEach(r => { r.co2 = 450; r.humidity = 45; }),
+  'One bad room': () => { presets['All normal'](); rooms[2].co2 = 1400; rooms[2].humidity = 72; },
+  'Two bad rooms': () => { presets['All normal'](); rooms[0].co2 = 1200; rooms[3].co2 = 1600; },
+  'High humidity': () => rooms.forEach(r => { r.co2 = 500; r.humidity = 80; }),
+  'Gradual': () => rooms.forEach((r, i) => { r.co2 = 400 + i * 250; r.humidity = 40 + i * 8; }),
+};
+const presetsEl = document.getElementById('presets');
+for (const [name, fn] of Object.entries(presets)) {
+  const btn = document.createElement('button');
+  btn.textContent = name;
+  btn.addEventListener('click', () => {
+    fn();
+    smoothedDemands.fill(0);
+    smoothedFanDemand = 0;
+    updateRoomSliders();
+    for (let j = 0; j < 10; j++) simulate();
+  });
+  presetsEl.appendChild(btn);
+}
+
+// Initial run (converge EMA)
+for (let j = 0; j < 10; j++) simulate();
+</script>
+</body>
+</html>
