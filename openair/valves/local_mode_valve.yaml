@@ -34,9 +34,10 @@ interval:
             # Read fan speed from openair controller
             - http_request.get:
                 url: "http://${fan_host}/fan/Open AIR Mini"
+                capture_response: true
                 on_response:
                   then:
-                    - lambda: 'id(current_fan_speed) = parse_sensor_value(body, status_code);'
+                    - lambda: 'id(current_fan_speed) = parse_sensor_value(body, response->status_code);'
             # Compute demand and set valve position
             - lambda: |-
                 const float CO2_TARGET = ${co2_target};

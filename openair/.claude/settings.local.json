@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(esphome compile:*)",
+      "Bash(find /Users/okkeformsma/projects/homelab/openair/.esphome -name \"http_request*.h\" 2>/dev/null | head -5)",
+      "Bash(pip show:*)"
     ]
   }
 }

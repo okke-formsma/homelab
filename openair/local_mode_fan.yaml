@@ -1,0 +1,192 @@
+# Shared package: fan controller local mode logic.
+#
+# Polls up to 7 valve slots every ${poll_interval} when HA is disconnected
+# or "Local Mode" switch is on. Slots with host "0.0.0.0" (or any unreachable
+# host) return NAN and are excluded from demand calculation — the system runs
+# on whatever valves are reachable.
+#
+# To configure: set valve_1_host .. valve_7_host in your device yaml.
+# Unused slots default to "0.0.0.0" below — no need to list them.
+#
+# Tuning parameters (co2_target, fan_speed_min, etc.) come from
+# local_mode_settings.yaml, also included below.
+
+packages:
+  settings: !include local_mode_settings.yaml
+
+substitutions:
+  # Default: disabled. Override in your device yaml for each active valve.
+  valve_1_host: "0.0.0.0"
+  valve_2_host: "0.0.0.0"
+  valve_3_host: "0.0.0.0"
+  valve_4_host: "0.0.0.0"
+  valve_5_host: "0.0.0.0"
+  valve_6_host: "0.0.0.0"
+  valve_7_host: "0.0.0.0"
+
+esphome:
+  includes:
+    - local_mode_helpers.h
+
+http_request:
+  timeout: 3s
+
+globals:
+  - id: valve_co2
+    type: float[7]
+    restore_value: no
+    initial_value: "{NAN, NAN, NAN, NAN, NAN, NAN, NAN}"
+  - id: valve_humidity
+    type: float[7]
+    restore_value: no
+    initial_value: "{NAN, NAN, NAN, NAN, NAN, NAN, NAN}"
+  - id: smoothed_fan_demand
+    type: float
+    restore_value: no
+    initial_value: "0.0"
+
+interval:
+  - interval: ${poll_interval}
+    then:
+      - if:
+          condition:
+            or:
+              - not:
+                  api.connected:
+              - switch.is_on: local_mode
+          then:
+            # Poll all 7 slots. Unreachable / disabled hosts return NAN
+            # and are excluded from demand — no special handling needed.
+            - http_request.get:
+                url: "http://${valve_1_host}/sensor/CO2"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_co2)[0] = parse_sensor_value(body, response->status_code);'
+            - http_request.get:
+                url: "http://${valve_1_host}/sensor/Humidity"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_humidity)[0] = parse_sensor_value(body, response->status_code);'
+
+            - http_request.get:
+                url: "http://${valve_2_host}/sensor/CO2"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_co2)[1] = parse_sensor_value(body, response->status_code);'
+            - http_request.get:
+                url: "http://${valve_2_host}/sensor/Humidity"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_humidity)[1] = parse_sensor_value(body, response->status_code);'
+
+            - http_request.get:
+                url: "http://${valve_3_host}/sensor/CO2"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_co2)[2] = parse_sensor_value(body, response->status_code);'
+            - http_request.get:
+                url: "http://${valve_3_host}/sensor/Humidity"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_humidity)[2] = parse_sensor_value(body, response->status_code);'
+
+            - http_request.get:
+                url: "http://${valve_4_host}/sensor/CO2"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_co2)[3] = parse_sensor_value(body, response->status_code);'
+            - http_request.get:
+                url: "http://${valve_4_host}/sensor/Humidity"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_humidity)[3] = parse_sensor_value(body, response->status_code);'
+
+            - http_request.get:
+                url: "http://${valve_5_host}/sensor/CO2"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_co2)[4] = parse_sensor_value(body, response->status_code);'
+            - http_request.get:
+                url: "http://${valve_5_host}/sensor/Humidity"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_humidity)[4] = parse_sensor_value(body, response->status_code);'
+
+            - http_request.get:
+                url: "http://${valve_6_host}/sensor/CO2"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_co2)[5] = parse_sensor_value(body, response->status_code);'
+            - http_request.get:
+                url: "http://${valve_6_host}/sensor/Humidity"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_humidity)[5] = parse_sensor_value(body, response->status_code);'
+
+            - http_request.get:
+                url: "http://${valve_7_host}/sensor/CO2"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_co2)[6] = parse_sensor_value(body, response->status_code);'
+            - http_request.get:
+                url: "http://${valve_7_host}/sensor/Humidity"
+                capture_response: true
+                on_response:
+                  then:
+                    - lambda: 'id(valve_humidity)[6] = parse_sensor_value(body, response->status_code);'
+
+            - lambda: |-
+                const float CO2_TARGET = ${co2_target};
+                const float CO2_MAX = ${co2_max};
+                const float HUM_TARGET = ${humidity_target};
+                const float HUM_MAX = ${humidity_max};
+                const float SPEED_MIN = ${fan_speed_min};
+                const float SPEED_MAX = ${fan_speed_max};
+                const float ALPHA = ${smoothing_alpha};
+
+                float max_demand = 0.0f;
+                int active_valves = 0;
+
+                for (int i = 0; i < 7; i++) {
+                  float co2_d = compute_demand(id(valve_co2)[i], CO2_TARGET, CO2_MAX);
+                  float hum_d = compute_demand(id(valve_humidity)[i], HUM_TARGET, HUM_MAX);
+                  float d = std::max(co2_d, hum_d);
+
+                  ESP_LOGD("local_mode", "Valve %d: CO2=%.0f hum=%.1f%% demand=%.2f",
+                           i + 1,
+                           std::isnan(id(valve_co2)[i]) ? -1.0f : id(valve_co2)[i],
+                           std::isnan(id(valve_humidity)[i]) ? -1.0f : id(valve_humidity)[i],
+                           d);
+
+                  if (!std::isnan(id(valve_co2)[i]) || !std::isnan(id(valve_humidity)[i])) {
+                    active_valves++;
+                    if (d > max_demand) max_demand = d;
+                  }
+                }
+
+                float fan_demand = (active_valves > 0) ? max_demand : 0.0f;
+
+                id(smoothed_fan_demand) = ema(id(smoothed_fan_demand), fan_demand, ALPHA);
+                float smoothed = id(smoothed_fan_demand);
+
+                int speed = (int)(SPEED_MIN + smoothed * (SPEED_MAX - SPEED_MIN));
+                ESP_LOGI("local_mode", "Demand: max=%.2f active=%d fan_demand=%.2f smoothed=%.2f -> fan %d%%",
+                         max_demand, active_valves, fan_demand, smoothed, speed);
+
+                auto call = id(fan_motor).make_call();
+                call.set_speed(speed);
+                call.set_state(true);
+                call.perform();

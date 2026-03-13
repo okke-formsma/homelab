@@ -12,25 +12,64 @@ Local Mode is a fallback/standalone control system for the ventilation setup. It
 
 ## Architecture
 
+Each fan controller manages its own set of valves independently. Multiple installations run in parallel without interaction.
+
 ```
-┌──────────────────────────────────────────────────────┐
-│  OpenAIR Controller (open-air-mini-garage)            │
-│  ESP32 + Duco Silent fan (PWM on GPIO15)             │
-│  Polls valves via HTTP every 60s                     │
-│  Computes per-valve demand, sets fan speed            │
-│  Exposes fan speed via web server for valves to read │
-└────────────┬─────────────────────────────────────────┘
-             │ HTTP GET /sensor/CO2
-             │ HTTP GET /sensor/Humidity
-             │
-    ┌────────┼────────┬────────┬────────┬────────┐
-    ▼        ▼        ▼        ▼        ▼        │
- Valve 1  Valve 2  Valve 3  Valve 4  Valve 5    │
- (ESP32)  (ESP32)  (ESP32)  (ESP32)  (ESP32)    │
-    │                                            │
-    └── HTTP GET /fan/Open AIR Mini ─────────────┘
-        (each valve polls fan speed)
+┌──────────────────────────────────────────────┐   ┌──────────────────────────────────────────┐
+│  open-air-mini-garage (5 valves)              │   │  open-air-mini-huis (4 valves)            │
+│  ESP32 + fan (PWM on GPIO15)                 │   │  ESP32 + fan (PWM on GPIO15)             │
+│  Polls valves via HTTP every 60s             │   │  Polls valves via HTTP every 60s         │
+│  Exposes fan speed for valves to read        │   │  Exposes fan speed for valves to read    │
+└────────────┬─────────────────────────────────┘   └────────────┬─────────────────────────────┘
+             │ HTTP GET /sensor/{CO2,Humidity}                   │ HTTP GET /sensor/{CO2,Humidity}
+             ▼                                                   ▼
+     valve-1 .. valve-5                                valve-huis-1 .. valve-huis-4
+       (each polls fan speed back via HTTP)              (each polls fan speed back via HTTP)
 ```
+
+The system supports 2–7 valves per controller. Unused slots are set to `"0.0.0.0"` in the controller yaml — they fail silently (NAN) and are excluded from demand calculation.
+
+## Setting up a new installation
+
+> For flashing instructions see [FLASHING.md](FLASHING.md)
+
+Each installation is a fan controller + N valves (2–7). The only files you need to create or edit per installation are:
+
+**Fan controller** (e.g. `open-air-mini-garage.yaml`):
+
+```yaml
+packages:
+  local_mode: !include local_mode_fan.yaml
+
+substitutions:
+  valve_1_host: "open-air-valve-1.local"   # set one line per active valve
+  valve_2_host: "open-air-valve-2.local"   # unused slots default to "0.0.0.0"
+  # ...
+
+esphome:
+  name: open-air-mini-<yourname>
+# ... hardware config (GPIO, fan, sensors) ...
+```
+
+**Valve** (e.g. `valves/valve1.yaml`):
+
+```yaml
+substitutions:
+  devicename: open-air-valve-1
+  upper_devicename: Open AIR Valve 1
+  fan_host: "open-air-mini-<yourname>.local"  # only needed if != garage default
+
+<<: !include Open_AIR_Valve_DIS_SCD40_SGP41.yaml
+```
+
+**Secrets** (copy once per directory, never commit):
+
+```bash
+cp secrets.yaml.example secrets.yaml
+cp valves/secrets.yaml.example valves/secrets.yaml
+```
+
+Unused valve slots in `local_mode_fan.yaml` default to `"0.0.0.0"` — HTTP requests to that address fail immediately and return NAN, which is excluded from demand calculation. No special handling needed.
 
 ## Shared settings (`local_mode_settings.yaml`)
 
@@ -49,7 +88,7 @@ All tuning parameters live in one file, included by both the fan controller and 
 | `dead_band` | 0.05 | Below this fan demand, all valves open fully |
 | `smoothing_alpha` | 0.7 | EMA weight on new value (higher = less smoothing) |
 | `poll_interval` | 60s | How often to poll and recompute |
-| `fan_host` | open-air-mini-garage.local | Hostname valves use to poll fan speed |
+| `fan_host` | open-air-mini-garage.local | Hostname valves use to poll fan speed — override per valve for other installations |
 
 ## Shared helpers (`local_mode_helpers.h`)
 
@@ -57,11 +96,11 @@ All tuning parameters live in one file, included by both the fan controller and 
 - `compute_demand(value, target, max_val)` — maps a sensor value to 0-1 demand using linear interpolation between target and max.
 - `ema(old_value, new_value, alpha)` — exponential moving average for smoothing.
 
-## Fan control (openair controller — `open-air-mini-garage.yaml`)
+## Fan control (`local_mode_fan.yaml` — shared by all controllers)
 
 Every poll cycle, the openair controller:
 
-1. **Polls CO2 + humidity** from all 5 valves via HTTP (10 requests total)
+1. **Polls CO2 + humidity** from all configured valves via HTTP (2 requests per slot, up to 14 total)
 2. **Computes per-valve demand** (0-1) using `compute_demand()` — linear interpolation between target and max, taking the higher of CO2 and humidity demand
 3. **Fan demand = max demand** across all reachable valves (the neediest room drives the fan)
 4. **Applies EMA smoothing** to prevent jitter
