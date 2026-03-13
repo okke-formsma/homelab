@@ -214,6 +214,13 @@ globals:
 # ---------- MAINTENANCE SETTINGS (Configuration tab) ----------
 switch:
   - platform: template
+    name: "Local Mode"
+    id: local_mode
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+
+  - platform: template
     id: maintenance_rehome_enable
     name: "${upper_devicename} Maintenance Re-home Enabled"
     icon: "mdi:autorenew"
@@ -412,6 +419,28 @@ interval:
           ESP_LOGI("maintenance", "Maintenance re-home triggered (period=%.2fh)", h);
 
           id(rehome_button).press();
+
+  # ---------- OFFLINE VALVE CONTROL ----------
+  - interval: 60s
+    then:
+      - if:
+          condition:
+            and:
+              - or:
+                  - not:
+                      api.connected:
+                  - switch.is_on: local_mode
+              - lambda: 'return !id(homing_in_progress);'
+          then:
+            - lambda: |-
+                float co2 = id(air_Co2).state;
+                float hum = id(air_humidity).state;
+                float pos = 0.0f;
+                if ((!isnan(co2) && co2 > 1500.0f) || (!isnan(hum) && hum > 75.0f)) pos = 1.0f;
+                else if ((!isnan(co2) && co2 > 900.0f) || (!isnan(hum) && hum > 65.0f)) pos = 0.5f;
+                auto call = id(air_valve).make_call();
+                call.set_position(pos);
+                call.perform();
 
 # ---------- STEPPER ----------
 stepper:
