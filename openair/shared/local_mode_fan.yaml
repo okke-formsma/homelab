@@ -61,120 +61,162 @@ interval:
                 condition:
                   lambda: 'return std::string("${valve_1_host}") != "0.0.0.0";'
                 then:
+                  - logger.log: "GET http://${valve_1_host}/sensor/CO2"
                   - http_request.get:
                       url: "http://${valve_1_host}/sensor/CO2"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_co2)[0] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_co2)[0] = parse_sensor_value(body, response->status_code);
+                  - logger.log: "GET http://${valve_1_host}/sensor/Humidity"
                   - http_request.get:
                       url: "http://${valve_1_host}/sensor/Humidity"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_humidity)[0] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_humidity)[0] = parse_sensor_value(body, response->status_code);
 
             - if:
                 condition:
                   lambda: 'return std::string("${valve_2_host}") != "0.0.0.0";'
                 then:
+                  - logger.log: "GET http://${valve_2_host}/sensor/CO2"
                   - http_request.get:
                       url: "http://${valve_2_host}/sensor/CO2"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_co2)[1] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_co2)[1] = parse_sensor_value(body, response->status_code);
+                  - logger.log: "GET http://${valve_2_host}/sensor/Humidity"
                   - http_request.get:
                       url: "http://${valve_2_host}/sensor/Humidity"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_humidity)[1] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_humidity)[1] = parse_sensor_value(body, response->status_code);
 
             - if:
                 condition:
                   lambda: 'return std::string("${valve_3_host}") != "0.0.0.0";'
                 then:
+                  - logger.log: "GET http://${valve_3_host}/sensor/CO2"
                   - http_request.get:
                       url: "http://${valve_3_host}/sensor/CO2"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_co2)[2] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_co2)[2] = parse_sensor_value(body, response->status_code);
+                  - logger.log: "GET http://${valve_3_host}/sensor/Humidity"
                   - http_request.get:
                       url: "http://${valve_3_host}/sensor/Humidity"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_humidity)[2] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_humidity)[2] = parse_sensor_value(body, response->status_code);
 
             - if:
                 condition:
                   lambda: 'return std::string("${valve_4_host}") != "0.0.0.0";'
                 then:
+                  - logger.log: "GET http://${valve_4_host}/sensor/CO2"
                   - http_request.get:
                       url: "http://${valve_4_host}/sensor/CO2"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_co2)[3] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_co2)[3] = parse_sensor_value(body, response->status_code);
+                  - logger.log: "GET http://${valve_4_host}/sensor/Humidity"
                   - http_request.get:
                       url: "http://${valve_4_host}/sensor/Humidity"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_humidity)[3] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_humidity)[3] = parse_sensor_value(body, response->status_code);
 
             - if:
                 condition:
                   lambda: 'return std::string("${valve_5_host}") != "0.0.0.0";'
                 then:
+                  - logger.log: "GET http://${valve_5_host}/sensor/CO2"
                   - http_request.get:
                       url: "http://${valve_5_host}/sensor/CO2"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_co2)[4] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_co2)[4] = parse_sensor_value(body, response->status_code);
+                  - logger.log: "GET http://${valve_5_host}/sensor/Humidity"
                   - http_request.get:
                       url: "http://${valve_5_host}/sensor/Humidity"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_humidity)[4] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_humidity)[4] = parse_sensor_value(body, response->status_code);
 
             - if:
                 condition:
                   lambda: 'return std::string("${valve_6_host}") != "0.0.0.0";'
                 then:
+                  - logger.log: "GET http://${valve_6_host}/sensor/CO2"
                   - http_request.get:
                       url: "http://${valve_6_host}/sensor/CO2"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_co2)[5] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_co2)[5] = parse_sensor_value(body, response->status_code);
+                  - logger.log: "GET http://${valve_6_host}/sensor/Humidity"
                   - http_request.get:
                       url: "http://${valve_6_host}/sensor/Humidity"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_humidity)[5] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_humidity)[5] = parse_sensor_value(body, response->status_code);
 
             - if:
                 condition:
                   lambda: 'return std::string("${valve_7_host}") != "0.0.0.0";'
                 then:
+                  - logger.log: "GET http://${valve_7_host}/sensor/CO2"
                   - http_request.get:
                       url: "http://${valve_7_host}/sensor/CO2"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_co2)[6] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_co2)[6] = parse_sensor_value(body, response->status_code);
+                  - logger.log: "GET http://${valve_7_host}/sensor/Humidity"
                   - http_request.get:
                       url: "http://${valve_7_host}/sensor/Humidity"
                       capture_response: true
                       on_response:
                         then:
-                          - lambda: 'id(valve_humidity)[6] = parse_sensor_value(body, response->status_code);'
+                          - lambda: |-
+                              ESP_LOGD("poll", "Response: %s", body.c_str());
+                              id(valve_humidity)[6] = parse_sensor_value(body, response->status_code);
 
             - lambda: |-
                 const float CO2_TARGET = ${co2_target};

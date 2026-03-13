@@ -32,12 +32,15 @@ interval:
               - lambda: 'return !id(homing_in_progress);'
           then:
             # Read fan speed from openair controller
+            - logger.log: "GET http://${fan_host}/fan/Open%20AIR%20Mini"
             - http_request.get:
                 url: "http://${fan_host}/fan/Open%20AIR%20Mini"
                 capture_response: true
                 on_response:
                   then:
-                    - lambda: 'id(current_fan_speed) = parse_sensor_value(body, response->status_code);'
+                    - lambda: |-
+                        ESP_LOGD("poll", "Response: %s", body.c_str());
+                        id(current_fan_speed) = parse_sensor_value(body, response->status_code);
             # Compute demand and set valve position
             - lambda: |-
                 const float CO2_TARGET = ${co2_target};
