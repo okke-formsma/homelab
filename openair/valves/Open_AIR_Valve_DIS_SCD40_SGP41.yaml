@@ -223,7 +223,7 @@ switch:
 
   - platform: template
     id: maintenance_rehome_enable
-    name: "${upper_devicename} Maintenance Re-home Enabled"
+    name: "Maintenance Re-home Enabled"
     icon: "mdi:autorenew"
     entity_category: config
     optimistic: true
@@ -237,13 +237,13 @@ switch:
           id(last_maintenance_reason) = "Disabled by toggle";
 
   - platform: restart
-    name: "Reboot ${upper_devicename} Controller"
+    name: "Reboot Controller"
     entity_category: config
 
 number:
   - platform: template
     id: maintenance_period_hours
-    name: "${upper_devicename} Maintenance Period Hours"
+    name: "Maintenance Period Hours"
     unit_of_measurement: "h"
     icon: "mdi:timer-cog"
     entity_category: config
@@ -293,7 +293,7 @@ i2c:
 valve:
   - platform: template
     id: air_valve
-    name: "${upper_devicename} Valve"
+    name: "Valve"
     has_position: true
 
     # HA semantics:
@@ -460,7 +460,7 @@ stepper:
 binary_sensor:
   - platform: gpio
     id: valve_homing_switch
-    name: "${upper_devicename} Closed Switch"
+    name: "Closed Switch"
     pin:
       number: GPIO35
       mode:
@@ -469,7 +469,7 @@ binary_sensor:
 
   - platform: template
     id: homing_failed_sensor
-    name: "${upper_devicename} Homing Failed"
+    name: "Homing Failed"
     lambda: |-
       return id(homing_failed);
     entity_category: diagnostic
@@ -477,7 +477,7 @@ binary_sensor:
 
   - platform: template
     id: homing_in_progress_sensor
-    name: "${upper_devicename} Homing In Progress"
+    name: "Homing In Progress"
     lambda: |-
       return id(homing_in_progress);
     entity_category: diagnostic
@@ -487,7 +487,7 @@ binary_sensor:
 button:
   - platform: template
     id: rehome_button
-    name: "Re-home ${upper_devicename}"
+    name: "Re-home"
     on_press:
       then:
         - lambda: |-
@@ -581,7 +581,7 @@ sensor:
   # WiFi RSSI
   - platform: wifi_signal
     id: wifi_signal_db
-    name: "${upper_devicename} WiFi RSSI"
+    name: "WiFi RSSI"
     update_interval: 60s
     unit_of_measurement: "dBm"
     device_class: signal_strength
@@ -590,7 +590,7 @@ sensor:
   # Derived WiFi percentage
   - platform: copy
     source_id: wifi_signal_db
-    name: "${upper_devicename} WiFi Signal Percent"
+    name: "WiFi Signal Percent"
     filters:
       - lambda: |-
           if (x <= -100.0f) return 0.0f;
@@ -603,15 +603,15 @@ sensor:
     i2c_id: i2c_sensor_1
     temperature_offset: 1
     co2:
-      name: "${upper_devicename} CO2"
+      name: "CO2"
       id: air_Co2
       accuracy_decimals: 0
     temperature:
-      name: "${upper_devicename} Temperature"
+      name: "Temperature"
       id: air_temperature
       accuracy_decimals: 2
     humidity:
-      name: "${upper_devicename} Humidity"
+      name: "Humidity"
       id: air_humidity
       accuracy_decimals: 2
     update_interval: 30s
@@ -620,10 +620,10 @@ sensor:
   - platform: sgp4x
     i2c_id: i2c_sensor_1
     voc:
-      name: "${upper_devicename} VOC Index"
+      name: "VOC Index"
       id: air_VOC
     nox:
-      name: "${upper_devicename} NOx Index"
+      name: "NOx Index"
       id: air_NOx
     compensation:
       temperature_source: air_temperature
@@ -631,16 +631,16 @@ sensor:
     update_interval: 30s
 
   - platform: uptime
-    name: "${upper_devicename} Uptime"
+    name: "Uptime"
     entity_category: diagnostic
 
   - platform: internal_temperature
-    name: "${upper_devicename} MCU Temperature"
+    name: "MCU Temperature"
     entity_category: diagnostic
 
   # Maintenance diagnostics (Diagnostic tab)
   - platform: template
-    name: "${upper_devicename} Maintenance Period Effective"
+    name: "Maintenance Period Effective"
     entity_category: diagnostic
     unit_of_measurement: "h"
     icon: "mdi:timer-cog"
@@ -650,7 +650,7 @@ sensor:
       return id(maintenance_period_hours_store);
 
   - platform: template
-    name: "${upper_devicename} Maintenance Re-home Due In"
+    name: "Maintenance Re-home Due In"
     entity_category: diagnostic
     unit_of_measurement: "min"
     icon: "mdi:timer-sand"
@@ -672,17 +672,17 @@ sensor:
 
 text_sensor:
   - platform: version
-    name: "${upper_devicename} Firmware Version"
+    name: "Firmware Version"
     entity_category: diagnostic
 
   - platform: wifi_info
     ip_address:
-      name: "${upper_devicename} WiFi IP"
+      name: "WiFi IP"
       entity_category: diagnostic
 
   # Maintenance timestamp (Configuration tab)
   - platform: template
-    name: "${upper_devicename} Last Maintenance Re-home"
+    name: "Last Maintenance Re-home"
     entity_category: config
     icon: "mdi:clock-check"
     lambda: |-
@@ -695,7 +695,7 @@ text_sensor:
 
   # Maintenance status (Diagnostic tab)
   - platform: template
-    name: "${upper_devicename} Maintenance Status"
+    name: "Maintenance Status"
     entity_category: diagnostic
     icon: "mdi:information-outline"
     lambda: |-

@@ -140,60 +140,60 @@ interval:
 
             # Valve 1
             - http_request.get:
-                url: "http://${valve_1_host}/sensor/air_co2"
+                url: "http://${valve_1_host}/sensor/CO2"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
             - http_request.get:
-                url: "http://${valve_1_host}/sensor/air_humidity"
+                url: "http://${valve_1_host}/sensor/Humidity"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
 
             # Valve 2
             - http_request.get:
-                url: "http://${valve_2_host}/sensor/air_co2"
+                url: "http://${valve_2_host}/sensor/CO2"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
             - http_request.get:
-                url: "http://${valve_2_host}/sensor/air_humidity"
+                url: "http://${valve_2_host}/sensor/Humidity"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
 
             # Valve 3
             - http_request.get:
-                url: "http://${valve_3_host}/sensor/air_co2"
+                url: "http://${valve_3_host}/sensor/CO2"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
             - http_request.get:
-                url: "http://${valve_3_host}/sensor/air_humidity"
+                url: "http://${valve_3_host}/sensor/Humidity"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
 
             # Valve 4
             - http_request.get:
-                url: "http://${valve_4_host}/sensor/air_co2"
+                url: "http://${valve_4_host}/sensor/CO2"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
             - http_request.get:
-                url: "http://${valve_4_host}/sensor/air_humidity"
+                url: "http://${valve_4_host}/sensor/Humidity"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
 
             # Valve 5
             - http_request.get:
-                url: "http://${valve_5_host}/sensor/air_co2"
+                url: "http://${valve_5_host}/sensor/CO2"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_co2), body, status_code);'
             - http_request.get:
-                url: "http://${valve_5_host}/sensor/air_humidity"
+                url: "http://${valve_5_host}/sensor/Humidity"
                 on_response:
                   then:
                     - lambda: 'update_worst_value(id(local_worst_humidity), body, status_code);'
