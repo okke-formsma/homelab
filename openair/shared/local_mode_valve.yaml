@@ -33,7 +33,7 @@ interval:
           then:
             # Read fan speed from openair controller
             - http_request.get:
-                url: "http://${fan_host}/fan/Open AIR Mini"
+                url: "http://${fan_host}/fan/Open%20AIR%20Mini"
                 capture_response: true
                 on_response:
                   then:
