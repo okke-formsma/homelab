@@ -1,18 +1,11 @@
 # Fan controller for one installation.
-# Copy this file to your installation directory (e.g. myhouse/) and fill in the valve hostnames.
-# Also create config.yaml with fan_host set to this controller's hostname.
+# Copy this file to your installation directory (e.g. myhouse/) and adjust config.yaml.
 
 packages:
   local_mode: !include ../shared/local_mode_fan.yaml
 
-substitutions:
-  # Set one line per active valve. Unused slots default to "0.0.0.0" (disabled).
-  valve_1_host: "open-air-valve-1.local"
-  valve_2_host: "open-air-valve-2.local"
-  # valve_3_host: "0.0.0.0"   # uncomment and fill in to add more valves (up to 7)
-
 esphome:
-  name: open-air-mini-<yourname>     # must match fan_host in config.yaml (without .local)
+  name: ${device_name}
   includes:
     - ../shared/local_mode_helpers.h
 

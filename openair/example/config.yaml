@@ -1,4 +1,14 @@
 substitutions:
+  # Name of this fan controller. Used as ESPHome device name and mDNS hostname.
+  # Must match fan_host below (without .local).
+  device_name: "open-air-mini-<yourname>"
+
   # Hostname that the valves in this installation poll for fan speed.
-  # Must match the esphome.name of your fan controller.
-  fan_host: "open-air-mini-<yourname>.local"
+  # Derived from device_name above.
+  fan_host: "${device_name}.local"
+
+  # Active valve hostnames for this installation.
+  # Unused slots default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
+  valve_1_host: "open-air-valve-1.local"
+  valve_2_host: "open-air-valve-2.local"
+  # valve_3_host: "0.0.0.0"   # uncomment and fill in to add more valves (up to 7)

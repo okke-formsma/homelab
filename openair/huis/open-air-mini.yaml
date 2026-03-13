@@ -1,16 +1,8 @@
 packages:
   local_mode: !include ../shared/local_mode_fan.yaml
 
-substitutions:
-  # Active valve hostnames for this installation (4 valves).
-  # Unused slots default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
-  valve_1_host: "open-air-valve-huis-1.local"
-  valve_2_host: "open-air-valve-huis-2.local"
-  valve_3_host: "open-air-valve-huis-3.local"
-  valve_4_host: "open-air-valve-huis-4.local"
-
 esphome:
-  name: open-air-mini-huis
+  name: ${device_name}
   includes:
     - ../shared/local_mode_helpers.h
 
@@ -35,7 +27,7 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   ap:
-    ssid: "Open-AIR Huis Fallback"
+    ssid: "Open-AIR Fallback"
     password: !secret wifi_ap_password
 
 captive_portal:

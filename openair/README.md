@@ -118,8 +118,8 @@ Each installation directory contains:
 
 | File | Purpose |
 |---|---|
-| `config.yaml` | `fan_host` — the one setting shared between the fan controller and its valves |
-| `open-air-mini.yaml` | Fan controller: valve hostnames + hardware config |
+| `config.yaml` | All user-configurable settings: `device_name`, `fan_host`, valve hostnames |
+| `open-air-mini.yaml` | Fan controller: hardware config only (no user edits needed) |
 | `valve-N.yaml` | One file per valve: device name + includes config + hardware template |
 
 ## Setting up a new installation
@@ -132,36 +132,24 @@ mkdir myhouse
 
 ### 2. Create `myhouse/config.yaml`
 
-This is the only value shared between the fan controller and all its valves — the hostname the valves use to poll the fan controller.
+Copy from `example/config.yaml`. Fill in your device name and valve hostnames:
 
 ```yaml
 substitutions:
-  fan_host: "open-air-mini-myhouse.local"
-```
+  device_name: "open-air-mini-myhouse"
+  fan_host: "${device_name}.local"
 
-### 3. Create `myhouse/open-air-mini.yaml`
-
-Copy from `example/fan-controller.yaml`. Fill in:
-- `esphome.name` — must match `fan_host` in config.yaml (without `.local`)
-- `valve_N_host` substitutions — one per physical valve (2–7)
-
-```yaml
-packages:
-  local_mode: !include ../shared/local_mode_fan.yaml
-
-substitutions:
   valve_1_host: "open-air-valve-myhouse-1.local"
   valve_2_host: "open-air-valve-myhouse-2.local"
   valve_3_host: "open-air-valve-myhouse-3.local"
   # Unused slots default to "0.0.0.0" in local_mode_fan.yaml — no need to list them
-
-esphome:
-  name: open-air-mini-myhouse
-  includes:
-    - ../shared/local_mode_helpers.h
-
-# ... rest of hardware config, copy from example/fan-controller.yaml
 ```
+
+`fan_host` is automatically derived from `device_name`, so you only need to set the name once.
+
+### 3. Create `myhouse/open-air-mini.yaml`
+
+Copy from `example/fan-controller.yaml` without modification. All installation-specific values come from `config.yaml`.
 
 ### 4. Create `myhouse/valve-N.yaml` for each valve
 
