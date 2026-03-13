@@ -421,7 +421,7 @@ interval:
 
           id(rehome_button).press();
 
-  # ---------- OFFLINE VALVE CONTROL ----------
+  # ---------- LOCAL MODE VALVE CONTROL ----------
   - interval: 60s
     then:
       - if:
