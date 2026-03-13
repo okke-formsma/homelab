@@ -1,10 +1,111 @@
-# OpenAIR Local Mode
+# Open-AIR — fan and valve control
 
 **[▶ Open simulator](https://formsma.nl/homelab/openair/simulator.html)** — interactive tool to explore how the fan and valves respond to sensor readings.
 
 Local Mode is a standalone control system that lets the fan and valves operate **without Home Assistant**. It activates when:
 - The HA API connection is lost, **or**
 - The "Local Mode" toggle switch is turned on manually
+
+---
+
+## Repository layout
+
+```
+openair/
+  shared/          ← shared logic — never edit these
+  garage/          ← garage installation (fan controller + 5 valves)
+  huis/            ← huis installation (fan controller + 4 valves)
+  example/         ← copy this to start a new installation
+  secrets.yaml     ← gitignored, one file covers all installations
+```
+
+Each installation directory contains:
+
+| File | Purpose |
+|---|---|
+| `config.yaml` | All user-configurable settings: `device_name`, `fan_host`, valve hostnames |
+| `open-air-mini.yaml` | Fan controller: hardware config (no user edits needed) |
+| `valve-N.yaml` | One file per valve: device name + hardware template |
+
+---
+
+## Setting up a new installation
+
+### 0. Secrets
+
+Create `secrets.yaml` at the `openair/` root if it doesn't exist yet (ESPHome searches parent directories, so one file covers every installation):
+
+```bash
+cp secrets.yaml.example secrets.yaml
+# edit secrets.yaml with your WiFi credentials and OTA password
+```
+
+### 1. Create a directory
+
+```bash
+mkdir myhouse
+```
+
+### 2. Create `myhouse/config.yaml`
+
+Copy from `example/config.yaml`. Fill in your device name and valve hostnames:
+
+```yaml
+substitutions:
+  device_name: "open-air-mini-myhouse"
+  fan_host: "${device_name}.local"
+
+  valve_1_host: "open-air-valve-myhouse-1.local"
+  valve_2_host: "open-air-valve-myhouse-2.local"
+  valve_3_host: "open-air-valve-myhouse-3.local"
+  # Unused slots default to "0.0.0.0" in local_mode_fan.yaml — no need to list them
+```
+
+`fan_host` is automatically derived from `device_name`, so you only need to set the name once.
+
+### 3. Create `myhouse/open-air-mini.yaml`
+
+Copy from `example/fan-controller.yaml`. No modifications needed — it picks up all settings from `config.yaml` via the `packages` include at the top:
+
+```yaml
+packages:
+  config: !include config.yaml
+  local_mode: !include ../shared/local_mode_fan.yaml
+# ...
+```
+
+### 4. Create `myhouse/valve-N.yaml` for each valve
+
+Copy from `example/valve.yaml`. Fill in `devicename` and `upper_devicename`.
+`fan_host` comes automatically from `config.yaml`.
+
+```yaml
+substitutions:
+  devicename: open-air-valve-myhouse-1
+  upper_devicename: Open AIR Valve Myhouse 1
+
+packages:
+  config: !include config.yaml
+  hardware: !include ../shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml
+
+esphome:
+  includes:
+    - ../shared/local_mode_helpers.h
+```
+
+Repeat for each valve, incrementing the number.
+
+### 5. Flash
+
+```bash
+esphome run myhouse/open-air-mini.yaml
+esphome run myhouse/valve-1.yaml
+# repeat for each valve
+```
+
+See [FLASHING.md](FLASHING.md) for more detail.
+
+---
 
 ## Architecture
 
@@ -24,7 +125,11 @@ Each fan controller manages its own set of valves independently. Multiple instal
 
 Unused valve slots in `local_mode_fan.yaml` default to `"0.0.0.0"`. Requests to that address fail immediately, return NAN, and are excluded from demand calculation — no special handling needed.
 
-## Shared settings (`shared/local_mode_settings.yaml`)
+---
+
+## How it works
+
+### Shared settings (`shared/local_mode_settings.yaml`)
 
 All tuning parameters live in one file, included by both the fan controller and every valve:
 
@@ -42,13 +147,7 @@ All tuning parameters live in one file, included by both the fan controller and 
 | `smoothing_alpha` | 0.7 | EMA weight on new value (higher = less smoothing) |
 | `poll_interval` | 60s | How often to poll and recompute |
 
-## Shared helpers (`shared/local_mode_helpers.h`)
-
-- `parse_sensor_value(body, status_code)` — extracts the `"value"` field from ESPHome web server JSON responses. Returns NAN on failure.
-- `compute_demand(value, target, max_val)` — maps a sensor value to 0-1 demand using linear interpolation between target and max.
-- `ema(old_value, new_value, alpha)` — exponential moving average for smoothing.
-
-## Fan control (`shared/local_mode_fan.yaml`)
+### Fan control (`shared/local_mode_fan.yaml`)
 
 Every poll cycle, the fan controller:
 
@@ -62,7 +161,7 @@ Valves returning NAN (unreachable or sensor error) are excluded. The system keep
 
 The fan speed is exposed via the ESPHome web server at `/fan/Open AIR Mini`, which valves poll to coordinate.
 
-## Valve control (`shared/local_mode_valve.yaml`)
+### Valve control (`shared/local_mode_valve.yaml`)
 
 Each valve runs independently every poll cycle:
 
@@ -90,6 +189,8 @@ Valve positioning uses a 101-entry lookup table mapping 0–100% to stepper moto
 
 Valve control is skipped during homing (`homing_in_progress` flag).
 
+---
+
 ## Assumptions and approximations
 
 ### Fan speed is driven by the single worst room
@@ -100,93 +201,3 @@ The valve position formula (`ratio = demand / fan_demand`) assumes airflow throu
 
 ### No flow rate awareness
 The system controls PWM percentage, not actual airflow (m³/h). The fan curve (RPM → m³/h at different backpressures) is unknown and would require expensive measurement equipment to characterize.
-
----
-
-## Repository layout
-
-```
-openair/
-  shared/          ← shared logic — never edit these
-  garage/          ← garage installation (fan controller + 5 valves)
-  huis/            ← huis installation (fan controller + 4 valves)
-  example/         ← copy this to start a new installation
-  secrets.yaml     ← gitignored, one file covers all installations
-```
-
-Each installation directory contains:
-
-| File | Purpose |
-|---|---|
-| `config.yaml` | All user-configurable settings: `device_name`, `fan_host`, valve hostnames |
-| `open-air-mini.yaml` | Fan controller: hardware config only (no user edits needed) |
-| `valve-N.yaml` | One file per valve: device name + includes config + hardware template |
-
-## Setting up a new installation
-
-### 1. Create a directory
-
-```bash
-mkdir myhouse
-```
-
-### 2. Create `myhouse/config.yaml`
-
-Copy from `example/config.yaml`. Fill in your device name and valve hostnames:
-
-```yaml
-substitutions:
-  device_name: "open-air-mini-myhouse"
-  fan_host: "${device_name}.local"
-
-  valve_1_host: "open-air-valve-myhouse-1.local"
-  valve_2_host: "open-air-valve-myhouse-2.local"
-  valve_3_host: "open-air-valve-myhouse-3.local"
-  # Unused slots default to "0.0.0.0" in local_mode_fan.yaml — no need to list them
-```
-
-`fan_host` is automatically derived from `device_name`, so you only need to set the name once.
-
-### 3. Create `myhouse/open-air-mini.yaml`
-
-Copy from `example/fan-controller.yaml` without modification. All installation-specific values come from `config.yaml`.
-
-### 4. Create `myhouse/valve-N.yaml` for each valve
-
-Copy from `example/valve.yaml`. Fill in `devicename` and `upper_devicename`.
-`fan_host` comes automatically from `config.yaml`.
-
-```yaml
-substitutions:
-  devicename: open-air-valve-myhouse-1
-  upper_devicename: Open AIR Valve Myhouse 1
-
-packages:
-  config: !include config.yaml
-  hardware: !include ../shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml
-
-esphome:
-  includes:
-    - ../shared/local_mode_helpers.h
-```
-
-Repeat for each valve, incrementing the number.
-
-### 5. Secrets
-
-Create `secrets.yaml` at the `openair/` root if it doesn't exist yet (ESPHome searches parent directories, so one file covers every installation):
-
-```bash
-cp secrets.yaml.example secrets.yaml
-# edit secrets.yaml with your WiFi credentials and keys
-```
-
-### 6. Flash
-
-```bash
-esphome run myhouse/open-air-mini.yaml
-esphome run myhouse/valve-1.yaml
-# repeat for each valve
-```
-
-See [FLASHING.md](FLASHING.md) for more detail.

@@ -2,6 +2,7 @@
 # Copy this file to your installation directory (e.g. myhouse/) and adjust config.yaml.
 
 packages:
+  config: !include config.yaml
   local_mode: !include ../shared/local_mode_fan.yaml
 
 esphome:

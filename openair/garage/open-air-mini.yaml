@@ -1,4 +1,5 @@
 packages:
+  config: !include config.yaml
   local_mode: !include ../shared/local_mode_fan.yaml
 
 esphome:
