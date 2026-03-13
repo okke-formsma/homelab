@@ -205,7 +205,6 @@ interval:
                 const float ALPHA = ${smoothing_alpha};
 
                 float max_demand = 0.0f;
-                float total_demand = 0.0f;
                 int active_valves = 0;
 
                 for (int i = 0; i < 5; i++) {
@@ -221,23 +220,20 @@ interval:
 
                   if (!std::isnan(id(valve_co2)[i]) || !std::isnan(id(valve_humidity)[i])) {
                     active_valves++;
-                    total_demand += d;
                     if (d > max_demand) max_demand = d;
                   }
                 }
 
-                // Fan factor: at least serve the neediest room, scale up for multiple
-                float fan_demand = (active_valves > 0)
-                  ? std::max(max_demand, total_demand / (float)active_valves)
-                  : 0.0f;
+                // Fan demand driven by the neediest room
+                float fan_demand = (active_valves > 0) ? max_demand : 0.0f;
 
                 // Apply EMA smoothing
                 id(smoothed_fan_demand) = ema(id(smoothed_fan_demand), fan_demand, ALPHA);
                 float smoothed = id(smoothed_fan_demand);
 
                 int speed = (int)(SPEED_MIN + smoothed * (SPEED_MAX - SPEED_MIN));
-                ESP_LOGI("local_mode", "Demand: max=%.2f total=%.2f active=%d fan_demand=%.2f smoothed=%.2f -> fan %d%%",
-                         max_demand, total_demand, active_valves, fan_demand, smoothed, speed);
+                ESP_LOGI("local_mode", "Demand: max=%.2f active=%d fan_demand=%.2f smoothed=%.2f -> fan %d%%",
+                         max_demand, active_valves, fan_demand, smoothed, speed);
 
                 auto call = id(fan_motor).make_call();
                 call.set_speed(speed);

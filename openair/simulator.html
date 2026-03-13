@@ -242,15 +242,16 @@ function simulate() {
   const S = settings;
   const demands = [];
 
+  let fanDemandRaw = 0;
   for (let i = 0; i < 5; i++) {
     const co2_d = computeDemand(rooms[i].co2, S.co2_target, S.co2_max);
     const hum_d = computeDemand(rooms[i].humidity, S.humidity_target, S.humidity_max);
     const d = Math.max(co2_d, hum_d);
-    smoothedDemands[i] = ema(smoothedDemands[i], d, S.smoothing_alpha);
+    smoothedDemands[i] = ema(smoothedDemands[i], d, S.smoothing_alpha); // for valve ratio
+    if (d > fanDemandRaw) fanDemandRaw = d; // raw max for fan (match ESPHome)
     demands.push(smoothedDemands[i]);
   }
 
-  const fanDemandRaw = Math.max(...demands);
   smoothedFanDemand = ema(smoothedFanDemand, fanDemandRaw, S.smoothing_alpha);
   const fanSpeed = S.fan_speed_min + smoothedFanDemand * (S.fan_speed_max - S.fan_speed_min);
 
