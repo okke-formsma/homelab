@@ -32,7 +32,7 @@ interval:
               - lambda: 'return !id(homing_in_progress);'
           then:
             # Read fan speed from openair controller
-            - logger.log: "GET http://${fan_host}/fan/Open%20AIR%20Mini"
+            - lambda: 'ESP_LOGD("poll", "GET http://${fan_host}/fan/Open%%20AIR%%20Mini");'
             - http_request.get:
                 url: "http://${fan_host}/fan/Open%20AIR%20Mini"
                 capture_response: true
