@@ -526,7 +526,8 @@ for (const [name, [fn, positions]] of Object.entries(presets)) {
 setInterval(() => {
   if (running) {
     for (let i = 0; i < 5; i++) {
-      const airflow = lastFanDemand * lastPositions[i];
+      const fanSpeedNorm = (settings.fan_speed_min + lastFanDemand * (settings.fan_speed_max - settings.fan_speed_min)) / 100;
+      const airflow = fanSpeedNorm * lastPositions[i];
       const occupants = people.filter(p => p.room === i).length; // outside (room=-1) excluded
       rooms[i].co2      = rooms[i].co2      - airflow * (rooms[i].co2      - outside.co2)      * 0.03 + occupants * 0.5;
       rooms[i].humidity = rooms[i].humidity - airflow * (rooms[i].humidity - outside.humidity) * 0.03;
