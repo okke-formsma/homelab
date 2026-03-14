@@ -13,6 +13,6 @@ substitutions:
 
   # Active valve hostnames for this installation.
   # Unused slots default to "0.0.0.0" (disabled) in local_mode_fan.yaml.
-  valve_1_host: "open-air-valve-1.local"
-  valve_2_host: "open-air-valve-2.local"
+  valve_1_host: "example-valve-1.local"
+  valve_2_host: "example-valve-2.local"
   # valve_3_host: "0.0.0.0"   # uncomment and fill in to add more valves (up to 7)

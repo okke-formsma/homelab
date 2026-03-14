@@ -1,14 +1,17 @@
 # One valve for this installation.
-# Copy this file to your installation directory, rename it (e.g. valve-1.yaml),
+# Copy this file to your installation directory, rename it (e.g. valve-2.yaml),
 # and fill in devicename / upper_devicename.
 # fan_host comes from config.yaml in the same directory.
 
 substitutions:
-  devicename: open-air-valve-<yourname>-1
-  upper_devicename: Open AIR Valve <Yourname> 1
+  devicename: example-valve-2
+  upper_devicename: Example Valve 2
 
 packages:
   config: !include config.yaml
+  # Pick the hardware package that matches your sensor set:
+  # - Open_AIR_Valve_DIS_SCD40.yaml (SCD40 only)
+  # - Open_AIR_Valve_DIS_SCD40_SGP41.yaml (SCD40 + SGP41)
   hardware: !include ../shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml
 
 esphome:

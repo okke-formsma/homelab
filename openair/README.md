@@ -56,12 +56,11 @@ packages:
   settings: !include ../shared/local_mode_settings.yaml
 
 substitutions:
-  device_name: "open-air-mini-myhouse"
+  device_name: "open-air-mini-<yourname>"
   fan_host: "${device_name}.local"
 
-  valve_1_host: "open-air-valve-myhouse-1.local"
-  valve_2_host: "open-air-valve-myhouse-2.local"
-  valve_3_host: "open-air-valve-myhouse-3.local"
+  valve_1_host: "example-valve-1.local"
+  valve_2_host: "example-valve-2.local"
   # Unused slots default to "0.0.0.0" in local_mode_fan.yaml — no need to list them
 ```
 
@@ -80,13 +79,13 @@ packages:
 
 ### 4. Create `myhouse/valve-N.yaml` for each valve
 
-Copy from `example/valve.yaml`. Fill in `devicename` and `upper_devicename`.
+Copy from `example/valve-1.yaml`. Fill in `devicename` and `upper_devicename`.
 `fan_host` comes automatically from `config.yaml`.
 
 ```yaml
 substitutions:
-  devicename: open-air-valve-myhouse-1
-  upper_devicename: Open AIR Valve Myhouse 1
+  devicename: example-valve-1
+  upper_devicename: Example Valve 1
 
 packages:
   config: !include config.yaml
@@ -97,13 +96,22 @@ esphome:
     - ../shared/local_mode_helpers.h
 ```
 
-Repeat for each valve, incrementing the number.
+Repeat for each valve (e.g., valve-1 and valve-2), incrementing the number.
+
+#### Choosing the hardware package
+
+Pick the hardware include that matches your sensor set:
+- `shared/Open_AIR_Valve_DIS_SCD40.yaml`: SCD40 only — CO₂, humidity, temperature.
+- `shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml`: SCD40 + SGP41 — CO₂, humidity, temperature, VOC index, NOx index.
+
+Use the SGP41 variant only if that sensor is present on the valve PCB. If you choose the wrong one, the build will fail or the extra sensors will read as unavailable.
 
 ### 5. Flash
 
 ```bash
 esphome run myhouse/open-air-mini.yaml
 esphome run myhouse/valve-1.yaml
+esphome run myhouse/valve-2.yaml
 # repeat for each valve
 ```
 
@@ -113,18 +121,24 @@ See [FLASHING.md](FLASHING.md) for more detail.
 
 ## Architecture
 
-Each fan controller manages its own set of valves independently. Multiple installations run in parallel without interaction.
+Each fan controller manages its own set of valves independently.
 
 ```
-┌────────────────────────────────────┐   ┌────────────────────────────────────┐
-│  open-air-mini-garage (5 valves)   │   │  open-air-mini-huis (4 valves)     │
-│  Polls valves via HTTP every 60s   │   │  Polls valves via HTTP every 60s   │
-│  Exposes fan speed via web server  │   │  Exposes fan speed via web server  │
-└──────────────┬─────────────────────┘   └──────────────┬─────────────────────┘
-               │ HTTP GET /sensor/Demand                 │ HTTP GET /sensor/Demand
-               ▼                                         ▼
-       valve-1 .. valve-5                        valve-1 .. valve-4
-         (each polls /fan/Open AIR Mini back)       (each polls /fan/Open AIR Mini back)
+┌────────────────────────────────────┐
+│  open-air-mini-<yourname> (2 valves)│
+│  Polls valves via HTTP every 60s   │
+│  Exposes fan speed via web server  │
+└──────────────┬─────────────────────┘
+               ▼ GET /sensor/Demand
+               |
+         ┌─────┴───────┐
+         ▲             ▲   GET /fan/Open AIR Mini
+         |             |
+┌─────────────────┐  ┌─────────────────┐
+│ example-valve-1 │  │ example-valve-2 │
+│ SCD40 + SGP41   │  │ SCD40 only      │
+│ CO₂/H/T/VOC/NOx │  │ CO₂/H/T         │
+└─────────────────┘  └─────────────────┘
 ```
 
 Unused valve slots in `local_mode_fan.yaml` default to `"0.0.0.0"`. Requests to that address fail immediately, return NAN, and are excluded from demand calculation — no special handling needed.

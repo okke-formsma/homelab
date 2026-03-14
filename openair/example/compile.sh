@@ -4,4 +4,5 @@ cd "$(dirname "$0")"
 
 esphome compile \
   fan-controller.yaml \
-  valve.yaml
+  valve-1.yaml \
+  valve-2.yaml
