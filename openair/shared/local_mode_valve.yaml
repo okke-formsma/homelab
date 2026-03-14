@@ -179,6 +179,11 @@ interval:
             - http_request.get:
                 url: "http://${fan_host}/fan/Open%20AIR%20Mini"
                 capture_response: true
+                on_error:
+                  then:
+                    - lambda: |-
+                        ESP_LOGW("poll", "Fan request failed");
+                        id(current_fan_speed) = NAN;
                 on_response:
                   then:
                     - lambda: |-

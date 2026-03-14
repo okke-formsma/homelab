@@ -16,7 +16,7 @@ openair/
   garage/          ← garage installation (fan controller + 5 valves)
   huis/            ← huis installation (fan controller + 4 valves)
   example/         ← copy this to start a new installation
-  secrets.yaml     ← gitignored, one file covers all installations
+  secrets.yaml.example  ← template for per-install secrets.yaml
 ```
 
 Each installation directory contains:
@@ -39,7 +39,7 @@ mkdir myhouse
 
 ### 1. Secrets
 
-Copy `secrets.yaml` into your installation directory (ESPHome only looks for it next to the config being compiled):
+Copy `secrets.yaml` into your installation directory (ESPHome only looks for it next to the config being compiled). If you want a single shared file, use a symlink from each install to the same secrets file.
 
 ```bash
 cp secrets.yaml.example myhouse/secrets.yaml
@@ -51,6 +51,10 @@ cp secrets.yaml.example myhouse/secrets.yaml
 Copy from `example/config.yaml`. Fill in your device name and valve hostnames:
 
 ```yaml
+packages:
+  defaults: !include ../shared/local_mode_defaults.yaml
+  settings: !include ../shared/local_mode_settings.yaml
+
 substitutions:
   device_name: "open-air-mini-myhouse"
   fan_host: "${device_name}.local"
@@ -117,10 +121,10 @@ Each fan controller manages its own set of valves independently. Multiple instal
 │  Polls valves via HTTP every 60s   │   │  Polls valves via HTTP every 60s   │
 │  Exposes fan speed via web server  │   │  Exposes fan speed via web server  │
 └──────────────┬─────────────────────┘   └──────────────┬─────────────────────┘
-               │ HTTP GET /sensor/{CO2,Humidity}         │ HTTP GET /sensor/{CO2,Humidity}
+               │ HTTP GET /sensor/Demand                 │ HTTP GET /sensor/Demand
                ▼                                         ▼
        valve-1 .. valve-5                        valve-1 .. valve-4
-         (each polls fan speed back)               (each polls fan speed back)
+         (each polls /fan/Open AIR Mini back)       (each polls /fan/Open AIR Mini back)
 ```
 
 Unused valve slots in `local_mode_fan.yaml` default to `"0.0.0.0"`. Requests to that address fail immediately, return NAN, and are excluded from demand calculation — no special handling needed.

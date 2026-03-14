@@ -1,3 +1,7 @@
+packages:
+  defaults: !include ../shared/local_mode_defaults.yaml
+  settings: !include ../shared/local_mode_settings.yaml
+
 substitutions:
   # Name of this fan controller. Used as ESPHome device name and mDNS hostname.
   # Must match fan_host below (without .local).

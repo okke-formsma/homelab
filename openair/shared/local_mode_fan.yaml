@@ -59,6 +59,11 @@ interval:
                   - http_request.get:
                       url: "http://${valve_1_host}/sensor/Demand"
                       capture_response: true
+                      on_error:
+                        then:
+                          - lambda: |-
+                              ESP_LOGW("poll", "Request failed for valve_1");
+                              id(valve_demand)[0] = NAN;
                       on_response:
                         then:
                           - lambda: |-
@@ -73,6 +78,11 @@ interval:
                   - http_request.get:
                       url: "http://${valve_2_host}/sensor/Demand"
                       capture_response: true
+                      on_error:
+                        then:
+                          - lambda: |-
+                              ESP_LOGW("poll", "Request failed for valve_2");
+                              id(valve_demand)[1] = NAN;
                       on_response:
                         then:
                           - lambda: |-
@@ -87,6 +97,11 @@ interval:
                   - http_request.get:
                       url: "http://${valve_3_host}/sensor/Demand"
                       capture_response: true
+                      on_error:
+                        then:
+                          - lambda: |-
+                              ESP_LOGW("poll", "Request failed for valve_3");
+                              id(valve_demand)[2] = NAN;
                       on_response:
                         then:
                           - lambda: |-
@@ -101,6 +116,11 @@ interval:
                   - http_request.get:
                       url: "http://${valve_4_host}/sensor/Demand"
                       capture_response: true
+                      on_error:
+                        then:
+                          - lambda: |-
+                              ESP_LOGW("poll", "Request failed for valve_4");
+                              id(valve_demand)[3] = NAN;
                       on_response:
                         then:
                           - lambda: |-
@@ -115,6 +135,11 @@ interval:
                   - http_request.get:
                       url: "http://${valve_5_host}/sensor/Demand"
                       capture_response: true
+                      on_error:
+                        then:
+                          - lambda: |-
+                              ESP_LOGW("poll", "Request failed for valve_5");
+                              id(valve_demand)[4] = NAN;
                       on_response:
                         then:
                           - lambda: |-
@@ -129,6 +154,11 @@ interval:
                   - http_request.get:
                       url: "http://${valve_6_host}/sensor/Demand"
                       capture_response: true
+                      on_error:
+                        then:
+                          - lambda: |-
+                              ESP_LOGW("poll", "Request failed for valve_6");
+                              id(valve_demand)[5] = NAN;
                       on_response:
                         then:
                           - lambda: |-
@@ -143,6 +173,11 @@ interval:
                   - http_request.get:
                       url: "http://${valve_7_host}/sensor/Demand"
                       capture_response: true
+                      on_error:
+                        then:
+                          - lambda: |-
+                              ESP_LOGW("poll", "Request failed for valve_7");
+                              id(valve_demand)[6] = NAN;
                       on_response:
                         then:
                           - lambda: |-
