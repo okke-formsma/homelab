@@ -32,6 +32,14 @@ globals:
     restore_value: no
     initial_value: "0.0"
 
+sensor:
+  - platform: template
+    name: "Fan Speed"
+    id: fan_speed_pct
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: "mdi:fan"
+
 interval:
   - interval: ${poll_interval}
     then:
@@ -245,6 +253,8 @@ interval:
                 int speed = (int)(SPEED_MIN + smoothed * (SPEED_MAX - SPEED_MIN));
                 ESP_LOGI("local_mode", "Demand: max=%.2f active=%d fan_demand=%.2f smoothed=%.2f -> fan %d%%",
                          max_demand, active_valves, fan_demand, smoothed, speed);
+
+                id(fan_speed_pct).publish_state(speed);
 
                 auto call = id(fan_motor).make_call();
                 call.set_speed(speed);
