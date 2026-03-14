@@ -22,6 +22,93 @@ globals:
     type: float
     restore_value: no
     initial_value: "NAN"
+  - id: co2_target_val
+    type: float
+    restore_value: yes
+    initial_value: "${co2_target}"
+  - id: co2_max_val
+    type: float
+    restore_value: yes
+    initial_value: "${co2_max}"
+  - id: humidity_target_val
+    type: float
+    restore_value: yes
+    initial_value: "${humidity_target}"
+  - id: humidity_max_val
+    type: float
+    restore_value: yes
+    initial_value: "${humidity_max}"
+
+esphome:
+  on_boot:
+    - priority: -100
+      then:
+        - lambda: |-
+            id(co2_target_num).publish_state(id(co2_target_val));
+            id(co2_max_num).publish_state(id(co2_max_val));
+            id(humidity_target_num).publish_state(id(humidity_target_val));
+            id(humidity_max_num).publish_state(id(humidity_max_val));
+
+number:
+  - platform: template
+    name: "CO2 Target"
+    id: co2_target_num
+    unit_of_measurement: "ppm"
+    icon: "mdi:molecule-co2"
+    entity_category: config
+    min_value: 400
+    max_value: 1200
+    step: 50
+    optimistic: true
+    restore_value: false
+    initial_value: ${co2_target}
+    set_action:
+      - lambda: 'id(co2_target_val) = x;'
+
+  - platform: template
+    name: "CO2 Max"
+    id: co2_max_num
+    unit_of_measurement: "ppm"
+    icon: "mdi:molecule-co2"
+    entity_category: config
+    min_value: 600
+    max_value: 3000
+    step: 50
+    optimistic: true
+    restore_value: false
+    initial_value: ${co2_max}
+    set_action:
+      - lambda: 'id(co2_max_val) = x;'
+
+  - platform: template
+    name: "Humidity Target"
+    id: humidity_target_num
+    unit_of_measurement: "%"
+    icon: "mdi:water-percent"
+    entity_category: config
+    min_value: 30
+    max_value: 80
+    step: 5
+    optimistic: true
+    restore_value: false
+    initial_value: ${humidity_target}
+    set_action:
+      - lambda: 'id(humidity_target_val) = x;'
+
+  - platform: template
+    name: "Humidity Max"
+    id: humidity_max_num
+    unit_of_measurement: "%"
+    icon: "mdi:water-percent"
+    entity_category: config
+    min_value: 50
+    max_value: 100
+    step: 5
+    optimistic: true
+    restore_value: false
+    initial_value: ${humidity_max}
+    set_action:
+      - lambda: 'id(humidity_max_val) = x;'
 
 interval:
   # ---------- LOCAL MODE VALVE CONTROL ----------
@@ -61,10 +148,10 @@ interval:
                         id(current_fan_speed) = v;
             # Compute demand and set valve position
             - lambda: |-
-                const float CO2_TARGET = ${co2_target};
-                const float CO2_MAX = ${co2_max};
-                const float HUM_TARGET = ${humidity_target};
-                const float HUM_MAX = ${humidity_max};
+                const float CO2_TARGET = id(co2_target_val);
+                const float CO2_MAX = id(co2_max_val);
+                const float HUM_TARGET = id(humidity_target_val);
+                const float HUM_MAX = id(humidity_max_val);
                 const float SPEED_MIN = ${fan_speed_min};
                 const float SPEED_MAX = ${fan_speed_max};
                 const float POS_MIN = ${valve_pos_min};
