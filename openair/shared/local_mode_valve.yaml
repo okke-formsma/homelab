@@ -5,6 +5,14 @@
 http_request:
   timeout: 3s
 
+sensor:
+  - platform: template
+    name: "Demand"
+    id: demand_sensor
+    unit_of_measurement: ""
+    accuracy_decimals: 2
+    icon: "mdi:gauge"
+
 globals:
   - id: smoothed_demand
     type: float
@@ -75,6 +83,7 @@ interval:
                 // Apply EMA smoothing
                 id(smoothed_demand) = ema(id(smoothed_demand), demand, ALPHA);
                 float smoothed = id(smoothed_demand);
+                id(demand_sensor).publish_state(smoothed);
 
                 // Compute position using fan speed ratio
                 float fan_speed = id(current_fan_speed);
