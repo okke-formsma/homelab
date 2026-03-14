@@ -56,8 +56,8 @@ number:
     unit_of_measurement: "ppm"
     icon: "mdi:molecule-co2"
     entity_category: config
-    min_value: 400
-    max_value: 1200
+    min_value: 0
+    max_value: 2000
     step: 50
     optimistic: true
     restore_value: false
@@ -71,8 +71,8 @@ number:
     unit_of_measurement: "ppm"
     icon: "mdi:molecule-co2"
     entity_category: config
-    min_value: 600
-    max_value: 3000
+    min_value: 0
+    max_value: 2000
     step: 50
     optimistic: true
     restore_value: false
@@ -86,8 +86,8 @@ number:
     unit_of_measurement: "%"
     icon: "mdi:water-percent"
     entity_category: config
-    min_value: 30
-    max_value: 80
+    min_value: 0
+    max_value: 100
     step: 5
     optimistic: true
     restore_value: false
@@ -101,7 +101,7 @@ number:
     unit_of_measurement: "%"
     icon: "mdi:water-percent"
     entity_category: config
-    min_value: 50
+    min_value: 0
     max_value: 100
     step: 5
     optimistic: true
