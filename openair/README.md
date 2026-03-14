@@ -145,15 +145,16 @@ All tuning parameters live in one file, included by both the fan controller and 
 | `valve_pos_max` | 1.0 | Fully open |
 | `dead_band` | 0.05 | Below this fan demand, all valves open fully |
 | `smoothing_alpha` | 0.7 | EMA weight on new value (higher = less smoothing) |
+| `ki_scale` | 0.5 | Max demand added by a fully charged integral (0 = disable I term) |
+| `integral_max` | 10 | Polls (minutes at full demand) to saturate the integral |
 | `poll_interval` | 60s | How often to poll and recompute |
 
 ### Fan control (`shared/local_mode_fan.yaml`)
 
 Every poll cycle, the fan controller:
 
-1. **Polls CO2 + humidity** from all configured valves via HTTP (2 requests per slot, up to 14 total)
-2. **Computes per-valve demand** (0–1) — linear interpolation between target and max, taking the higher of CO2 and humidity demand
-3. **Fan demand = max demand** across all reachable valves (the neediest room drives the fan)
+1. **Polls PI demand** from all configured valves via HTTP (`/sensor/Demand`, one request per slot)
+2. **Fan demand = max demand** across all reachable valves (the neediest room drives the fan); demand already includes the I term computed on each valve
 4. **Applies EMA smoothing** to prevent jitter
 5. **Sets fan speed**: `fan_speed_min + smoothed_demand × (fan_speed_max − fan_speed_min)`
 
@@ -167,9 +168,30 @@ Each valve runs independently every poll cycle:
 
 1. **Reads own CO2 + humidity** from local I2C sensors
 2. **Polls current fan speed** from the fan controller via HTTP GET
-3. **Computes own demand** (0–1) using the same formula
+3. **Computes own PI demand** (0–1) — see below
 4. **Applies EMA smoothing**
 5. **Sets valve position** using the fan speed to coordinate with other rooms:
+
+#### PI controller
+
+Demand is computed as a proportional term (P) plus an integral term (I):
+
+```
+signed_error = max(
+  (co2 − co2_target) / (co2_max − co2_target),
+  (humidity − hum_target) / (hum_max − hum_target)
+)
+
+P = clamp(signed_error, 0, 1)
+
+integral += signed_error          # accumulates when above target, drains when below
+integral  = clamp(integral, 0, integral_max)
+I_contribution = (integral / integral_max) × ki_scale
+
+pi_demand = clamp(P + I_contribution, 0, 1)
+```
+
+The I term means a room that lingers just above the CO₂ target will gradually increase demand over time, pushing the fan harder. When the CO₂ finally drops below target, the integral drains and the fan "runs on" briefly before settling. Set `ki_scale: "0"` to revert to pure-P behaviour.
 
 ```
 fan_demand = normalize fan speed to 0-1

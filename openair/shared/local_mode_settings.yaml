@@ -19,5 +19,9 @@ substitutions:
   # Smoothing (EMA alpha: higher = more weight on new value)
   smoothing_alpha: "0.7"
 
+  # Integral (I) controller - set ki_scale: "0" to disable
+  ki_scale: "0.5"     # max demand added by full integral (0.5 = up to +50% on top of P term)
+  integral_max: "10"  # polls to saturate integral (10 × 60s = 10 min at full demand)
+
   # Polling interval
   poll_interval: "60s"

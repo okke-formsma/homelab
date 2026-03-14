@@ -12,9 +12,20 @@ sensor:
     unit_of_measurement: ""
     accuracy_decimals: 2
     icon: "mdi:gauge"
+  - platform: template
+    name: "Integral Demand"
+    id: integral_sensor
+    unit_of_measurement: ""
+    accuracy_decimals: 2
+    icon: "mdi:chart-timeline-variant"
+    entity_category: diagnostic
 
 globals:
   - id: smoothed_demand
+    type: float
+    restore_value: no
+    initial_value: "0.0"
+  - id: integral_demand
     type: float
     restore_value: no
     initial_value: "0.0"
@@ -38,6 +49,14 @@ globals:
     type: float
     restore_value: yes
     initial_value: "${humidity_max}"
+  - id: ki_scale_val
+    type: float
+    restore_value: yes
+    initial_value: "${ki_scale}"
+  - id: integral_max_val
+    type: float
+    restore_value: yes
+    initial_value: "${integral_max}"
 
 esphome:
   on_boot:
@@ -48,6 +67,8 @@ esphome:
             id(co2_max_num).publish_state(id(co2_max_val));
             id(humidity_target_num).publish_state(id(humidity_target_val));
             id(humidity_max_num).publish_state(id(humidity_max_val));
+            id(ki_scale_num).publish_state(id(ki_scale_val));
+            id(integral_max_num).publish_state(id(integral_max_val));
 
 number:
   - platform: template
@@ -110,6 +131,36 @@ number:
     set_action:
       - lambda: 'id(humidity_max_val) = x;'
 
+  - platform: template
+    name: "Ki Scale"
+    id: ki_scale_num
+    unit_of_measurement: ""
+    icon: "mdi:chart-bell-curve"
+    entity_category: config
+    min_value: 0
+    max_value: 2.0
+    step: 0.1
+    optimistic: true
+    restore_value: false
+    initial_value: ${ki_scale}
+    set_action:
+      - lambda: 'id(ki_scale_val) = x; id(integral_demand) = 0.0f;'
+
+  - platform: template
+    name: "Integral Max (polls)"
+    id: integral_max_num
+    unit_of_measurement: ""
+    icon: "mdi:timer-sand"
+    entity_category: config
+    min_value: 1
+    max_value: 60
+    step: 1
+    optimistic: true
+    restore_value: false
+    initial_value: ${integral_max}
+    set_action:
+      - lambda: 'id(integral_max_val) = x; id(integral_demand) = 0.0f;'
+
 interval:
   # ---------- LOCAL MODE VALVE CONTROL ----------
   - interval: ${poll_interval}
@@ -158,17 +209,32 @@ interval:
                 const float POS_MAX = ${valve_pos_max};
                 const float ALPHA = ${smoothing_alpha};
                 const float DEAD_BAND = ${dead_band};
+                const float KI_SCALE = id(ki_scale_val);
+                const float INTEGRAL_MAX = id(integral_max_val);
 
                 float co2 = id(air_Co2).state;
                 float hum = id(air_humidity).state;
 
-                // Compute this valve's demand
-                float co2_d = compute_demand(co2, CO2_TARGET, CO2_MAX);
-                float hum_d = compute_demand(hum, HUM_TARGET, HUM_MAX);
-                float demand = std::max(co2_d, hum_d);
+                // Signed (unclamped) normalized error for each sensor — can be negative
+                // when the sensor is below the target, which drains the integral.
+                float co2_err = std::isnan(co2) ? 0.0f : (co2 - CO2_TARGET) / (CO2_MAX - CO2_TARGET);
+                float hum_err = std::isnan(hum) ? 0.0f : (hum - HUM_TARGET) / (HUM_MAX - HUM_TARGET);
+                float signed_error = std::max(co2_err, hum_err);
+
+                // P term: clamp signed error to [0, 1]
+                float demand = std::max(0.0f, std::min(1.0f, signed_error));
+
+                // I term: accumulate signed error, clamp to [0, INTEGRAL_MAX] (anti-windup)
+                id(integral_demand) = std::max(0.0f, std::min(INTEGRAL_MAX,
+                    id(integral_demand) + signed_error));
+                float integral_contribution = (id(integral_demand) / INTEGRAL_MAX) * KI_SCALE;
+                id(integral_sensor).publish_state(id(integral_demand) / INTEGRAL_MAX);
+
+                // Combined PI demand, clamped to [0, 1]
+                float pi_demand = std::max(0.0f, std::min(1.0f, demand + integral_contribution));
 
                 // Apply EMA smoothing
-                id(smoothed_demand) = ema(id(smoothed_demand), demand, ALPHA);
+                id(smoothed_demand) = ema(id(smoothed_demand), pi_demand, ALPHA);
                 float smoothed = id(smoothed_demand);
                 id(demand_sensor).publish_state(smoothed);
 
@@ -194,8 +260,8 @@ interval:
                   }
                 }
 
-                ESP_LOGI("local_mode", "CO2=%.0f hum=%.1f%% demand=%.2f smoothed=%.2f fan=%.0f%% -> pos=%.2f",
-                         co2, hum, demand, smoothed, fan_speed, position);
+                ESP_LOGI("local_mode", "CO2=%.0f hum=%.1f%% demand=%.2f integral=%.2f pi=%.2f smoothed=%.2f fan=%.0f%% -> pos=%.2f",
+                         co2, hum, demand, id(integral_demand), pi_demand, smoothed, fan_speed, position);
 
                 auto call = id(air_valve).make_call();
                 call.set_position(position);

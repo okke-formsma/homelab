@@ -128,19 +128,19 @@
       </div>
       <div class="explain-step">
         <div class="explain-title">Ventilator &amp; valves</div>
-        <p>The simulation runs continuously. Each room's demand (0–1) is <code>max(CO₂ demand, humidity demand)</code>, EMA-smoothed. Fan speed follows the worst room. Valves open proportionally to each room's demand — bad rooms get fresh air first, good rooms get the minimum.</p>
+        <p>The simulation runs continuously. Each room's demand combines a P term (immediate response) and an I term (accumulated past error), then EMA-smoothed. Fan speed follows the worst room. Valves open proportionally to each room's demand — bad rooms get fresh air first, good rooms get the minimum.</p>
       </div>
     </div>
     <hr class="divider" style="margin: 14px 0;">
     <h2>How it works</h2>
     <div class="explain-grid">
       <div class="explain-step">
-        <div class="explain-title">1. Demand per room</div>
-        <p>Each room computes a demand (0–1) for CO₂ and humidity independently: <code>(value − target) / (max − target)</code>, clamped to [0, 1]. The room's demand is the higher of the two. Demand is smoothed over time with an exponential moving average (EMA), controlled by <em>EMA alpha</em> — higher alpha means faster response.</p>
+        <div class="explain-title">1. Demand per room (PI controller)</div>
+        <p>Each room computes a signed normalized error for CO₂ and humidity: <code>(value − target) / (max − target)</code>. The <em>P term</em> is this error clamped to [0, 1] — immediate response. The <em>I term</em> is an accumulator that grows when the sensor stays above target and drains when it drops below. Combined: <code>demand = clamp(P + I × Ki, 0, 1)</code>, then EMA-smoothed. Set <em>Ki scale</em> to 0 to disable the I term.</p>
       </div>
       <div class="explain-step">
         <div class="explain-title">2. Fan speed</div>
-        <p>Fan demand equals the highest room demand, then EMA-smoothed. A single bad room is enough to spin the fan up. Fan speed is mapped linearly from <em>Fan min</em> to <em>Fan max</em> based on this demand.</p>
+        <p>Fan demand equals the highest room's PI demand, then EMA-smoothed. A single bad room is enough to spin the fan up. Fan speed is mapped linearly from <em>Fan min</em> to <em>Fan max</em> based on this demand. The I term means a room that stays slightly bad for many minutes will gradually escalate the fan speed.</p>
       </div>
       <div class="explain-step">
         <div class="explain-title">3. Valve positions</div>
@@ -159,7 +159,9 @@ const DEFAULTS = {
   humidity_target: 60, humidity_max: 75,
   fan_speed_min: 15, fan_speed_max: 70,
   valve_pos_min: 0.05, valve_pos_max: 1.0,
-  smoothing_alpha: 0.15
+  smoothing_alpha: 0.15,
+  ki_scale: 0.5,
+  integral_max: 10,
 };
 
 function loadSettings() {
@@ -210,6 +212,7 @@ let lastPositions = new Array(5).fill(settings.valve_pos_min);
 let lastFanDemand = 0;
 let smoothedDemands = new Array(5).fill(0);
 let smoothedFanDemand = 0;
+let integralDemands = new Array(5).fill(0);
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -244,11 +247,21 @@ function simulate() {
 
   let fanDemandRaw = 0;
   for (let i = 0; i < 5; i++) {
-    const co2_d = computeDemand(rooms[i].co2, S.co2_target, S.co2_max);
-    const hum_d = computeDemand(rooms[i].humidity, S.humidity_target, S.humidity_max);
-    const d = Math.max(co2_d, hum_d);
-    smoothedDemands[i] = ema(smoothedDemands[i], d, S.smoothing_alpha); // for valve ratio
-    if (d > fanDemandRaw) fanDemandRaw = d; // raw max for fan (match ESPHome)
+    // Signed (unclamped) error — can go negative when below target, draining the integral
+    const co2_err = (rooms[i].co2 - S.co2_target) / (S.co2_max - S.co2_target);
+    const hum_err = (rooms[i].humidity - S.humidity_target) / (S.humidity_max - S.humidity_target);
+    const signed_error = Math.max(co2_err, hum_err);
+
+    // P term
+    const d = clamp(signed_error, 0, 1);
+
+    // I term: accumulate signed error; each tick is 100ms, one "poll" is 60s
+    integralDemands[i] = clamp(integralDemands[i] + signed_error * (0.1 / 60), 0, S.integral_max);
+    const integral_contribution = (integralDemands[i] / S.integral_max) * S.ki_scale;
+
+    const pi_demand = clamp(d + integral_contribution, 0, 1);
+    smoothedDemands[i] = ema(smoothedDemands[i], pi_demand, S.smoothing_alpha);
+    if (pi_demand > fanDemandRaw) fanDemandRaw = pi_demand;
     demands.push(smoothedDemands[i]);
   }
 
@@ -444,6 +457,8 @@ const settingDefs = [
   { key: 'valve_pos_min',   label: 'Valve min',   min: 0, max: 100,  step: 1,    fmt: v => v + '%',      scale: 0.01 },
   { key: 'valve_pos_max',   label: 'Valve max',   min: 0, max: 100,  step: 1,    fmt: v => v + '%',      scale: 0.01 },
   { key: 'smoothing_alpha', label: 'EMA alpha',   min: 0, max: 1,    step: 0.01, fmt: v => v.toFixed(2) },
+  { key: 'ki_scale',        label: 'Ki scale',    min: 0, max: 2,    step: 0.1,  fmt: v => v.toFixed(1) },
+  { key: 'integral_max',    label: 'I max (min)', min: 1, max: 60,   step: 1,    fmt: v => v + ' min' },
 ];
 for (const def of settingDefs) {
   const initSlider = def.scale ? Math.round(settings[def.key] / def.scale) : settings[def.key];
@@ -515,6 +530,7 @@ for (const [name, [fn, positions, always]] of Object.entries(presets)) {
       fn();
       smoothedDemands.fill(0);
       smoothedFanDemand = 0;
+      integralDemands.fill(0);
       updateRoomSliders(); saveRooms();
     }
     if (always) always();
