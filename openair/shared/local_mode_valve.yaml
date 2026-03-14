@@ -2,9 +2,6 @@
 #   esphome:
 #     includes: [../shared/local_mode_helpers.h]
 
-packages:
-  settings: !include local_mode_settings.yaml
-
 http_request:
   timeout: 3s
 
