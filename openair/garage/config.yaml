@@ -13,5 +13,8 @@ substitutions:
 
   # Active valve hostnames for this installation.
   # Overrides defaults from local_mode_defaults.yaml.
+  # Lower co2_max for more aggressive ventilation (target ~800 ppm)
+  co2_max: "1200"
+
   valve_3_host: "garage-valve-3.local"
   valve_4_host: "garage-valve-4.local"
