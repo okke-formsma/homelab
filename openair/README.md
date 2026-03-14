@@ -217,6 +217,17 @@ Valve control is skipped during homing (`homing_in_progress` flag).
 
 ---
 
+## Fault scenarios
+
+- **Valve offline:** fan controller ignores its demand after request failure; fan demand is computed from reachable valves only.
+- **All valves offline:** fan demand becomes 0 and the fan falls back to `fan_speed_min` (always-on minimum).
+- **Wi‑Fi/router outage (fan + valves unreachable):** fan controller sees zero reachable valves and runs at `fan_speed_min`; valves can’t reach the fan controller and default to fully open.
+- **Fan controller offline:** valves open fully as a safe default to distribute air to all rooms.
+- **Home Assistant offline:** Local Mode activates automatically and continues local control.
+- **Sensor error / NAN:** room demand becomes 0 and is excluded from fan demand.
+
+---
+
 ## Assumptions and approximations
 
 ### Fan speed is driven by the single worst room
