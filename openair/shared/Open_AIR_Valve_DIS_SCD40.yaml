@@ -597,6 +597,14 @@ sensor:
     update_interval: 30s
     measurement_mode: periodic
 
+  - platform: template
+    name: "Valve Position"
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 30s
+    lambda: |-
+      return id(air_valve).position * 100.0f;
+
   - platform: uptime
     name: "Uptime"
     entity_category: diagnostic
