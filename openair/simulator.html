@@ -50,9 +50,13 @@
 
   .demand-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
   .demand-label { width: 82px; font-size: 0.8em; color: #667; white-space: nowrap; }
-  .demand-bar-wrap { flex: 1; background: #0a0f1e; border-radius: 4px; height: 8px; overflow: hidden; }
-  .demand-bar { height: 100%; border-radius: 4px; background: #e8a735; }
+  .demand-bar-wrap { flex: 1; background: #0a0f1e; border-radius: 4px; height: 8px; overflow: hidden; display: flex; }
+  .demand-bar-p { height: 100%; background: #e8a735; }
+  .demand-bar-i { height: 100%; background: #7a5adf; }
   .demand-val { width: 40px; font-size: 0.75em; text-align: right; color: #998; font-variant-numeric: tabular-nums; }
+  .demand-legend { font-size: 0.72em; color: #888; margin-bottom: 5px; display: flex; gap: 10px; }
+  .demand-legend span { display: flex; align-items: center; gap: 3px; }
+  .demand-legend .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
 
   .settings-grid { display: grid; grid-template-columns: auto 1fr 44px; gap: 4px 8px; align-items: center; }
   .settings-grid label { font-size: 0.8em; color: #8899aa; white-space: nowrap; }
@@ -213,6 +217,8 @@ let lastFanDemand = 0;
 let smoothedDemands = new Array(5).fill(0);
 let smoothedFanDemand = 0;
 let integralDemands = new Array(5).fill(0);
+let rawPTerms = new Array(5).fill(0);
+let rawIContribs = new Array(5).fill(0);
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -260,6 +266,8 @@ function simulate() {
     const integral_contribution = (integralDemands[i] / S.integral_max) * S.ki_scale;
 
     const pi_demand = clamp(d + integral_contribution, 0, 1);
+    rawPTerms[i] = d;
+    rawIContribs[i] = integral_contribution;
     smoothedDemands[i] = ema(smoothedDemands[i], pi_demand, S.smoothing_alpha);
     if (pi_demand > fanDemandRaw) fanDemandRaw = pi_demand;
     demands.push(smoothedDemands[i]);
@@ -290,8 +298,8 @@ function simulate() {
     bar.style.background = barColor(demands[i]);
     document.getElementById('vpct-' + i).textContent = pct + '%';
 
-    const dbar = document.getElementById('dbar-' + i);
-    dbar.style.width = (demands[i] * 100) + '%';
+    document.getElementById('dbar-p-' + i).style.width = (rawPTerms[i] * 100) + '%';
+    document.getElementById('dbar-i-' + i).style.width = (clamp(rawIContribs[i], 0, 1 - rawPTerms[i]) * 100) + '%';
     document.getElementById('dval-' + i).textContent = demands[i].toFixed(2);
   }
   lastPositions = positions;
@@ -432,6 +440,10 @@ renderPeople();
 // Build valve bars
 const vbarsEl = document.getElementById('valve-bars');
 const dbarsEl = document.getElementById('demand-bars');
+dbarsEl.innerHTML = `<div class="demand-legend">
+  <span><i class="swatch" style="background:#e8a735"></i> P (now)</span>
+  <span><i class="swatch" style="background:#7a5adf"></i> I (accumulated)</span>
+</div>`;
 for (let i = 0; i < 5; i++) {
   vbarsEl.innerHTML += `<div class="valve-row">
     <span class="valve-label">${ROOM_NAMES[i]}</span>
@@ -440,7 +452,7 @@ for (let i = 0; i < 5; i++) {
   </div>`;
   dbarsEl.innerHTML += `<div class="demand-row">
     <span class="demand-label">${ROOM_NAMES[i]}</span>
-    <div class="demand-bar-wrap"><div class="demand-bar" id="dbar-${i}"></div></div>
+    <div class="demand-bar-wrap"><div class="demand-bar-p" id="dbar-p-${i}"></div><div class="demand-bar-i" id="dbar-i-${i}"></div></div>
     <span class="demand-val" id="dval-${i}">0.00</span>
   </div>`;
 }
