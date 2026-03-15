@@ -12,6 +12,7 @@ sensor:
     unit_of_measurement: ""
     accuracy_decimals: 2
     icon: "mdi:gauge"
+    state_class: measurement
   - platform: template
     name: "Integral Demand"
     id: integral_sensor
@@ -19,6 +20,7 @@ sensor:
     accuracy_decimals: 2
     icon: "mdi:chart-timeline-variant"
     entity_category: diagnostic
+    state_class: measurement
 
 globals:
   - id: smoothed_demand

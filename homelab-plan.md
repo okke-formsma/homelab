@@ -55,7 +55,7 @@ External USB (/dev/sdX)
 |------|----|-------|
 | Router | 192.168.1.1 | DHCP range: .2-.249 |
 | Proxmox (nuc.local) | 192.168.1.250 | Static |
-| Home Assistant | 192.168.1.251 | Assign static in HAOS |
+| Home Assistant | 192.168.1.214 | Tailscale: `homeassistant.griffin-court.ts.net` (100.109.123.104) |
 | Docker LXC (Pi-hole) | 192.168.1.252 | Assign static in Proxmox |
 
 - Router DHCP: 192.168.1.2 - 192.168.1.249
@@ -242,7 +242,7 @@ docker compose up -d
 
 ### 10. Configure Home Assistant
 
-1. Access HAOS at `http://192.168.1.251:8123`
+1. Access HAOS at `http://192.168.1.214:8123` or `http://homeassistant.griffin-court.ts.net:8123`
 2. Complete onboarding wizard
 3. Install add-ons:
    - Settings → Add-ons → Add-on Store
@@ -317,6 +317,10 @@ vzdump 100 --storage backup --mode snapshot  # Manual backup
 docker ps                  # Running containers
 docker compose logs -f     # Follow logs
 docker system prune -a     # Clean up unused images
+
+# SSH into Home Assistant (Terminal & SSH add-on required)
+ssh root@192.168.1.214
+ssh root@homeassistant.griffin-court.ts.net  # via Tailscale
 
 # Home Assistant
 ha core update             # Update HA Core

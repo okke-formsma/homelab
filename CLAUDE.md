@@ -1,16 +1,31 @@
 # Homelab
 
-## Home Assistant CLI
+## Home Assistant API
 
-Use `hass-cli` for all HA interactions. Connection config is in `.env` (gitignored):
+Use the HA REST API directly. Connection config is in `.env` (gitignored):
 
 ```bash
 source .env
-hass-cli state list
-hass-cli entity list
+# List all states
+curl -s -H "Authorization: Bearer $HASS_TOKEN" "$HASS_SERVER/api/states" | python3 -m json.tool
+
+# Get a single entity
+curl -s -H "Authorization: Bearer $HASS_TOKEN" "$HASS_SERVER/api/states/sensor.some_entity"
+
+# Call a service
+curl -s -X POST -H "Authorization: Bearer $HASS_TOKEN" -H "Content-Type: application/json" \
+  "$HASS_SERVER/api/services/domain/service" -d '{"entity_id": "..."}'
 ```
 
 The `.env` and `.claude/settings.local.json` are gitignored — never commit them.
+
+For Python scripts that interact with HA (e.g. websocket API), use the `uv` environment in `openair/`:
+
+```bash
+cd openair
+uv add websockets   # install extra deps as needed
+uv run python3 my_script.py
+```
 
 ## Flashing ESPHome devices
 

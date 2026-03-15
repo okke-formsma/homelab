@@ -1,0 +1,225 @@
+url_path: open-air
+title: Open AIR
+icon: mdi:hvac
+show_in_sidebar: true
+
+views:
+  - title: Garage
+    path: huis
+    icon: mdi:home-thermometer
+    panel: true
+    cards:
+      - type: vertical-stack
+        cards:
+
+          # ── Fan ─────────────────────────────────────────────────────────────
+          - type: entities
+            title: Fan
+            entities:
+              - entity: fan.open_air_mini_garage_open_air_mini
+                name: Fan
+              - entity: sensor.open_air_mini_garage_fan_speed
+                name: Speed %
+              - entity: sensor.open_air_mini_garage_air_mini_rpm
+                name: RPM
+
+          # ── Rooms (3 columns) ────────────────────────────────────────────────
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: entities
+                title: Entree
+                entities:
+                  - entity: sensor.valve_entree_co2
+                    name: CO2
+                  - entity: sensor.valve_entree_temperature
+                    name: Temperature
+                  - entity: sensor.valve_entree_humidity
+                    name: Humidity
+                  - entity: sensor.valve_entree_voc_index
+                    name: VOC Index
+                  - entity: sensor.valve_entree_nox_index
+                    name: NOx Index
+                  - entity: sensor.valve_entree_valve_position
+                    name: Valve %
+                  - entity: sensor.valve_entree_demand
+                    name: Demand
+
+              - type: entities
+                title: SLK Achter
+                entities:
+                  - entity: sensor.valve_slk_achter_co2
+                    name: CO2
+                  - entity: sensor.valve_slk_achter_temperature
+                    name: Temperature
+                  - entity: sensor.valve_slk_achter_humidity
+                    name: Humidity
+                  - entity: sensor.valve_slk_achter_voc_index
+                    name: VOC Index
+                  - entity: sensor.valve_slk_achter_nox_index
+                    name: NOx Index
+                  - entity: sensor.valve_slk_achter_valve_position
+                    name: Valve %
+                  - entity: sensor.valve_slk_achter_demand
+                    name: Demand
+
+              - type: entities
+                title: SLK BG Voor
+                entities:
+                  - entity: sensor.valve_slk_bg_voor_co2
+                    name: CO2
+                  - entity: sensor.valve_slk_bg_voor_temperature
+                    name: Temperature
+                  - entity: sensor.valve_slk_bg_voor_humidity
+                    name: Humidity
+                  - entity: sensor.valve_slk_bg_voor_voc_index
+                    name: VOC Index
+                  - entity: sensor.valve_slk_bg_voor_nox_index
+                    name: NOx Index
+                  - entity: sensor.valve_slk_bg_voor_valve_position
+                    name: Valve %
+                  - entity: sensor.valve_slk_bg_voor_demand
+                    name: Demand
+
+              - type: entities
+                title: Samuel
+                entities:
+                  - entity: sensor.valve_slk_samuel_co2
+                    name: CO2
+                  - entity: sensor.valve_slk_samuel_temperature
+                    name: Temperature
+                  - entity: sensor.valve_slk_samuel_humidity
+                    name: Humidity
+                  - entity: sensor.valve_slk_samuel_voc_index
+                    name: VOC Index
+                  - entity: sensor.valve_slk_samuel_nox_index
+                    name: NOx Index
+                  - entity: sensor.valve_slk_samuel_valve_position
+                    name: Valve %
+                  - entity: sensor.valve_slk_samuel_demand
+                    name: Demand
+
+              - type: entities
+                title: Thomas
+                entities:
+                  - entity: sensor.valve_slk_thomas_co2
+                    name: CO2
+                  - entity: sensor.valve_slk_thomas_temperature
+                    name: Temperature
+                  - entity: sensor.valve_slk_thomas_humidity
+                    name: Humidity
+                  - entity: sensor.valve_slk_thomas_voc_index
+                    name: VOC Index
+                  - entity: sensor.valve_slk_thomas_nox_index
+                    name: NOx Index
+                  - entity: sensor.valve_slk_thomas_valve_position
+                    name: Valve %
+                  - entity: sensor.valve_slk_thomas_demand
+                    name: Demand
+
+          # ── Graphs ───────────────────────────────────────────────────────────
+          - type: history-graph
+            title: CO2
+            hours_to_show: 24
+            entities:
+              - entity: sensor.valve_entree_co2
+                name: Entree
+              - entity: sensor.valve_slk_achter_co2
+                name: SLK Achter
+              - entity: sensor.valve_slk_bg_voor_co2
+                name: SLK BG Voor
+              - entity: sensor.valve_slk_samuel_co2
+                name: Samuel
+              - entity: sensor.valve_slk_thomas_co2
+                name: Thomas
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: history-graph
+                title: Temperature
+                hours_to_show: 24
+                entities:
+                  - entity: sensor.valve_entree_temperature
+                    name: Entree
+                  - entity: sensor.valve_slk_achter_temperature
+                    name: SLK Achter
+                  - entity: sensor.valve_slk_bg_voor_temperature
+                    name: SLK BG Voor
+                  - entity: sensor.valve_slk_samuel_temperature
+                    name: Samuel
+                  - entity: sensor.valve_slk_thomas_temperature
+                    name: Thomas
+              - type: history-graph
+                title: Humidity
+                hours_to_show: 24
+                entities:
+                  - entity: sensor.valve_entree_humidity
+                    name: Entree
+                  - entity: sensor.valve_slk_achter_humidity
+                    name: SLK Achter
+                  - entity: sensor.valve_slk_bg_voor_humidity
+                    name: SLK BG Voor
+                  - entity: sensor.valve_slk_samuel_humidity
+                    name: Samuel
+                  - entity: sensor.valve_slk_thomas_humidity
+                    name: Thomas
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: history-graph
+                title: VOC Index
+                hours_to_show: 24
+                entities:
+                  - entity: sensor.valve_entree_voc_index
+                    name: Entree
+                  - entity: sensor.valve_slk_achter_voc_index
+                    name: SLK Achter
+                  - entity: sensor.valve_slk_bg_voor_voc_index
+                    name: SLK BG Voor
+                  - entity: sensor.valve_slk_samuel_voc_index
+                    name: Samuel
+                  - entity: sensor.valve_slk_thomas_voc_index
+                    name: Thomas
+              - type: history-graph
+                title: NOx Index
+                hours_to_show: 24
+                entities:
+                  - entity: sensor.valve_entree_nox_index
+                    name: Entree
+                  - entity: sensor.valve_slk_achter_nox_index
+                    name: SLK Achter
+                  - entity: sensor.valve_slk_bg_voor_nox_index
+                    name: SLK BG Voor
+                  - entity: sensor.valve_slk_samuel_nox_index
+                    name: Samuel
+                  - entity: sensor.valve_slk_thomas_nox_index
+                    name: Thomas
+
+          - type: history-graph
+            title: Demand
+            hours_to_show: 24
+            entities:
+              - entity: sensor.valve_entree_demand
+                name: Entree
+              - entity: sensor.valve_slk_achter_demand
+                name: SLK Achter
+              - entity: sensor.valve_slk_bg_voor_demand
+                name: SLK BG Voor
+              - entity: sensor.valve_slk_samuel_demand
+                name: Samuel
+              - entity: sensor.valve_slk_thomas_demand
+                name: Thomas
+
+          - type: history-graph
+            title: Fan Speed & RPM
+            hours_to_show: 24
+            entities:
+              - entity: sensor.open_air_mini_garage_fan_speed
+                name: Fan Speed %
+              - entity: sensor.open_air_mini_garage_air_mini_rpm
+                name: Fan RPM
