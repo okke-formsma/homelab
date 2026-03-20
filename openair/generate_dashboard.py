@@ -13,6 +13,9 @@ from pathlib import Path
 import yaml
 
 
+NO_BORDER_STYLE = "ha-card { border: none !important; box-shadow: none !important; outline: none !important; }"
+
+
 # ── Custom EVAL tooltip used by some charts ──────────────────────────────────
 
 CUSTOM_TOOLTIP = (
@@ -51,7 +54,7 @@ COLOR_TEMPLATES = {
     ),
     "valve_position": (
         "{{% set v = states('{entity}')|float(0) %}}"
-        " {{% if v == 0 %}}red{{% else %}}grey{{% endif %}}"
+        " {{% if v == 0 %}}red{{% else %}}green{{% endif %}}"
     ),
 }
 
@@ -119,6 +122,7 @@ def build_room_card(room):
             "icon_color": COLOR_TEMPLATES[key].format(entity=entity),
             "layout": "vertical",
             "tap_action": {"action": "none"},
+            "card_mod": {"style": NO_BORDER_STYLE},
         }
         sensors.append(card)
 
@@ -131,6 +135,7 @@ def build_room_card(room):
                 "icon": room["icon"],
                 "icon_color": room["color"],
                 "layout": "vertical",
+                "card_mod": {"style": NO_BORDER_STYLE},
                 "tap_action": {
                     "action": "navigate",
                     "navigation_path": f"/config/devices/device/{room['device_id']}",
@@ -139,6 +144,7 @@ def build_room_card(room):
             {
                 "type": "grid", "columns": 2, "square": False,
                 "cards": sensors,
+                "card_mod": {"style": NO_BORDER_STYLE},
             },
         ],
     }
@@ -185,7 +191,7 @@ def build_tooltip_custom():
     }
 
 
-def build_apex_chart(graph_cfg, all_rooms):
+def build_apex_chart(graph_cfg, all_rooms, graph_span="24h"):
     """Build a single apexcharts-card from graph config."""
     yaxis_cfg = graph_cfg.get("yaxis", {})
     yaxis = [{}]
@@ -198,8 +204,7 @@ def build_apex_chart(graph_cfg, all_rooms):
     apex_sub["forceNiceScale"] = True
     yaxis[0]["apex_config"] = apex_sub
 
-    tooltip = (build_tooltip_custom() if graph_cfg.get("tooltip") == "custom"
-               else build_tooltip_shared())
+    tooltip = build_tooltip_custom()
 
     # Filter rooms if specified
     room_names = graph_cfg.get("rooms")
@@ -211,7 +216,7 @@ def build_apex_chart(graph_cfg, all_rooms):
     return {
         "type": "custom:apexcharts-card",
         "header": {"show": False},
-        "graph_span": "24h",
+        "graph_span": graph_span,
         "yaxis": yaxis,
         "apex_config": {
             "title": {
@@ -228,13 +233,13 @@ def build_apex_chart(graph_cfg, all_rooms):
     }
 
 
-def build_fan_chart(fan_cfg):
+def build_fan_chart(fan_cfg, graph_span="24h"):
     """The special dual-axis fan chart."""
     tooltip = build_tooltip_custom()
     return {
         "type": "custom:apexcharts-card",
         "header": {"show": False},
-        "graph_span": "24h",
+        "graph_span": graph_span,
         "yaxis": [
             {"id": "speed", "min": 0, "max": 100},
             {"id": "rpm", "opposite": True, "min": 0},
@@ -267,21 +272,50 @@ def build_fan_chart(fan_cfg):
     }
 
 
-def build_graph_grids(graph_pairs, all_rooms, fan_cfg):
+def build_graph_grids(graph_pairs, all_rooms, fan_cfg, graph_span="24h"):
     """Build the graph section: pairs of charts in 2-column grids."""
     grids = []
     for pair in graph_pairs:
         cards = []
         for g in pair:
             if g.get("special") == "fan":
-                cards.append(build_fan_chart(fan_cfg))
+                cards.append(build_fan_chart(fan_cfg, graph_span))
             elif "sensor" in g:
-                cards.append(build_apex_chart(g, all_rooms))
+                cards.append(build_apex_chart(g, all_rooms, graph_span))
         grids.append({
             "type": "grid", "columns": 2, "square": False,
             "cards": cards,
         })
     return grids
+
+
+def build_span_chips(span_entries, current_span, url_path, view_path):
+    """Build a row of chips to switch between time ranges, highlighting the active one."""
+    chips = []
+    for entry in span_entries:
+        span = entry["span"]
+        label = entry.get("label", span)
+        path = view_path if span == current_span else f"{view_path}-{span}"
+        is_active = span == current_span
+        chip = {
+            "type": "template",
+            "icon": "mdi:clock-outline",
+            "content": label,
+            "tap_action": {
+                "action": "navigate",
+                "navigation_path": f"/{url_path}/{path}",
+            },
+        }
+        if is_active:
+            chip["card_mod"] = {
+                "style": "ha-card { --chip-background: var(--primary-color) !important; --chip-font-color: var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color) !important; }"
+            }
+        chips.append(chip)
+    return {
+        "type": "custom:mushroom-chips-card",
+        "alignment": "center",
+        "chips": chips,
+    }
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
@@ -294,28 +328,42 @@ def generate(config_path: str):
     rooms = cfg["rooms"]
     fan = cfg["fan"]
     view_cfg = cfg["view"]
+    url_path = cfg["url_path"]
+    span_entries = cfg.get("graph_spans", [{"span": "24h", "label": "24h"}])
+    default_span = cfg.get("default_span", span_entries[0]["span"])
 
-    view_cards = [
-        build_fan_top_cards(fan),
-        build_room_status_grid(rooms),
-        *build_graph_grids(cfg["graphs"], rooms, fan),
-    ]
+    views = []
+    for entry in span_entries:
+        span = entry["span"]
+        label = entry.get("label", span)
+        is_default = span == default_span
+        path = view_cfg["path"] if is_default else f"{view_cfg['path']}-{span}"
+        title = view_cfg["title"] if is_default else f"{view_cfg['title']} ({label})"
+
+        view_cards = [
+            build_span_chips(span_entries, span, url_path, view_cfg["path"]),
+            build_fan_top_cards(fan),
+            build_room_status_grid(rooms),
+            *build_graph_grids(cfg["graphs"], rooms, fan, span),
+        ]
+
+        view = {
+            "title": title,
+            "path": path,
+            "icon": view_cfg["icon"],
+            "panel": True,
+            "cards": [{"type": "vertical-stack", "cards": view_cards}],
+        }
+        if not is_default:
+            view["subview"] = True
+        views.append(view)
 
     dashboard = {
-        "url_path": cfg["url_path"],
+        "url_path": url_path,
         "title": cfg["title"],
         "icon": cfg.get("icon", "mdi:view-dashboard"),
         "show_in_sidebar": cfg.get("show_in_sidebar", True),
-        "views": [{
-            "title": view_cfg["title"],
-            "path": view_cfg["path"],
-            "icon": view_cfg["icon"],
-            "panel": True,
-            "cards": [{
-                "type": "vertical-stack",
-                "cards": view_cards,
-            }],
-        }],
+        "views": views,
     }
 
     out_path = config_path.parent / "dashboard.yaml"

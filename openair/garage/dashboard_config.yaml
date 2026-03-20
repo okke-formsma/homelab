@@ -11,6 +11,13 @@ view:
   path: garage
   icon: mdi:home-thermometer
 
+graph_spans:
+  - { span: 6h, label: 6 hours }
+  - { span: 24h, label: 1 day }
+  - { span: 3d, label: 3 days }
+  - { span: 7d, label: 1 week }
+default_span: 24h
+
 fan:
   entity: fan.open_air_mini_garage_open_air_mini
   speed_entity: sensor.open_air_mini_garage_fan_speed
@@ -54,31 +61,31 @@ rooms:
 graphs:
   - - title: CO2
       sensor: co2
-      yaxis: { min: "~400", max: "~1500", tickAmount: 5 }
+      yaxis: { min: "~400", max: "~1200", tickAmount: 5 }
     - title: Temperature
       sensor: temperature
-      yaxis: { min: "~15", max: "~30" }
+      yaxis: { min: "~15", max: "~25" }
 
   - - title: Humidity
       sensor: humidity
       yaxis: { min: "~40", max: "~60" }
     - title: VOC Index
       sensor: voc_index
-      yaxis: { min: 0 }
-      rooms: [SLK Achter, BG Voor, Samuel, Thomas]
+      yaxis: { min: 0, max: "~400" }
 
   - - title: NOx Index
       sensor: nox_index
       yaxis: { min: 0 }
-      tooltip: custom
-      rooms: [SLK Achter, BG Voor, Samuel, Thomas]
+
+      # rooms: [SLK Achter, BG Voor, Samuel, Thomas]
     - title: Demand
       sensor: demand
-      tooltip: custom
+
       yaxis: { min: 0 }
 
   - - title: Fan
       special: fan
     - title: Valve Position
       sensor: valve_position
+
       yaxis: { min: 0, max: "~100", tickAmount: 5 }

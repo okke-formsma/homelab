@@ -4,13 +4,44 @@ title: Open AIR
 icon: mdi:hvac
 show_in_sidebar: true
 views:
-- title: Garage
-  path: garage
+- title: Garage (6 hours)
+  path: garage-6h
   icon: mdi:home-thermometer
   panel: true
   cards:
   - type: vertical-stack
     cards:
+    - type: custom:mushroom-chips-card
+      alignment: center
+      chips:
+      - type: template
+        icon: mdi:clock-outline
+        content: 6 hours
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage
+        card_mod:
+          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
+            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
+            !important; }'
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 day
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-24h
+      - type: template
+        icon: mdi:clock-outline
+        content: 3 days
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-3d
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 week
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-7d
     - type: grid
       columns: 2
       square: false
@@ -84,6 +115,9 @@ views:
           icon: mdi:door
           icon_color: blue
           layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
           tap_action:
             action: navigate
             navigation_path: /config/devices/device/2b94ce3551ca791a222cab07342b19cd
@@ -100,6 +134,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_entree_humidity'')|round(0) }}%'
             icon: mdi:water-percent
@@ -108,6 +145,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_entree_temperature'')|round(1) }}°'
             icon: mdi:thermometer
@@ -117,14 +157,23 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_entree_valve_position'')|round(0) }}%'
             icon: mdi:valve
             icon_color: '{% set v = states(''sensor.valve_entree_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}grey{% endif %}'
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
       - type: custom:stack-in-card
         cards:
         - type: custom:mushroom-template-card
@@ -132,6 +181,9 @@ views:
           icon: mdi:bed
           icon_color: red
           layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
           tap_action:
             action: navigate
             navigation_path: /config/devices/device/9878ef444d36b10bc353ec7f423309b1
@@ -148,6 +200,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_achter_humidity'')|round(0) }}%'
             icon: mdi:water-percent
@@ -156,6 +211,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_achter_temperature'')|round(1)
               }}°'
@@ -166,15 +224,24 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_achter_valve_position'')|round(0)
               }}%'
             icon: mdi:valve
             icon_color: '{% set v = states(''sensor.valve_slk_achter_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}grey{% endif %}'
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
       - type: custom:stack-in-card
         cards:
         - type: custom:mushroom-template-card
@@ -182,6 +249,9 @@ views:
           icon: mdi:bed
           icon_color: yellow
           layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
           tap_action:
             action: navigate
             navigation_path: /config/devices/device/47ce55ad7d1375efad04f9a636777e46
@@ -198,6 +268,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_bg_voor_humidity'')|round(0) }}%'
             icon: mdi:water-percent
@@ -206,6 +279,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_bg_voor_temperature'')|round(1)
               }}°'
@@ -216,15 +292,24 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_bg_voor_valve_position'')|round(0)
               }}%'
             icon: mdi:valve
             icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}grey{% endif %}'
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
       - type: custom:stack-in-card
         cards:
         - type: custom:mushroom-template-card
@@ -232,6 +317,9 @@ views:
           icon: mdi:bed
           icon_color: orange
           layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
           tap_action:
             action: navigate
             navigation_path: /config/devices/device/6fff785a835d36a4e810a54cc13f46ff
@@ -248,6 +336,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_samuel_humidity'')|round(0) }}%'
             icon: mdi:water-percent
@@ -256,6 +347,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_samuel_temperature'')|round(1)
               }}°'
@@ -266,15 +360,24 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_samuel_valve_position'')|round(0)
               }}%'
             icon: mdi:valve
             icon_color: '{% set v = states(''sensor.valve_slk_samuel_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}grey{% endif %}'
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
       - type: custom:stack-in-card
         cards:
         - type: custom:mushroom-template-card
@@ -282,6 +385,9 @@ views:
           icon: mdi:bed
           icon_color: purple
           layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
           tap_action:
             action: navigate
             navigation_path: /config/devices/device/a43282f340dbaa54f4edae5f2e4d86c3
@@ -298,6 +404,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_thomas_humidity'')|round(0) }}%'
             icon: mdi:water-percent
@@ -306,6 +415,9 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_thomas_temperature'')|round(1)
               }}°'
@@ -316,15 +428,24 @@ views:
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
           - type: custom:mushroom-template-card
             primary: '{{ states(''sensor.valve_slk_thomas_valve_position'')|round(0)
               }}%'
             icon: mdi:valve
             icon_color: '{% set v = states(''sensor.valve_slk_thomas_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}grey{% endif %}'
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
             layout: vertical
             tap_action:
               action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
     - type: grid
       columns: 2
       square: false
@@ -332,10 +453,10 @@ views:
       - type: custom:apexcharts-card
         header:
           show: false
-        graph_span: 24h
+        graph_span: 6h
         yaxis:
         - min: ~400
-          max: ~1500
+          max: ~1200
           apex_config:
             tickAmount: 5
             forceNiceScale: true
@@ -355,15 +476,1171 @@ views:
           legend:
             show: false
           tooltip:
-            enabled: true
-            shared: true
-            intersect: false
             followCursor: true
             fixed:
               enabled: true
               position: topLeft
-            x:
-              show: false
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_co2
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_co2
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_co2
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_co2
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_co2
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 6h
+        yaxis:
+        - min: ~15
+          max: ~25
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Temperature
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_temperature
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_temperature
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_temperature
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_temperature
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_temperature
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 6h
+        yaxis:
+        - min: ~40
+          max: ~60
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Humidity
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_humidity
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_humidity
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_humidity
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_humidity
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_humidity
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 6h
+        yaxis:
+        - min: 0
+          max: ~400
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: VOC Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_voc_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_voc_index
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_voc_index
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_voc_index
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_voc_index
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 6h
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: NOx Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_nox_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_nox_index
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_nox_index
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_nox_index
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_nox_index
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 6h
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Demand
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_demand
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_demand
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_demand
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_demand
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_demand
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 6h
+        yaxis:
+        - id: speed
+          min: 0
+          max: 100
+        - id: rpm
+          opposite: true
+          min: 0
+        apex_config:
+          title:
+            text: Fan
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_mini_garage_fan_speed
+          name: Speed %
+          stroke_width: 2
+          yaxis_id: speed
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_mini_garage_air_mini_rpm
+          name: RPM
+          stroke_width: 2
+          yaxis_id: rpm
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 6h
+        yaxis:
+        - min: 0
+          max: ~100
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Valve Position
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_valve_position
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_valve_position
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_valve_position
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_valve_position
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_valve_position
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+  subview: true
+- title: Garage
+  path: garage
+  icon: mdi:home-thermometer
+  panel: true
+  cards:
+  - type: vertical-stack
+    cards:
+    - type: custom:mushroom-chips-card
+      alignment: center
+      chips:
+      - type: template
+        icon: mdi:clock-outline
+        content: 6 hours
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-6h
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 day
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage
+        card_mod:
+          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
+            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
+            !important; }'
+      - type: template
+        icon: mdi:clock-outline
+        content: 3 days
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-3d
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 week
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-7d
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:stack-in-card
+        card_mod:
+          style: 'ha-card { overflow: hidden; height: 70px; }'
+        cards:
+        - type: custom:mini-graph-card
+          entities:
+          - entity: sensor.open_air_mini_garage_fan_speed
+            color: rgba(var(--rgb-primary-color), 0.15)
+          hours_to_show: 24
+          line_width: 2
+          height: 55
+          show:
+            name: false
+            icon: false
+            state: false
+            labels: false
+            points: false
+            fill: fade
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -8px; }'
+        - type: custom:mushroom-fan-card
+          entity: fan.open_air_mini_garage_open_air_mini
+          name: Fan
+          icon_animation: true
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -72px; position: relative; z-index:
+              1; }'
+      - type: custom:stack-in-card
+        card_mod:
+          style: 'ha-card { overflow: hidden; height: 70px; }'
+        cards:
+        - type: custom:mini-graph-card
+          entities:
+          - entity: sensor.open_air_mini_garage_air_mini_rpm
+            color: rgba(var(--rgb-primary-color), 0.15)
+          hours_to_show: 24
+          line_width: 2
+          height: 55
+          show:
+            name: false
+            icon: false
+            state: false
+            labels: false
+            points: false
+            fill: fade
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -8px; }'
+        - type: custom:mushroom-entity-card
+          entity: sensor.open_air_mini_garage_air_mini_rpm
+          name: RPM
+          icon: mdi:rotate-right
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -72px; position: relative; z-index:
+              1; }'
+    - type: grid
+      columns: 5
+      square: false
+      cards:
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Entree
+          icon: mdi:door
+          icon_color: blue
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/2b94ce3551ca791a222cab07342b19cd
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_entree_co2'')|float(0) %}
+              {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_entree_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_temperature'')|round(1) }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_entree_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_valve_position'')|round(0) }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_entree_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: SLK Achter
+          icon: mdi:bed
+          icon_color: red
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/9878ef444d36b10bc353ec7f423309b1
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: BG Voor
+          icon: mdi:bed
+          icon_color: yellow
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/47ce55ad7d1375efad04f9a636777e46
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Samuel
+          icon: mdi:bed
+          icon_color: orange
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/6fff785a835d36a4e810a54cc13f46ff
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Thomas
+          icon: mdi:bed
+          icon_color: purple
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/a43282f340dbaa54f4edae5f2e4d86c3
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: ~400
+          max: ~1200
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: CO2
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
         series:
         - entity: sensor.valve_entree_co2
           name: Entree
@@ -421,7 +1698,7 @@ views:
         graph_span: 24h
         yaxis:
         - min: ~15
-          max: ~30
+          max: ~25
           apex_config:
             forceNiceScale: true
         apex_config:
@@ -440,15 +1717,20 @@ views:
           legend:
             show: false
           tooltip:
-            enabled: true
-            shared: true
-            intersect: false
             followCursor: true
             fixed:
               enabled: true
               position: topLeft
-            x:
-              show: false
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
         series:
         - entity: sensor.valve_entree_temperature
           name: Entree
@@ -529,15 +1811,20 @@ views:
           legend:
             show: false
           tooltip:
-            enabled: true
-            shared: true
-            intersect: false
             followCursor: true
             fixed:
               enabled: true
               position: topLeft
-            x:
-              show: false
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
         series:
         - entity: sensor.valve_entree_humidity
           name: Entree
@@ -595,6 +1882,7 @@ views:
         graph_span: 24h
         yaxis:
         - min: 0
+          max: ~400
           apex_config:
             forceNiceScale: true
         apex_config:
@@ -613,16 +1901,31 @@ views:
           legend:
             show: false
           tooltip:
-            enabled: true
-            shared: true
-            intersect: false
             followCursor: true
             fixed:
               enabled: true
               position: topLeft
-            x:
-              show: false
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
         series:
+        - entity: sensor.valve_entree_voc_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
         - entity: sensor.valve_slk_achter_voc_index
           name: SLK Achter
           color: '#FF1744'
@@ -706,6 +2009,16 @@ views:
               '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
               + ''</b></div>''; } return h + ''</div>''; }'
         series:
+        - entity: sensor.valve_entree_nox_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
         - entity: sensor.valve_slk_achter_nox_index
           name: SLK Achter
           color: '#FF1744'
@@ -927,15 +2240,20 @@ views:
           legend:
             show: false
           tooltip:
-            enabled: true
-            shared: true
-            intersect: false
             followCursor: true
             fixed:
               enabled: true
               position: topLeft
-            x:
-              show: false
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
         series:
         - entity: sensor.valve_entree_valve_position
           name: Entree
@@ -987,3 +2305,2305 @@ views:
             func: last
             duration: 5min
             fill: last
+- title: Garage (3 days)
+  path: garage-3d
+  icon: mdi:home-thermometer
+  panel: true
+  cards:
+  - type: vertical-stack
+    cards:
+    - type: custom:mushroom-chips-card
+      alignment: center
+      chips:
+      - type: template
+        icon: mdi:clock-outline
+        content: 6 hours
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-6h
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 day
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-24h
+      - type: template
+        icon: mdi:clock-outline
+        content: 3 days
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage
+        card_mod:
+          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
+            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
+            !important; }'
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 week
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-7d
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:stack-in-card
+        card_mod:
+          style: 'ha-card { overflow: hidden; height: 70px; }'
+        cards:
+        - type: custom:mini-graph-card
+          entities:
+          - entity: sensor.open_air_mini_garage_fan_speed
+            color: rgba(var(--rgb-primary-color), 0.15)
+          hours_to_show: 24
+          line_width: 2
+          height: 55
+          show:
+            name: false
+            icon: false
+            state: false
+            labels: false
+            points: false
+            fill: fade
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -8px; }'
+        - type: custom:mushroom-fan-card
+          entity: fan.open_air_mini_garage_open_air_mini
+          name: Fan
+          icon_animation: true
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -72px; position: relative; z-index:
+              1; }'
+      - type: custom:stack-in-card
+        card_mod:
+          style: 'ha-card { overflow: hidden; height: 70px; }'
+        cards:
+        - type: custom:mini-graph-card
+          entities:
+          - entity: sensor.open_air_mini_garage_air_mini_rpm
+            color: rgba(var(--rgb-primary-color), 0.15)
+          hours_to_show: 24
+          line_width: 2
+          height: 55
+          show:
+            name: false
+            icon: false
+            state: false
+            labels: false
+            points: false
+            fill: fade
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -8px; }'
+        - type: custom:mushroom-entity-card
+          entity: sensor.open_air_mini_garage_air_mini_rpm
+          name: RPM
+          icon: mdi:rotate-right
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -72px; position: relative; z-index:
+              1; }'
+    - type: grid
+      columns: 5
+      square: false
+      cards:
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Entree
+          icon: mdi:door
+          icon_color: blue
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/2b94ce3551ca791a222cab07342b19cd
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_entree_co2'')|float(0) %}
+              {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_entree_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_temperature'')|round(1) }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_entree_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_valve_position'')|round(0) }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_entree_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: SLK Achter
+          icon: mdi:bed
+          icon_color: red
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/9878ef444d36b10bc353ec7f423309b1
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: BG Voor
+          icon: mdi:bed
+          icon_color: yellow
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/47ce55ad7d1375efad04f9a636777e46
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Samuel
+          icon: mdi:bed
+          icon_color: orange
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/6fff785a835d36a4e810a54cc13f46ff
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Thomas
+          icon: mdi:bed
+          icon_color: purple
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/a43282f340dbaa54f4edae5f2e4d86c3
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - min: ~400
+          max: ~1200
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: CO2
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_co2
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_co2
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_co2
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_co2
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_co2
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - min: ~15
+          max: ~25
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Temperature
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_temperature
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_temperature
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_temperature
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_temperature
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_temperature
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - min: ~40
+          max: ~60
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Humidity
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_humidity
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_humidity
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_humidity
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_humidity
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_humidity
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - min: 0
+          max: ~400
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: VOC Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_voc_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_voc_index
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_voc_index
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_voc_index
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_voc_index
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: NOx Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_nox_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_nox_index
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_nox_index
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_nox_index
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_nox_index
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Demand
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_demand
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_demand
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_demand
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_demand
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_demand
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - id: speed
+          min: 0
+          max: 100
+        - id: rpm
+          opposite: true
+          min: 0
+        apex_config:
+          title:
+            text: Fan
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_mini_garage_fan_speed
+          name: Speed %
+          stroke_width: 2
+          yaxis_id: speed
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_mini_garage_air_mini_rpm
+          name: RPM
+          stroke_width: 2
+          yaxis_id: rpm
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 3d
+        yaxis:
+        - min: 0
+          max: ~100
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Valve Position
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_valve_position
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_valve_position
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_valve_position
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_valve_position
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_valve_position
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+  subview: true
+- title: Garage (1 week)
+  path: garage-7d
+  icon: mdi:home-thermometer
+  panel: true
+  cards:
+  - type: vertical-stack
+    cards:
+    - type: custom:mushroom-chips-card
+      alignment: center
+      chips:
+      - type: template
+        icon: mdi:clock-outline
+        content: 6 hours
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-6h
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 day
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-24h
+      - type: template
+        icon: mdi:clock-outline
+        content: 3 days
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage-3d
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 week
+        tap_action:
+          action: navigate
+          navigation_path: /open-air/garage
+        card_mod:
+          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
+            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
+            !important; }'
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:stack-in-card
+        card_mod:
+          style: 'ha-card { overflow: hidden; height: 70px; }'
+        cards:
+        - type: custom:mini-graph-card
+          entities:
+          - entity: sensor.open_air_mini_garage_fan_speed
+            color: rgba(var(--rgb-primary-color), 0.15)
+          hours_to_show: 24
+          line_width: 2
+          height: 55
+          show:
+            name: false
+            icon: false
+            state: false
+            labels: false
+            points: false
+            fill: fade
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -8px; }'
+        - type: custom:mushroom-fan-card
+          entity: fan.open_air_mini_garage_open_air_mini
+          name: Fan
+          icon_animation: true
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -72px; position: relative; z-index:
+              1; }'
+      - type: custom:stack-in-card
+        card_mod:
+          style: 'ha-card { overflow: hidden; height: 70px; }'
+        cards:
+        - type: custom:mini-graph-card
+          entities:
+          - entity: sensor.open_air_mini_garage_air_mini_rpm
+            color: rgba(var(--rgb-primary-color), 0.15)
+          hours_to_show: 24
+          line_width: 2
+          height: 55
+          show:
+            name: false
+            icon: false
+            state: false
+            labels: false
+            points: false
+            fill: fade
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -8px; }'
+        - type: custom:mushroom-entity-card
+          entity: sensor.open_air_mini_garage_air_mini_rpm
+          name: RPM
+          icon: mdi:rotate-right
+          card_mod:
+            style: 'ha-card { background: none !important; box-shadow: none !important;
+              border: none !important; margin-top: -72px; position: relative; z-index:
+              1; }'
+    - type: grid
+      columns: 5
+      square: false
+      cards:
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Entree
+          icon: mdi:door
+          icon_color: blue
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/2b94ce3551ca791a222cab07342b19cd
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_entree_co2'')|float(0) %}
+              {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_entree_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_temperature'')|round(1) }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_entree_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_entree_valve_position'')|round(0) }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_entree_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: SLK Achter
+          icon: mdi:bed
+          icon_color: red
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/9878ef444d36b10bc353ec7f423309b1
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_achter_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_achter_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: BG Voor
+          icon: mdi:bed
+          icon_color: yellow
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/47ce55ad7d1375efad04f9a636777e46
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_bg_voor_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_bg_voor_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Samuel
+          icon: mdi:bed
+          icon_color: orange
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/6fff785a835d36a4e810a54cc13f46ff
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_samuel_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_samuel_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Thomas
+          icon: mdi:bed
+          icon_color: purple
+          layout: vertical
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/a43282f340dbaa54f4edae5f2e4d86c3
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_humidity'')|round(0) }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.valve_slk_thomas_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.valve_slk_thomas_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+            card_mod:
+              style: 'ha-card { border: none !important; box-shadow: none !important;
+                outline: none !important; }'
+          card_mod:
+            style: 'ha-card { border: none !important; box-shadow: none !important;
+              outline: none !important; }'
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - min: ~400
+          max: ~1200
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: CO2
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_co2
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_co2
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_co2
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_co2
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_co2
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - min: ~15
+          max: ~25
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Temperature
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_temperature
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_temperature
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_temperature
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_temperature
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_temperature
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - min: ~40
+          max: ~60
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Humidity
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_humidity
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_humidity
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_humidity
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_humidity
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_humidity
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - min: 0
+          max: ~400
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: VOC Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_voc_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_voc_index
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_voc_index
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_voc_index
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_voc_index
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: NOx Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_nox_index
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_nox_index
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_nox_index
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_nox_index
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_nox_index
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Demand
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_demand
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_demand
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_demand
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_demand
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_demand
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - id: speed
+          min: 0
+          max: 100
+        - id: rpm
+          opposite: true
+          min: 0
+        apex_config:
+          title:
+            text: Fan
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_mini_garage_fan_speed
+          name: Speed %
+          stroke_width: 2
+          yaxis_id: speed
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_mini_garage_air_mini_rpm
+          name: RPM
+          stroke_width: 2
+          yaxis_id: rpm
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 7d
+        yaxis:
+        - min: 0
+          max: ~100
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Valve Position
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.valve_entree_valve_position
+          name: Entree
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_achter_valve_position
+          name: SLK Achter
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_bg_voor_valve_position
+          name: BG Voor
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_samuel_valve_position
+          name: Samuel
+          color: '#FF9100'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.valve_slk_thomas_valve_position
+          name: Thomas
+          color: '#D500F9'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+  subview: true
