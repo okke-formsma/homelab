@@ -1,0 +1,84 @@
+# Compact config for generate_dashboard.py → dashboard.yaml
+# Run: cd openair && uv run python3 generate_dashboard.py garage/dashboard_config.yaml
+
+url_path: open-air
+title: Open AIR
+icon: mdi:hvac
+show_in_sidebar: true
+
+view:
+  title: Garage
+  path: garage
+  icon: mdi:home-thermometer
+
+fan:
+  entity: fan.open_air_mini_garage_open_air_mini
+  speed_entity: sensor.open_air_mini_garage_fan_speed
+  rpm_entity: sensor.open_air_mini_garage_air_mini_rpm
+
+rooms:
+  - name: Entree
+    entity_prefix: valve_entree
+    icon: mdi:door
+    color: blue
+    hex: "#448AFF"
+    device_id: 2b94ce3551ca791a222cab07342b19cd
+  - name: SLK Achter
+    entity_prefix: valve_slk_achter
+    icon: mdi:bed
+    color: red
+    hex: "#FF1744"
+    device_id: 9878ef444d36b10bc353ec7f423309b1
+  - name: BG Voor
+    entity_prefix: valve_slk_bg_voor
+    icon: mdi:bed
+    color: yellow
+    hex: "#FFD600"
+    device_id: 47ce55ad7d1375efad04f9a636777e46
+  - name: Samuel
+    entity_prefix: valve_slk_samuel
+    icon: mdi:bed
+    color: orange
+    hex: "#FF9100"
+    device_id: 6fff785a835d36a4e810a54cc13f46ff
+  - name: Thomas
+    entity_prefix: valve_slk_thomas
+    icon: mdi:bed
+    color: purple
+    hex: "#D500F9"
+    device_id: a43282f340dbaa54f4edae5f2e4d86c3
+
+# Graphs are laid out in 2-column grids (pairs).
+# "rooms" can be "all" or a list of room names to include.
+# "tooltip" can be "shared" (default) or "custom" (the EVAL multi-series tooltip).
+graphs:
+  - - title: CO2
+      sensor: co2
+      yaxis: { min: "~400", max: "~1500", tickAmount: 5 }
+    - title: Temperature
+      sensor: temperature
+      yaxis: { min: "~15", max: "~30" }
+
+  - - title: Humidity
+      sensor: humidity
+      yaxis: { min: "~40", max: "~60" }
+    - title: VOC Index
+      sensor: voc_index
+      yaxis: { min: 0 }
+      rooms: [SLK Achter, BG Voor, Samuel, Thomas]
+
+  - - title: NOx Index
+      sensor: nox_index
+      yaxis: { min: 0 }
+      tooltip: custom
+      rooms: [SLK Achter, BG Voor, Samuel, Thomas]
+    - title: Demand
+      sensor: demand
+      tooltip: custom
+      yaxis: { min: 0 }
+
+  - - title: Fan
+      special: fan
+    - title: Valve Position
+      sensor: valve_position
+      yaxis: { min: 0, max: "~100", tickAmount: 5 }
