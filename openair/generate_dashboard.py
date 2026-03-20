@@ -2,18 +2,28 @@
 """Generate a Lovelace dashboard YAML from a compact config.
 
 Usage:
+    cd openair
     uv run python3 generate_dashboard.py garage/dashboard_config.yaml
+    source ../.env && uv run python3 push_dashboard.py garage/dashboard.yaml
 
 Writes the output to dashboard.yaml in the same directory as the config.
+
+Prerequisites:
+    Each view uses `theme: openair` to remove card borders. This theme must
+    exist on the HA instance at /config/themes/openair.yaml:
+
+        openair:
+          ha-card-border-width: 0px
+
+    Then reload themes: Developer Tools → Services → frontend.reload_themes.
+    (card_mod per-card styling does NOT survive SPA back-navigation — only
+    a real HA theme reliably sets CSS variables across shadow DOM boundaries.)
 """
 
 import sys
 from pathlib import Path
 
 import yaml
-
-
-NO_BORDER_STYLE = "ha-card { border: none !important; box-shadow: none !important; outline: none !important; }"
 
 
 # ── Custom EVAL tooltip used by some charts ──────────────────────────────────
@@ -70,39 +80,27 @@ SENSOR_DISPLAY = {
 
 def build_fan_top_cards(fan_cfg):
     """The two fan status cards at the top (fan control + RPM)."""
-    bg_style = "ha-card { background: none !important; box-shadow: none !important; border: none !important; "
-
-    def overlay_card(graph_entity, overlay):
-        return {
-            "type": "custom:stack-in-card",
-            "card_mod": {"style": "ha-card { overflow: hidden; height: 70px; }"},
-            "cards": [
-                {
-                    "type": "custom:mini-graph-card",
-                    "entities": [{"entity": graph_entity, "color": "rgba(var(--rgb-primary-color), 0.15)"}],
-                    "hours_to_show": 24, "line_width": 2, "height": 55,
-                    "show": {"name": False, "icon": False, "state": False, "labels": False, "points": False, "fill": "fade"},
-                    "card_mod": {"style": bg_style + "margin-top: -8px; }"},
-                },
-                {**overlay, "card_mod": {"style": bg_style + "margin-top: -72px; position: relative; z-index: 1; }"}},
-            ],
-        }
+    device_id = fan_cfg.get("device_id")
+    tap_action = ({"action": "navigate", "navigation_path": f"/config/devices/device/{device_id}"}
+                  if device_id else {"action": "more-info"})
 
     return {
         "type": "grid", "columns": 2, "square": False,
         "cards": [
-            overlay_card(fan_cfg["speed_entity"], {
+            {
                 "type": "custom:mushroom-fan-card",
                 "entity": fan_cfg["entity"],
                 "name": "Fan",
                 "icon_animation": True,
-            }),
-            overlay_card(fan_cfg["rpm_entity"], {
+                "tap_action": tap_action,
+            },
+            {
                 "type": "custom:mushroom-entity-card",
                 "entity": fan_cfg["rpm_entity"],
                 "name": "RPM",
                 "icon": "mdi:rotate-right",
-            }),
+                "tap_action": tap_action,
+            },
         ],
     }
 
@@ -122,7 +120,6 @@ def build_room_card(room):
             "icon_color": COLOR_TEMPLATES[key].format(entity=entity),
             "layout": "vertical",
             "tap_action": {"action": "none"},
-            "card_mod": {"style": NO_BORDER_STYLE},
         }
         sensors.append(card)
 
@@ -135,7 +132,6 @@ def build_room_card(room):
                 "icon": room["icon"],
                 "icon_color": room["color"],
                 "layout": "vertical",
-                "card_mod": {"style": NO_BORDER_STYLE},
                 "tap_action": {
                     "action": "navigate",
                     "navigation_path": f"/config/devices/device/{room['device_id']}",
@@ -144,7 +140,6 @@ def build_room_card(room):
             {
                 "type": "grid", "columns": 2, "square": False,
                 "cards": sensors,
-                "card_mod": {"style": NO_BORDER_STYLE},
             },
         ],
     }
@@ -352,6 +347,7 @@ def generate(config_path: str):
             "path": path,
             "icon": view_cfg["icon"],
             "panel": True,
+            "theme": "openair",  # see /config/themes/openair.yaml on HA instance
             "cards": [{"type": "vertical-stack", "cards": view_cards}],
         }
         if not is_default:

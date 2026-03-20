@@ -1,5 +1,12 @@
 # Compact config for generate_dashboard.py → dashboard.yaml
-# Run: cd openair && uv run python3 generate_dashboard.py garage/dashboard_config.yaml
+#
+# Generate & push:
+#   cd openair
+#   uv run python3 generate_dashboard.py garage/dashboard_config.yaml
+#   source ../.env && uv run python3 push_dashboard.py garage/dashboard.yaml
+#
+# Requires "openair" theme on HA instance (removes card borders).
+# See generate_dashboard.py docstring for setup instructions.
 
 url_path: open-air
 title: Open AIR
@@ -22,6 +29,7 @@ fan:
   entity: fan.open_air_mini_garage_open_air_mini
   speed_entity: sensor.open_air_mini_garage_fan_speed
   rpm_entity: sensor.open_air_mini_garage_air_mini_rpm
+  device_id: 7520238333fb3167b7a52854074ad22e
 
 rooms:
   - name: Entree
