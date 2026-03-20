@@ -14,6 +14,14 @@ sensor:
     icon: "mdi:gauge"
     state_class: measurement
   - platform: template
+    name: "Proportional Demand"
+    id: proportional_sensor
+    unit_of_measurement: ""
+    accuracy_decimals: 2
+    icon: "mdi:gauge-empty"
+    entity_category: diagnostic
+    state_class: measurement
+  - platform: template
     name: "Integral Demand"
     id: integral_sensor
     unit_of_measurement: ""
@@ -230,6 +238,7 @@ interval:
 
                 // P term: clamp signed error to [0, 1]
                 float demand = std::max(0.0f, std::min(1.0f, signed_error));
+                id(proportional_sensor).publish_state(demand);
 
                 // I term: accumulate signed error, clamp to [0, INTEGRAL_MAX] (anti-windup)
                 id(integral_demand) = std::max(0.0f, std::min(INTEGRAL_MAX,
