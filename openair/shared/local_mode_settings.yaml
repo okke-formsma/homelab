@@ -16,6 +16,9 @@ substitutions:
   # Dead band: below this fan demand, all valves open fully (prevents hunting near setpoint)
   dead_band: "0.05"
 
+  # Position dead band: only move the valve if new position differs by more than this (0.05 = 5%)
+  position_dead_band: "0.05"
+
   # Smoothing (EMA alpha: higher = more weight on new value)
   smoothing_alpha: "0.7"
 

@@ -279,6 +279,13 @@ interval:
                 ESP_LOGI("local_mode", "CO2=%.0f hum=%.1f%% demand=%.2f integral=%.2f pi=%.2f smoothed=%.2f fan=%.0f%% -> pos=%.2f",
                          co2, hum, demand, id(integral_demand), pi_demand, smoothed, fan_speed, position);
 
-                auto call = id(air_valve).make_call();
-                call.set_position(position);
-                call.perform();
+                // Only move if position changed by more than the dead band
+                static const float POS_DEAD_BAND = ${position_dead_band};
+                float current_pos = id(air_valve).position;
+                if (std::isnan(current_pos) || std::abs(position - current_pos) >= POS_DEAD_BAND) {
+                  auto call = id(air_valve).make_call();
+                  call.set_position(position);
+                  call.perform();
+                } else {
+                  ESP_LOGD("local_mode", "Position unchanged (%.2f -> %.2f, deadband %.2f)", current_pos, position, POS_DEAD_BAND);
+                }
