@@ -2,7 +2,7 @@
 set -e
 cd "$(dirname "$0")"
 
-esphome run open-air-mini.yaml --no-logs
+esphome run open-air-mini.yaml --no-logs --device 192.168.1.205
 esphome run valve-1.yaml --no-logs --device 192.168.1.144
 esphome run valve-2.yaml --no-logs --device 192.168.1.190
 esphome run valve-3.yaml --no-logs --device 192.168.1.229
