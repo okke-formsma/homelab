@@ -5,8 +5,7 @@ packages:
 substitutions:
   # Name of this fan controller. Used as ESPHome device name and mDNS hostname.
   # Must match fan_host below (without .local).
-  device_name: "open-air-mini-huis_XXXXXX"
-  # XXXXX is so we don't accidentally flash until hardware is updated. See 'old' branch until then.
+  device_name: "open-air-mini-huis"
 
   # Hostname that the valves in this installation poll for fan speed.
   # Derived from device_name above.

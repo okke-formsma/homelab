@@ -1,6 +1,6 @@
 substitutions:
   devicename: open-air-valve-huis-4
-  upper_devicename: Open AIR Valve Huis 4
+  upper_devicename: "Huis Valve 4 Living Room"
 
 packages:
   config: !include config.yaml

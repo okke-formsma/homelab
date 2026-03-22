@@ -1,10 +1,10 @@
 substitutions:
   devicename: open-air-valve-huis-1
-  upper_devicename: Open AIR Valve Huis 1
+  upper_devicename: "Huis Valve 1 Bathroom"
 
 packages:
   config: !include config.yaml
-  hardware: !include ../shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml
+  hardware: !include ../shared/Open_AIR_Valve_DIS_SHT4x.yaml
 
 esphome:
   includes:

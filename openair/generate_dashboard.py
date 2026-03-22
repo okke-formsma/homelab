@@ -146,9 +146,9 @@ def build_room_card(room):
 
 
 def build_room_status_grid(rooms):
-    """The 5-column room status grid."""
+    """Room status grid — columns match the number of rooms."""
     return {
-        "type": "grid", "columns": 5, "square": False,
+        "type": "grid", "columns": len(rooms), "square": False,
         "cards": [build_room_card(r) for r in rooms],
     }
 

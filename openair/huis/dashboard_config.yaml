@@ -1,0 +1,85 @@
+# Compact config for generate_dashboard.py → dashboard.yaml
+#
+# Generate & push:
+#   cd openair
+#   uv run python3 generate_dashboard.py huis/dashboard_config.yaml
+#   source ../.env && uv run python3 push_dashboard.py huis/dashboard.yaml
+#
+# Requires "openair" theme on HA instance (removes card borders).
+# See generate_dashboard.py docstring for setup instructions.
+
+url_path: open-air-huis
+title: Open AIR Huis
+icon: mdi:hvac
+show_in_sidebar: true
+
+view:
+  title: Huis
+  path: huis
+  icon: mdi:home-thermometer
+
+graph_spans:
+  - { span: 6h, label: 6 hours }
+  - { span: 24h, label: 1 day }
+  - { span: 3d, label: 3 days }
+  - { span: 7d, label: 1 week }
+default_span: 24h
+
+fan:
+  entity: fan.open_air_mini_huis_open_air_mini
+  speed_entity: sensor.open_air_mini_huis_fan_speed
+  rpm_entity: sensor.open_air_mini_huis_air_mini_rpm
+  device_id: 25f7305f82eaa33d7a7a5cb86cc2a00b
+
+rooms:
+  - name: Bathroom
+    entity_prefix: open_air_valve_huis_1
+    icon: mdi:shower
+    color: blue
+    hex: "#448AFF"
+    device_id: 2177e4da155c6daa5a4df602d721db9c
+  - name: Master Bedroom
+    entity_prefix: open_air_valve_huis_2
+    icon: mdi:bed-king
+    color: red
+    hex: "#FF1744"
+    device_id: 5ebfaeed7f970bb8bdfbe7969a9ee9a9
+  - name: Toilet
+    entity_prefix: open_air_valve_huis_3
+    icon: mdi:toilet
+    color: yellow
+    hex: "#FFD600"
+    device_id: 3610a8e45d55069ecc8d3c93329635be
+
+# Graphs are laid out in 2-column grids (pairs).
+# "rooms" can be "all" or a list of room names to include.
+graphs:
+  - - title: CO2
+      sensor: co2
+      rooms: [Master Bedroom, Toilet]
+      yaxis: { min: "~400", max: "~1200", tickAmount: 5 }
+    - title: Temperature
+      sensor: temperature
+      yaxis: { min: "~15", max: "~25" }
+
+  - - title: Humidity
+      sensor: humidity
+      yaxis: { min: "~40", max: "~60" }
+    - title: VOC Index
+      sensor: voc_index
+      rooms: [Toilet]
+      yaxis: { min: 0, max: "~400" }
+
+  - - title: NOx Index
+      sensor: nox_index
+      rooms: [Toilet]
+      yaxis: { min: 0 }
+    - title: Demand
+      sensor: demand
+      yaxis: { min: 0 }
+
+  - - title: Fan
+      special: fan
+    - title: Valve Position
+      sensor: valve_position
+      yaxis: { min: 0, max: "~100", tickAmount: 5 }
