@@ -53,7 +53,7 @@ interval:
                 ESP_LOGI("poll", "valve_1=${valve_1_host} valve_2=${valve_2_host} valve_3=${valve_3_host} valve_4=${valve_4_host} valve_5=${valve_5_host}");
             - if:
                 condition:
-                  lambda: 'return std::string("${valve_1_host}") != "0.0.0.0";'
+                  lambda: 'return std::string("${valve_1_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_1_host}");'
                 then:
                   - logger.log: "GET http://${valve_1_host}/sensor/Demand"
                   - http_request.get:
@@ -69,10 +69,12 @@ interval:
                           - lambda: |-
                               ESP_LOGD("poll", "Response: %s", body.c_str());
                               id(valve_demand)[0] = parse_sensor_value(body, response->status_code);
+                else:
+                  - lambda: 'id(valve_demand)[0] = NAN;'
 
             - if:
                 condition:
-                  lambda: 'return std::string("${valve_2_host}") != "0.0.0.0";'
+                  lambda: 'return std::string("${valve_2_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_2_host}");'
                 then:
                   - logger.log: "GET http://${valve_2_host}/sensor/Demand"
                   - http_request.get:
@@ -88,10 +90,12 @@ interval:
                           - lambda: |-
                               ESP_LOGD("poll", "Response: %s", body.c_str());
                               id(valve_demand)[1] = parse_sensor_value(body, response->status_code);
+                else:
+                  - lambda: 'id(valve_demand)[1] = NAN;'
 
             - if:
                 condition:
-                  lambda: 'return std::string("${valve_3_host}") != "0.0.0.0";'
+                  lambda: 'return std::string("${valve_3_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_3_host}");'
                 then:
                   - logger.log: "GET http://${valve_3_host}/sensor/Demand"
                   - http_request.get:
@@ -107,10 +111,12 @@ interval:
                           - lambda: |-
                               ESP_LOGD("poll", "Response: %s", body.c_str());
                               id(valve_demand)[2] = parse_sensor_value(body, response->status_code);
+                else:
+                  - lambda: 'id(valve_demand)[2] = NAN;'
 
             - if:
                 condition:
-                  lambda: 'return std::string("${valve_4_host}") != "0.0.0.0";'
+                  lambda: 'return std::string("${valve_4_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_4_host}");'
                 then:
                   - logger.log: "GET http://${valve_4_host}/sensor/Demand"
                   - http_request.get:
@@ -126,10 +132,12 @@ interval:
                           - lambda: |-
                               ESP_LOGD("poll", "Response: %s", body.c_str());
                               id(valve_demand)[3] = parse_sensor_value(body, response->status_code);
+                else:
+                  - lambda: 'id(valve_demand)[3] = NAN;'
 
             - if:
                 condition:
-                  lambda: 'return std::string("${valve_5_host}") != "0.0.0.0";'
+                  lambda: 'return std::string("${valve_5_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_5_host}");'
                 then:
                   - logger.log: "GET http://${valve_5_host}/sensor/Demand"
                   - http_request.get:
@@ -145,10 +153,12 @@ interval:
                           - lambda: |-
                               ESP_LOGD("poll", "Response: %s", body.c_str());
                               id(valve_demand)[4] = parse_sensor_value(body, response->status_code);
+                else:
+                  - lambda: 'id(valve_demand)[4] = NAN;'
 
             - if:
                 condition:
-                  lambda: 'return std::string("${valve_6_host}") != "0.0.0.0";'
+                  lambda: 'return std::string("${valve_6_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_6_host}");'
                 then:
                   - logger.log: "GET http://${valve_6_host}/sensor/Demand"
                   - http_request.get:
@@ -164,10 +174,12 @@ interval:
                           - lambda: |-
                               ESP_LOGD("poll", "Response: %s", body.c_str());
                               id(valve_demand)[5] = parse_sensor_value(body, response->status_code);
+                else:
+                  - lambda: 'id(valve_demand)[5] = NAN;'
 
             - if:
                 condition:
-                  lambda: 'return std::string("${valve_7_host}") != "0.0.0.0";'
+                  lambda: 'return std::string("${valve_7_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_7_host}");'
                 then:
                   - logger.log: "GET http://${valve_7_host}/sensor/Demand"
                   - http_request.get:
@@ -183,6 +195,8 @@ interval:
                           - lambda: |-
                               ESP_LOGD("poll", "Response: %s", body.c_str());
                               id(valve_demand)[6] = parse_sensor_value(body, response->status_code);
+                else:
+                  - lambda: 'id(valve_demand)[6] = NAN;'
 
             - lambda: |-
                 const float SPEED_MIN = ${fan_speed_min};

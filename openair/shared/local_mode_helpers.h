@@ -2,6 +2,31 @@
 
 #include <algorithm>
 #include <cmath>
+#include "mdns.h"
+
+// Check if an mDNS (.local) hostname is reachable, with a bounded timeout.
+// Returns true if the host resolves, false otherwise. This prevents the
+// HTTP client from blocking indefinitely on DNS resolution for offline hosts,
+// which would trigger the ESP32 watchdog and reboot the device.
+inline bool is_mdns_host_reachable(const char* hostname, uint32_t timeout_ms = 2000) {
+    std::string host(hostname);
+    // Strip ".local" suffix — mdns_query_a expects just the hostname part
+    auto pos = host.find(".local");
+    if (pos != std::string::npos) {
+        host = host.substr(0, pos);
+    }
+
+    esp_ip4_addr_t addr;
+    addr.addr = 0;
+    esp_err_t err = mdns_query_a(host.c_str(), timeout_ms, &addr);
+    if (err != ESP_OK) {
+        ESP_LOGW("mdns", "Cannot resolve %s (timeout %ums): %s",
+                 hostname, timeout_ms, esp_err_to_name(err));
+        return false;
+    }
+    ESP_LOGD("mdns", "Resolved %s to " IPSTR, hostname, IP2STR(&addr));
+    return true;
+}
 
 // Parse the "value" field from an ESPHome web server JSON response.
 // Returns NAN on failure.
