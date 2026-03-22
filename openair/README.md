@@ -101,10 +101,11 @@ Repeat for each valve (e.g., valve-1 and valve-2), incrementing the number.
 #### Choosing the hardware package
 
 Pick the hardware include that matches your sensor set:
+- `shared/Open_AIR_Valve_DIS_SHT4x.yaml`: SHT4x only — humidity, temperature. A dummy CO₂ sensor (NaN) is included so the local mode demand calculation works; demand is driven by humidity only.
 - `shared/Open_AIR_Valve_DIS_SCD40.yaml`: SCD40 only — CO₂, humidity, temperature.
 - `shared/Open_AIR_Valve_DIS_SCD40_SGP41.yaml`: SCD40 + SGP41 — CO₂, humidity, temperature, VOC index, NOx index.
 
-Use the SGP41 variant only if that sensor is present on the valve PCB. If you choose the wrong one, the build will fail or the extra sensors will read as unavailable.
+Use the variant that matches the sensors present on the valve PCB. If you choose the wrong one, the build will fail or the extra sensors will read as unavailable.
 
 ### 5. Flash
 
@@ -124,21 +125,21 @@ See [FLASHING.md](FLASHING.md) for more detail.
 Each fan controller manages its own set of valves independently.
 
 ```
-┌────────────────────────────────────┐
-│  open-air-mini-<yourname> (2 valves)│
-│  Polls valves via HTTP every 60s   │
-│  Exposes fan speed via web server  │
-└──────────────┬─────────────────────┘
+┌──────────────────────────────────────┐
+│  open-air-mini-<yourname> (3 valves) │
+│  Polls valves via HTTP every 60s     │
+│  Exposes fan speed via web server    │
+└──────────────┬───────────────────────┘
                ▼ GET /sensor/Demand
                |
-         ┌─────┴───────┐
-         ▲             ▲   GET /fan/Open AIR Mini
-         |             |
-┌─────────────────┐  ┌─────────────────┐
-│ example-valve-1 │  │ example-valve-2 │
-│ SCD40 + SGP41   │  │ SCD40 only      │
-│ CO₂/H/T/VOC/NOx │  │ CO₂/H/T         │
-└─────────────────┘  └─────────────────┘
+     ┌─────────┼──────────┐
+     ▲         ▲          ▲   GET /fan/Open AIR Mini
+     |         |          |
+┌──────────┐ ┌──────────┐ ┌──────────────┐
+│ valve-1  │ │ valve-2  │ │ valve-3      │
+│ SHT4x    │ │ SCD40    │ │ SCD40+SGP41  │
+│ H/T      │ │ CO₂/H/T  │ │ CO₂/H/T/V/N  │
+└──────────┘ └──────────┘ └──────────────┘
 ```
 
 Unused valve slots in `local_mode_fan.yaml` default to `"0.0.0.0"`. Requests to that address fail immediately, return NAN, and are excluded from demand calculation — no special handling needed.
@@ -184,7 +185,7 @@ The fan speed is exposed via the ESPHome web server at `/fan/Open AIR Mini`, whi
 
 Each valve runs independently every poll cycle:
 
-1. **Reads own CO2 + humidity** from local I2C sensors
+1. **Reads own sensors** (CO₂ + humidity, or humidity-only for SHT4x valves) from local I2C
 2. **Polls current fan speed** from the fan controller via HTTP GET
 3. **Computes own PI demand** (0–1) — see below
 4. **Applies EMA smoothing**
