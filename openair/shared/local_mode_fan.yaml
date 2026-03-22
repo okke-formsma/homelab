@@ -15,9 +15,6 @@
 #   esphome:
 #     includes: [../shared/local_mode_helpers.h]
 
-http_request:
-  timeout: 3s
-
 globals:
   - id: valve_demand
     type: float[7]
@@ -46,190 +43,36 @@ interval:
                   api.connected:
               - switch.is_on: local_mode
           then:
-            # Poll enabled valve slots. Disabled slots (0.0.0.0) are skipped
-            # entirely to avoid connection errors that crash the device.
             - lambda: |-
-                ESP_LOGI("poll", "Starting valve poll cycle");
-                ESP_LOGI("poll", "valve_1=${valve_1_host} valve_2=${valve_2_host} valve_3=${valve_3_host} valve_4=${valve_4_host} valve_5=${valve_5_host}");
-            - if:
-                condition:
-                  lambda: 'return std::string("${valve_1_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_1_host}");'
-                then:
-                  - logger.log: "GET http://${valve_1_host}/sensor/Demand"
-                  - http_request.get:
-                      url: "http://${valve_1_host}/sensor/Demand"
-                      capture_response: true
-                      on_error:
-                        then:
-                          - lambda: |-
-                              ESP_LOGW("poll", "Request failed for valve_1");
-                              id(valve_demand)[0] = NAN;
-                      on_response:
-                        then:
-                          - lambda: |-
-                              ESP_LOGD("poll", "Response: %s", body.c_str());
-                              id(valve_demand)[0] = parse_sensor_value(body, response->status_code);
-                else:
-                  - lambda: 'id(valve_demand)[0] = NAN;'
-
-            - if:
-                condition:
-                  lambda: 'return std::string("${valve_2_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_2_host}");'
-                then:
-                  - logger.log: "GET http://${valve_2_host}/sensor/Demand"
-                  - http_request.get:
-                      url: "http://${valve_2_host}/sensor/Demand"
-                      capture_response: true
-                      on_error:
-                        then:
-                          - lambda: |-
-                              ESP_LOGW("poll", "Request failed for valve_2");
-                              id(valve_demand)[1] = NAN;
-                      on_response:
-                        then:
-                          - lambda: |-
-                              ESP_LOGD("poll", "Response: %s", body.c_str());
-                              id(valve_demand)[1] = parse_sensor_value(body, response->status_code);
-                else:
-                  - lambda: 'id(valve_demand)[1] = NAN;'
-
-            - if:
-                condition:
-                  lambda: 'return std::string("${valve_3_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_3_host}");'
-                then:
-                  - logger.log: "GET http://${valve_3_host}/sensor/Demand"
-                  - http_request.get:
-                      url: "http://${valve_3_host}/sensor/Demand"
-                      capture_response: true
-                      on_error:
-                        then:
-                          - lambda: |-
-                              ESP_LOGW("poll", "Request failed for valve_3");
-                              id(valve_demand)[2] = NAN;
-                      on_response:
-                        then:
-                          - lambda: |-
-                              ESP_LOGD("poll", "Response: %s", body.c_str());
-                              id(valve_demand)[2] = parse_sensor_value(body, response->status_code);
-                else:
-                  - lambda: 'id(valve_demand)[2] = NAN;'
-
-            - if:
-                condition:
-                  lambda: 'return std::string("${valve_4_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_4_host}");'
-                then:
-                  - logger.log: "GET http://${valve_4_host}/sensor/Demand"
-                  - http_request.get:
-                      url: "http://${valve_4_host}/sensor/Demand"
-                      capture_response: true
-                      on_error:
-                        then:
-                          - lambda: |-
-                              ESP_LOGW("poll", "Request failed for valve_4");
-                              id(valve_demand)[3] = NAN;
-                      on_response:
-                        then:
-                          - lambda: |-
-                              ESP_LOGD("poll", "Response: %s", body.c_str());
-                              id(valve_demand)[3] = parse_sensor_value(body, response->status_code);
-                else:
-                  - lambda: 'id(valve_demand)[3] = NAN;'
-
-            - if:
-                condition:
-                  lambda: 'return std::string("${valve_5_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_5_host}");'
-                then:
-                  - logger.log: "GET http://${valve_5_host}/sensor/Demand"
-                  - http_request.get:
-                      url: "http://${valve_5_host}/sensor/Demand"
-                      capture_response: true
-                      on_error:
-                        then:
-                          - lambda: |-
-                              ESP_LOGW("poll", "Request failed for valve_5");
-                              id(valve_demand)[4] = NAN;
-                      on_response:
-                        then:
-                          - lambda: |-
-                              ESP_LOGD("poll", "Response: %s", body.c_str());
-                              id(valve_demand)[4] = parse_sensor_value(body, response->status_code);
-                else:
-                  - lambda: 'id(valve_demand)[4] = NAN;'
-
-            - if:
-                condition:
-                  lambda: 'return std::string("${valve_6_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_6_host}");'
-                then:
-                  - logger.log: "GET http://${valve_6_host}/sensor/Demand"
-                  - http_request.get:
-                      url: "http://${valve_6_host}/sensor/Demand"
-                      capture_response: true
-                      on_error:
-                        then:
-                          - lambda: |-
-                              ESP_LOGW("poll", "Request failed for valve_6");
-                              id(valve_demand)[5] = NAN;
-                      on_response:
-                        then:
-                          - lambda: |-
-                              ESP_LOGD("poll", "Response: %s", body.c_str());
-                              id(valve_demand)[5] = parse_sensor_value(body, response->status_code);
-                else:
-                  - lambda: 'id(valve_demand)[5] = NAN;'
-
-            - if:
-                condition:
-                  lambda: 'return std::string("${valve_7_host}") != "0.0.0.0" && is_mdns_host_reachable("${valve_7_host}");'
-                then:
-                  - logger.log: "GET http://${valve_7_host}/sensor/Demand"
-                  - http_request.get:
-                      url: "http://${valve_7_host}/sensor/Demand"
-                      capture_response: true
-                      on_error:
-                        then:
-                          - lambda: |-
-                              ESP_LOGW("poll", "Request failed for valve_7");
-                              id(valve_demand)[6] = NAN;
-                      on_response:
-                        then:
-                          - lambda: |-
-                              ESP_LOGD("poll", "Response: %s", body.c_str());
-                              id(valve_demand)[6] = parse_sensor_value(body, response->status_code);
-                else:
-                  - lambda: 'id(valve_demand)[6] = NAN;'
-
-            - lambda: |-
-                const float SPEED_MIN = ${fan_speed_min};
-                const float SPEED_MAX = ${fan_speed_max};
-                const float ALPHA = ${smoothing_alpha};
+                // Poll all valve slots for demand
+                const char* hosts[] = {
+                    "${valve_1_host}", "${valve_2_host}", "${valve_3_host}",
+                    "${valve_4_host}", "${valve_5_host}", "${valve_6_host}",
+                    "${valve_7_host}"};
 
                 float max_demand = 0.0f;
-                int active_valves = 0;
-
+                int active = 0;
                 for (int i = 0; i < 7; i++) {
+                  id(valve_demand)[i] = poll_valve_demand(hosts[i]);
                   float d = id(valve_demand)[i];
-
-                  ESP_LOGD("local_mode", "Valve %d: demand=%.2f",
-                           i + 1,
-                           std::isnan(d) ? -1.0f : d);
-
+                  ESP_LOGD("poll", "Valve %d (%s): demand=%.2f",
+                           i + 1, hosts[i], std::isnan(d) ? -1.0f : d);
                   if (!std::isnan(d)) {
-                    active_valves++;
+                    active++;
                     if (d > max_demand) max_demand = d;
                   }
                 }
 
-                float fan_demand = (active_valves > 0) ? max_demand : 0.0f;
-
-                id(smoothed_fan_demand) = ema(id(smoothed_fan_demand), fan_demand, ALPHA);
+                // Smooth and apply fan speed
+                float fan_demand = (active > 0) ? max_demand : 0.0f;
+                id(smoothed_fan_demand) = ema(id(smoothed_fan_demand), fan_demand, ${smoothing_alpha});
                 float smoothed = id(smoothed_fan_demand);
+                int speed = (int)(${fan_speed_min} + smoothed * (${fan_speed_max} - ${fan_speed_min}));
 
-                int speed = (int)(SPEED_MIN + smoothed * (SPEED_MAX - SPEED_MIN));
-                ESP_LOGI("local_mode", "Demand: max=%.2f active=%d fan_demand=%.2f smoothed=%.2f -> fan %d%%",
-                         max_demand, active_valves, fan_demand, smoothed, speed);
+                ESP_LOGI("poll", "max=%.2f active=%d smoothed=%.2f -> fan %d%%",
+                         max_demand, active, smoothed, speed);
 
                 id(fan_speed_pct).publish_state(speed);
-
                 auto call = id(fan_motor).make_call();
                 call.set_speed(speed);
                 call.set_state(true);
