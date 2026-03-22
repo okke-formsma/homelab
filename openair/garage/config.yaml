@@ -11,11 +11,6 @@ substitutions:
   # Derived from device_name above.
   fan_host: "${device_name}.local"
 
-  # Active valve hostnames for this installation.
-  # Overrides defaults from local_mode_defaults.yaml.
-  # Lower co2_max for more aggressive ventilation (target ~800 ppm)
-  co2_max: "1200"
-
   valve_1_host: "garage-valve-1.local"
   valve_2_host: "garage-valve-2.local"
   valve_3_host: "garage-valve-3.local"

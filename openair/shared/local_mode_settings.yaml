@@ -1,30 +1,30 @@
 substitutions:
   # Sensor targets (below these = no demand)
-  co2_target: "600"        # ppm - outdoor baseline
-  co2_max: "1500"          # ppm - full demand
-  humidity_target: "60"    # % - comfortable baseline
-  humidity_max: "75"       # % - full demand
+  co2_target: "700" # ppm - outdoor baseline
+  co2_max: "1200" # ppm - full demand
+  humidity_target: "60" # % - comfortable baseline
+  humidity_max: "80" # % - full demand
 
   # Fan speed range
-  fan_speed_min: "15"      # % - always-on minimum
-  fan_speed_max: "70"      # % - maximum speed
+  fan_speed_min: "15" # % - always-on minimum
+  fan_speed_max: "70" # % - maximum speed
 
   # Valve position range
-  valve_pos_min: "0.05"    # keep slightly open for sensor freshness
-  valve_pos_max: "1.0"     # fully open
+  valve_pos_min: "0.05" # keep slightly open for sensor freshness
+  valve_pos_max: "1.0" # fully open
 
   # Dead band: below this fan demand, all valves open fully (prevents hunting near setpoint)
   dead_band: "0.05"
 
   # Position dead band: only move the valve if new position differs by more than this (0.05 = 5%)
-  position_dead_band: "0.05"
+  position_dead_band: "0.2"
 
   # Smoothing (EMA alpha: higher = more weight on new value)
   smoothing_alpha: "0.7"
 
   # Integral (I) controller - set ki_scale: "0" to disable
-  ki_scale: "0.5"     # max demand added by full integral (0.5 = up to +50% on top of P term)
-  integral_max: "10"  # polls to saturate integral (10 × 60s = 10 min at full demand)
+  ki_scale: "0.5" # max demand added by full integral (0.5 = up to +50% on top of P term)
+  integral_max: "10" # polls to saturate integral (10 × 60s = 10 min at full demand)
 
   # Polling interval
   poll_interval: "60s"
