@@ -4,8 +4,8 @@ title: Open AIR Huis
 icon: mdi:hvac
 show_in_sidebar: true
 views:
-- title: Huis (6 hours)
-  path: huis-6h
+- title: Huis
+  path: huis
   icon: mdi:home-thermometer
   panel: true
   theme: openair
@@ -20,17 +20,17 @@ views:
         content: 6 hours
         tap_action:
           action: navigate
-          navigation_path: /open-air-huis/huis
-        card_mod:
-          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
-            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
-            !important; }'
+          navigation_path: /open-air-huis/huis-6h
       - type: template
         icon: mdi:clock-outline
         content: 1 day
         tap_action:
           action: navigate
-          navigation_path: /open-air-huis/huis-24h
+          navigation_path: /open-air-huis/huis
+        card_mod:
+          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
+            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
+            !important; }'
       - type: template
         icon: mdi:clock-outline
         content: 3 days
@@ -59,6 +59,736 @@ views:
         name: RPM
         icon: mdi:rotate-right
         tap_action: *id001
+    - type: grid
+      columns: 3
+      square: false
+      cards:
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Bathroom
+          icon: mdi:shower
+          icon_color: blue
+          layout: vertical
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/2177e4da155c6daa5a4df602d721db9c
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_1_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_1_humidity'')|round(0)
+              }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_1_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_1_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Master Bedroom
+          icon: mdi:bed-king
+          icon_color: red
+          layout: vertical
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/5ebfaeed7f970bb8bdfbe7969a9ee9a9
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_2_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_2_humidity'')|round(0)
+              }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_2_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_2_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+      - type: custom:stack-in-card
+        cards:
+        - type: custom:mushroom-template-card
+          primary: Toilet
+          icon: mdi:toilet
+          icon_color: yellow
+          layout: vertical
+          tap_action:
+            action: navigate
+            navigation_path: /config/devices/device/3610a8e45d55069ecc8d3c93329635be
+        - type: grid
+          columns: 2
+          square: false
+          cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_3_co2'')|round(0) }}'
+            icon: mdi:molecule-co2
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_co2'')|float(0)
+              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
+              %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_3_humidity'')|round(0)
+              }}%'
+            icon: mdi:water-percent
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_humidity'')|float(0)
+              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_3_temperature'')|round(1)
+              }}°'
+            icon: mdi:thermometer
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_temperature'')|float(0)
+              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
+              elif v <= 30 %}orange{% else %}red{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.open_air_valve_huis_3_valve_position'')|round(0)
+              }}%'
+            icon: mdi:valve
+            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_valve_position'')|float(0)
+              %} {% if v == 0 %}red{% else %}green{% endif %}'
+            layout: vertical
+            tap_action:
+              action: none
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: ~400
+          max: ~1200
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: CO2
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_valve_huis_2_co2
+          name: Master Bedroom
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_3_co2
+          name: Toilet
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: ~15
+          max: ~25
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Temperature
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_valve_huis_1_temperature
+          name: Bathroom
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_2_temperature
+          name: Master Bedroom
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_3_temperature
+          name: Toilet
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: ~40
+          max: ~60
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Humidity
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_valve_huis_1_humidity
+          name: Bathroom
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_2_humidity
+          name: Master Bedroom
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_3_humidity
+          name: Toilet
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: 0
+          max: ~400
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: VOC Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_valve_huis_3_voc_index
+          name: Toilet
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: NOx Index
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_valve_huis_3_nox_index
+          name: Toilet
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: 0
+          apex_config:
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Demand
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_valve_huis_1_demand
+          name: Bathroom
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_2_demand
+          name: Master Bedroom
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_3_demand
+          name: Toilet
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - id: speed
+          min: 0
+          max: 100
+        - id: rpm
+          opposite: true
+          min: 0
+        apex_config:
+          title:
+            text: Fan
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_mini_huis_fan_speed
+          name: Speed %
+          stroke_width: 2
+          yaxis_id: speed
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_mini_huis_air_mini_rpm
+          name: RPM
+          stroke_width: 2
+          yaxis_id: rpm
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+      - type: custom:apexcharts-card
+        header:
+          show: false
+        graph_span: 24h
+        yaxis:
+        - min: 0
+          max: ~100
+          apex_config:
+            tickAmount: 5
+            forceNiceScale: true
+        apex_config:
+          title:
+            text: Valve Position
+            floating: true
+            offsetY: 6
+            align: center
+            style:
+              fontSize: 14px
+              fontWeight: '600'
+          chart:
+            height: 180
+          stroke:
+            width: 2
+          legend:
+            show: false
+          tooltip:
+            followCursor: true
+            fixed:
+              enabled: true
+              position: topLeft
+            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
+              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
+              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
+              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
+              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
+              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
+              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
+              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
+              + ''</b></div>''; } return h + ''</div>''; }'
+        series:
+        - entity: sensor.open_air_valve_huis_1_valve_position
+          name: Bathroom
+          color: '#448AFF'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_2_valve_position
+          name: Master Bedroom
+          color: '#FF1744'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+        - entity: sensor.open_air_valve_huis_3_valve_position
+          name: Toilet
+          color: '#FFD600'
+          stroke_width: 2
+          extend_to: now
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 5min
+            fill: last
+- title: Huis (6 hours)
+  path: huis-6h
+  icon: mdi:home-thermometer
+  panel: true
+  theme: openair
+  cards:
+  - type: vertical-stack
+    cards:
+    - type: custom:mushroom-chips-card
+      alignment: center
+      chips:
+      - type: template
+        icon: mdi:clock-outline
+        content: 6 hours
+        tap_action:
+          action: navigate
+          navigation_path: /open-air-huis/huis-6h
+        card_mod:
+          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
+            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
+            !important; }'
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 day
+        tap_action:
+          action: navigate
+          navigation_path: /open-air-huis/huis
+      - type: template
+        icon: mdi:clock-outline
+        content: 3 days
+        tap_action:
+          action: navigate
+          navigation_path: /open-air-huis/huis-3d
+      - type: template
+        icon: mdi:clock-outline
+        content: 1 week
+        tap_action:
+          action: navigate
+          navigation_path: /open-air-huis/huis-7d
+    - type: grid
+      columns: 2
+      square: false
+      cards:
+      - type: custom:mushroom-fan-card
+        entity: fan.open_air_mini_huis_open_air_mini
+        name: Fan
+        icon_animation: true
+        tap_action: &id002
+          action: navigate
+          navigation_path: /config/devices/device/25f7305f82eaa33d7a7a5cb86cc2a00b
+      - type: custom:mushroom-entity-card
+        entity: sensor.open_air_mini_huis_air_mini_rpm
+        name: RPM
+        icon: mdi:rotate-right
+        tap_action: *id002
     - type: grid
       columns: 3
       square: false
@@ -735,736 +1465,6 @@ views:
             duration: 5min
             fill: last
   subview: true
-- title: Huis
-  path: huis
-  icon: mdi:home-thermometer
-  panel: true
-  theme: openair
-  cards:
-  - type: vertical-stack
-    cards:
-    - type: custom:mushroom-chips-card
-      alignment: center
-      chips:
-      - type: template
-        icon: mdi:clock-outline
-        content: 6 hours
-        tap_action:
-          action: navigate
-          navigation_path: /open-air-huis/huis-6h
-      - type: template
-        icon: mdi:clock-outline
-        content: 1 day
-        tap_action:
-          action: navigate
-          navigation_path: /open-air-huis/huis
-        card_mod:
-          style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
-            var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
-            !important; }'
-      - type: template
-        icon: mdi:clock-outline
-        content: 3 days
-        tap_action:
-          action: navigate
-          navigation_path: /open-air-huis/huis-3d
-      - type: template
-        icon: mdi:clock-outline
-        content: 1 week
-        tap_action:
-          action: navigate
-          navigation_path: /open-air-huis/huis-7d
-    - type: grid
-      columns: 2
-      square: false
-      cards:
-      - type: custom:mushroom-fan-card
-        entity: fan.open_air_mini_huis_open_air_mini
-        name: Fan
-        icon_animation: true
-        tap_action: &id002
-          action: navigate
-          navigation_path: /config/devices/device/25f7305f82eaa33d7a7a5cb86cc2a00b
-      - type: custom:mushroom-entity-card
-        entity: sensor.open_air_mini_huis_air_mini_rpm
-        name: RPM
-        icon: mdi:rotate-right
-        tap_action: *id002
-    - type: grid
-      columns: 3
-      square: false
-      cards:
-      - type: custom:stack-in-card
-        cards:
-        - type: custom:mushroom-template-card
-          primary: Bathroom
-          icon: mdi:shower
-          icon_color: blue
-          layout: vertical
-          tap_action:
-            action: navigate
-            navigation_path: /config/devices/device/2177e4da155c6daa5a4df602d721db9c
-        - type: grid
-          columns: 2
-          square: false
-          cards:
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_1_co2'')|round(0) }}'
-            icon: mdi:molecule-co2
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_co2'')|float(0)
-              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
-              %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_1_humidity'')|round(0)
-              }}%'
-            icon: mdi:water-percent
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_humidity'')|float(0)
-              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_1_temperature'')|round(1)
-              }}°'
-            icon: mdi:thermometer
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_temperature'')|float(0)
-              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
-              elif v <= 30 %}orange{% else %}red{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_1_valve_position'')|round(0)
-              }}%'
-            icon: mdi:valve
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_1_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}green{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-      - type: custom:stack-in-card
-        cards:
-        - type: custom:mushroom-template-card
-          primary: Master Bedroom
-          icon: mdi:bed-king
-          icon_color: red
-          layout: vertical
-          tap_action:
-            action: navigate
-            navigation_path: /config/devices/device/5ebfaeed7f970bb8bdfbe7969a9ee9a9
-        - type: grid
-          columns: 2
-          square: false
-          cards:
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_2_co2'')|round(0) }}'
-            icon: mdi:molecule-co2
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_co2'')|float(0)
-              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
-              %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_2_humidity'')|round(0)
-              }}%'
-            icon: mdi:water-percent
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_humidity'')|float(0)
-              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_2_temperature'')|round(1)
-              }}°'
-            icon: mdi:thermometer
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_temperature'')|float(0)
-              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
-              elif v <= 30 %}orange{% else %}red{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_2_valve_position'')|round(0)
-              }}%'
-            icon: mdi:valve
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_2_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}green{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-      - type: custom:stack-in-card
-        cards:
-        - type: custom:mushroom-template-card
-          primary: Toilet
-          icon: mdi:toilet
-          icon_color: yellow
-          layout: vertical
-          tap_action:
-            action: navigate
-            navigation_path: /config/devices/device/3610a8e45d55069ecc8d3c93329635be
-        - type: grid
-          columns: 2
-          square: false
-          cards:
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_3_co2'')|round(0) }}'
-            icon: mdi:molecule-co2
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_co2'')|float(0)
-              %} {% if v <= 800 %}green{% elif v <= 1200 %}orange{% else %}red{% endif
-              %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_3_humidity'')|round(0)
-              }}%'
-            icon: mdi:water-percent
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_humidity'')|float(0)
-              %} {% if 40 <= v <= 60 %}green{% else %}red{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_3_temperature'')|round(1)
-              }}°'
-            icon: mdi:thermometer
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_temperature'')|float(0)
-              %} {% if v < 15 %}blue{% elif v < 18 %}amber{% elif v <= 24 %}green{%
-              elif v <= 30 %}orange{% else %}red{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-          - type: custom:mushroom-template-card
-            primary: '{{ states(''sensor.open_air_valve_huis_3_valve_position'')|round(0)
-              }}%'
-            icon: mdi:valve
-            icon_color: '{% set v = states(''sensor.open_air_valve_huis_3_valve_position'')|float(0)
-              %} {% if v == 0 %}red{% else %}green{% endif %}'
-            layout: vertical
-            tap_action:
-              action: none
-    - type: grid
-      columns: 2
-      square: false
-      cards:
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - min: ~400
-          max: ~1200
-          apex_config:
-            tickAmount: 5
-            forceNiceScale: true
-        apex_config:
-          title:
-            text: CO2
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_valve_huis_2_co2
-          name: Master Bedroom
-          color: '#FF1744'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_3_co2
-          name: Toilet
-          color: '#FFD600'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - min: ~15
-          max: ~25
-          apex_config:
-            forceNiceScale: true
-        apex_config:
-          title:
-            text: Temperature
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_valve_huis_1_temperature
-          name: Bathroom
-          color: '#448AFF'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_2_temperature
-          name: Master Bedroom
-          color: '#FF1744'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_3_temperature
-          name: Toilet
-          color: '#FFD600'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-    - type: grid
-      columns: 2
-      square: false
-      cards:
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - min: ~40
-          max: ~60
-          apex_config:
-            forceNiceScale: true
-        apex_config:
-          title:
-            text: Humidity
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_valve_huis_1_humidity
-          name: Bathroom
-          color: '#448AFF'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_2_humidity
-          name: Master Bedroom
-          color: '#FF1744'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_3_humidity
-          name: Toilet
-          color: '#FFD600'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - min: 0
-          max: ~400
-          apex_config:
-            forceNiceScale: true
-        apex_config:
-          title:
-            text: VOC Index
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_valve_huis_3_voc_index
-          name: Toilet
-          color: '#FFD600'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-    - type: grid
-      columns: 2
-      square: false
-      cards:
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - min: 0
-          apex_config:
-            forceNiceScale: true
-        apex_config:
-          title:
-            text: NOx Index
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_valve_huis_3_nox_index
-          name: Toilet
-          color: '#FFD600'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - min: 0
-          apex_config:
-            forceNiceScale: true
-        apex_config:
-          title:
-            text: Demand
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_valve_huis_1_demand
-          name: Bathroom
-          color: '#448AFF'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_2_demand
-          name: Master Bedroom
-          color: '#FF1744'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_3_demand
-          name: Toilet
-          color: '#FFD600'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-    - type: grid
-      columns: 2
-      square: false
-      cards:
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - id: speed
-          min: 0
-          max: 100
-        - id: rpm
-          opposite: true
-          min: 0
-        apex_config:
-          title:
-            text: Fan
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_mini_huis_fan_speed
-          name: Speed %
-          stroke_width: 2
-          yaxis_id: speed
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_mini_huis_air_mini_rpm
-          name: RPM
-          stroke_width: 2
-          yaxis_id: rpm
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-      - type: custom:apexcharts-card
-        header:
-          show: false
-        graph_span: 24h
-        yaxis:
-        - min: 0
-          max: ~100
-          apex_config:
-            tickAmount: 5
-            forceNiceScale: true
-        apex_config:
-          title:
-            text: Valve Position
-            floating: true
-            offsetY: 6
-            align: center
-            style:
-              fontSize: 14px
-              fontWeight: '600'
-          chart:
-            height: 180
-          stroke:
-            width: 2
-          legend:
-            show: false
-          tooltip:
-            followCursor: true
-            fixed:
-              enabled: true
-              position: topLeft
-            custom: 'EVAL:function({seriesIndex, dataPointIndex, w}) { var x = w.globals.seriesX[seriesIndex][dataPointIndex];
-              var h = ''<div style="padding:6px 10px;font-size:12px">''; for (var
-              i = 0; i < w.globals.seriesNames.length; i++) { var xs = w.globals.seriesX[i];
-              var n = 0, m = 1/0; for (var j = 0; j < xs.length; j++) { var d = Math.abs(xs[j]
-              - x); if (d < m) { m = d; n = j; } } if (m > 600000) continue; var v
-              = w.globals.series[i][n]; if (v == null) continue; var c = w.globals.colors[i];
-              h += ''<div style="display:flex;align-items:center;gap:6px;padding:3px
-              0"><span style="background:'' + c + '';width:12px;height:12px;border-radius:50%;display:inline-block"></span>
-              '' + w.globals.seriesNames[i] + '': <b>'' + (Math.round(v * 10) / 10)
-              + ''</b></div>''; } return h + ''</div>''; }'
-        series:
-        - entity: sensor.open_air_valve_huis_1_valve_position
-          name: Bathroom
-          color: '#448AFF'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_2_valve_position
-          name: Master Bedroom
-          color: '#FF1744'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
-        - entity: sensor.open_air_valve_huis_3_valve_position
-          name: Toilet
-          color: '#FFD600'
-          stroke_width: 2
-          extend_to: now
-          fill_raw: last
-          group_by:
-            func: last
-            duration: 5min
-            fill: last
 - title: Huis (3 days)
   path: huis-3d
   icon: mdi:home-thermometer
@@ -1487,13 +1487,13 @@ views:
         content: 1 day
         tap_action:
           action: navigate
-          navigation_path: /open-air-huis/huis-24h
+          navigation_path: /open-air-huis/huis
       - type: template
         icon: mdi:clock-outline
         content: 3 days
         tap_action:
           action: navigate
-          navigation_path: /open-air-huis/huis
+          navigation_path: /open-air-huis/huis-3d
         card_mod:
           style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
             var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)
@@ -2218,7 +2218,7 @@ views:
         content: 1 day
         tap_action:
           action: navigate
-          navigation_path: /open-air-huis/huis-24h
+          navigation_path: /open-air-huis/huis
       - type: template
         icon: mdi:clock-outline
         content: 3 days
@@ -2230,7 +2230,7 @@ views:
         content: 1 week
         tap_action:
           action: navigate
-          navigation_path: /open-air-huis/huis
+          navigation_path: /open-air-huis/huis-7d
         card_mod:
           style: 'ha-card { --chip-background: var(--primary-color) !important; --chip-font-color:
             var(--text-primary-color) !important; --chip-icon-color: var(--text-primary-color)

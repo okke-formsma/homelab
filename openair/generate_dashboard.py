@@ -284,13 +284,13 @@ def build_graph_grids(graph_pairs, all_rooms, fan_cfg, graph_span="24h"):
     return grids
 
 
-def build_span_chips(span_entries, current_span, url_path, view_path):
+def build_span_chips(span_entries, current_span, default_span, url_path, view_path):
     """Build a row of chips to switch between time ranges, highlighting the active one."""
     chips = []
     for entry in span_entries:
         span = entry["span"]
         label = entry.get("label", span)
-        path = view_path if span == current_span else f"{view_path}-{span}"
+        path = view_path if span == default_span else f"{view_path}-{span}"
         is_active = span == current_span
         chip = {
             "type": "template",
@@ -328,7 +328,9 @@ def generate(config_path: str):
     default_span = cfg.get("default_span", span_entries[0]["span"])
 
     views = []
-    for entry in span_entries:
+    # Default view must be first so HA uses it as the landing/fallback view
+    sorted_entries = sorted(span_entries, key=lambda e: e["span"] != default_span)
+    for entry in sorted_entries:
         span = entry["span"]
         label = entry.get("label", span)
         is_default = span == default_span
@@ -336,7 +338,7 @@ def generate(config_path: str):
         title = view_cfg["title"] if is_default else f"{view_cfg['title']} ({label})"
 
         view_cards = [
-            build_span_chips(span_entries, span, url_path, view_cfg["path"]),
+            build_span_chips(span_entries, span, default_span, url_path, view_cfg["path"]),
             build_fan_top_cards(fan),
             build_room_status_grid(rooms),
             *build_graph_grids(cfg["graphs"], rooms, fan, span),
@@ -367,7 +369,9 @@ def generate(config_path: str):
         f.write("# AUTO-GENERATED — edit dashboard_config.yaml, then run generate_dashboard.py\n")
         yaml.dump(dashboard, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
 
-    print(f"Generated {out_path} ({sum(1 for _ in open(out_path))} lines)")
+    with open(out_path) as f:
+        line_count = sum(1 for _ in f)
+    print(f"Generated {out_path} ({line_count} lines)")
 
 
 if __name__ == "__main__":
